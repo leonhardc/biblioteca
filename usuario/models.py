@@ -13,6 +13,13 @@ class Aluno(models.Model):
     ingresso = models.DateField(default=datetime.date.today, null=False, blank=False, verbose_name='Data de ingresso')
     conclusao_prevista = models.DateField()
 
+    def __str__(self):
+        return f'<{self.usuario}>'
+
+    class Meta:
+        verbose_name = 'Aluno'
+        verbose_name_plural = 'Alunos'
+
 
 class Professor(models.Model):
     JORNADA = (
@@ -27,6 +34,23 @@ class Professor(models.Model):
     regime = models.CharField(max_length=3, blank=False, null=False, choices=JORNADA, verbose_name='Regime de trabalho')
     contratacao = models.DateField(default=datetime.date.today, blank=False, null=False, verbose_name='Data de Contratação')
 
+    def __str__(self):
+        return f'<{self.usuario}>'
+
+    class Meta:
+        verbose_name = 'Professor'
+        verbose_name_plural = 'Professores'
+
+
+
 class Funcionario(models.Model):
     usuario = models.ForeignKey(User, verbose_name='Usuário', on_delete=models.DO_NOTHING)
     matricula = models.CharField(max_length=4, blank=False, null=False, verbose_name='Matricula')
+    
+    def __str__(self):
+        return f'<{self.usuario}>'
+
+    class Meta:
+        verbose_name = 'Funcionário'
+        verbose_name_plural = 'Funcionários'
+
