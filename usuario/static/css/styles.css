@@ -16,6 +16,132 @@ main {
     background: linear-gradient(180deg, rgba(5,12,37,1) 0%, rgba(5,12,37,1) 43%, rgba(10,25,78,1) 100%);;
 }
 
+
+main .content {
+    width: 95%; 
+    height: 90%; 
+    background-color: #fff;
+}
+
+main .content nav {
+    width: 100%;
+    height: 70px; 
+    position: fixed; 
+    display: flex; 
+    flex-direction: row;
+    align-items: center;
+}
+
+main .content nav .usuario-card {
+    width: fit-content;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+}
+
+main .content nav .usuario-card .card {
+    position: absolute;
+    left: -230px;
+    width: 200px;
+    height: 90%;
+    background-color: #837e7e;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;  
+    color: #fff;
+}
+
+main .content nav .usuario-card .card img {
+    height: 50px;
+    margin-left: 10px;   
+    filter: invert(100%); 
+}
+
+main .content nav .usuario-card .card .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 15px;
+}
+main .content nav .usuario-card .card .info span:nth-child(1) {
+    font-size: 14px;
+}
+main .content nav .usuario-card .card .info span:nth-child(2) {
+    font-size: 12px;
+}
+
+main .content nav .r-content {
+    display: flex; 
+    flex-direction: row; 
+    align-items: center;
+    position: relative;
+}
+
+main .content nav .r-content .pesquisa {
+    /* TODO: Resolver o problema de posicionamento do form de pesquisa */
+}
+
+main .content nav .r-content .opcoes ul {
+    list-style: none; 
+    display: flex; 
+    flex-direction: row;    
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-inline-start: 0;
+    margin-inline-end: 0px;
+
+}
+
+main .content nav .r-content .opcoes ul li a {
+    text-decoration: none;
+    color: #837e7e;
+    transition: color 200ms ease-in-out;
+    position: relative;
+}
+
+main .content nav .r-content .opcoes ul li a::after {
+    content: '';
+    width: 0;
+    height: 5px;
+    background-color: #3d3b3b;
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    top: 17px;
+    transition: width 200ms ease-in-out;
+}
+
+main .content nav .r-content .opcoes ul li a:hover {
+    color: #3d3b3b;
+}
+
+main .content nav .r-content .opcoes ul li a:hover::after {
+    width: 100%;
+}
+
+
+main .content nav .r-content .pesquisa form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+main .content .livros {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+main .content .livros .livro {
+    width: 90%;
+}
+
 .form {
     width: fit-content;
     height: fit-content;
@@ -25,4 +151,13 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.form h3 {
+    color: #0d6efd;
+}
+
+.form form input[type="submit"] {
+    width: 100%; 
+    font-weight: bold;
 }

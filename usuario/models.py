@@ -35,7 +35,7 @@ class Professor(models.Model):
     contratacao = models.DateField(default=datetime.date.today, blank=False, null=False, verbose_name='Data de Contratação')
 
     def __str__(self):
-        return f'<{self.usuario}>'
+        return f'{self.usuario.first_name} {self.usuario.last_name}'
 
     class Meta:
         verbose_name = 'Professor'
@@ -53,4 +53,15 @@ class Funcionario(models.Model):
     class Meta:
         verbose_name = 'Funcionário'
         verbose_name_plural = 'Funcionários'
+
+
+class ProfessorCurso(models.Model):
+    professor = models.ForeignKey(Professor, on_delete=models.DO_NOTHING, verbose_name='Professor')
+    curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, verbose_name='Curso')
+    data_matricula = models.DateField(null=False, blank=False, verbose_name='Data da Matricula')
+    class Meta:
+        verbose_name = 'Professor-Curso'
+        verbose_name_plural = 'Professores-Cursos'
+    def __str__(self):
+        return f'<Curso: {self.curso.curso} Professor:{self.professor} Matricula: {self.data_matricula}>'
 
