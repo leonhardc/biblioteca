@@ -41,17 +41,15 @@ def criar_cursos():
                 print(f'Erro ao adicionar {curso}.')
 
 
-
-
 def criar_usuarios(alunos, professores, funcionarios):
-    print('Criando Alunos ...')
-    
+    print('-'*20,'\nCriando Alunos ...')
+
     for _ in range(alunos):
         # Cria Usuário
-        username = fake.user_name()
         first_name = fake.first_name()
         last_name = fake.last_name()
-        email = fake.email()
+        username = f'{first_name.lower()}{last_name.lower()}{random.randint(0, 999)}'
+        email = f'{first_name.lower()}{last_name.lower()}@example.com'
         password = '123456'  # Pode mudar para algo mais seguro
         if not User.objects.filter(username=username).exists():
             user = User.objects.create_user(
@@ -66,11 +64,12 @@ def criar_usuarios(alunos, professores, funcionarios):
             print(f'Criando aluno {user.first_name} ...')
             try:
                 matricula = f'{random.randint(100000, 999999)}'
-                curso = random.choice(Curso.objects.all())
+                ids_cursos = list(Curso.objects.values_list('id', flat=True))
+                curso = Curso.objects.get(id=random.choice(ids_cursos))
                 endereco = fake.address().replace('\n', ', ')
-                cpf = random.randint(100000000000, 99999999999)
+                cpf = ''.join([str(random.randint(0,9)) for _ in range(11)])
                 ingresso = datetime.date.today()
-                conclusao = ingresso + relativedelta(years=+5)
+                conclusao = ingresso + relativedelta(years=+curso.duracao)
                 novo_aluno = Aluno(
                     usuario = user, 
                     matricula = matricula,
@@ -78,18 +77,86 @@ def criar_usuarios(alunos, professores, funcionarios):
                     endereco = endereco,
                     cpf = cpf,
                     ingresso = ingresso,
-                    conclusao = conclusao
+                    conclusao_prevista = conclusao
                 )
                 novo_aluno.save()
-                print('Novo aluno criado com sucesso.')
+                print('Novo aluno criado com sucesso.\n')
             except Exception as e:
-                print(f'Erro ao criar aluno {user.first_name}')
+                print(f'Erro ao criar aluno {user.first_name}\n')
+                print(e)
 
-    print('Criando Professores ...')
-    # TODO: Implementar a inserção de professores
-    print('Criando Funcionarios ...')
-    # TODO: Implementar a inserção de funcionários
+    print('-'*20,'\nCriando Professores ...')
+
+    for _ in range(professores):
+        # Cria Usuário
+        first_name = fake.first_name()
+        last_name = fake.last_name()
+        username = f'{first_name.lower()}{last_name.lower()}{random.randint(0, 999)}'
+        email = f'{first_name.lower()}{last_name.lower()}@example.com'
+        password = '123456'  # Pode mudar para algo mais seguro
+        if not User.objects.filter(username=username).exists():
+            user = User.objects.create_user(
+                username=username,
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                password=password
+            )
+            print(f'Usuário {user.first_name} criado com sucesso!')
+            # Criar Professor
+            print(f'Criando professor {user.first_name} ...')
+            try:
+                matricula = f'{random.randint(1000, 9999)}'
+                curso = random.choice(Curso.objects.all())
+                cpf = ''.join([str(random.randint(0,9)) for _ in range(11)])
+                regime = random.choice(['20', '40', 'DE'])
+                novo_professor = Professor(
+                    usuario = user, 
+                    matricula = matricula,
+                    curso = curso,
+                    cpf = cpf,
+                    regime = regime,
+                )
+                novo_professor.save()
+                print('Novo professor criado com sucesso.\n')
+            except Exception as e:
+                print(f'Erro ao criar professor {user.first_name}\n')
+    
+    print('-'*20,'\nCriando Funcionarios ...')
+    # Cria Usuário
+    for _ in range(funcionarios):
+        # Cria Usuário
+        first_name = fake.first_name()
+        last_name = fake.last_name()
+        username = f'{first_name.lower()}{last_name.lower()}{random.randint(0, 999)}'
+        email = f'{first_name.lower()}{last_name.lower()}@example.com'
+        password = '123456'  # Pode mudar para algo mais seguro
+        if not User.objects.filter(username=username).exists():
+            user = User.objects.create_user(
+                username=username,
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                password=password
+            )
+            print(f'Usuário {user.first_name} criado com sucesso!')
+            # Criar Professor
+            print(f'Criando Funcionário {user.first_name} ...')
+            try:
+                matricula = f'{random.randint(1000, 9999)}'
+                novo_funcionario = Funcionario(
+                    usuario = user, 
+                    matricula = matricula
+                )
+                novo_funcionario.save()
+                print('Novo funcionario criado com sucesso.')
+            except Exception as e:
+                print(f'Erro ao criar funcionario {user.first_name}')
+    
+    print('-'*20,'\nFim da execução.')
 
 if __name__ == '__main__':
     # TODO: Adicionar 100 alunos, 10 professores e 10 funcionarios.
+    criar_cursos()
+    criar_usuarios(100, 10, 10)
     pass
