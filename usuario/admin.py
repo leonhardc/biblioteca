@@ -15,6 +15,7 @@ class AlunoAdmin(admin.ModelAdmin):
     ]
     search_fields = ['matricula', 'curso']
     list_display_links = ['matricula', 'usuario']
+    list_per_page = 20
     
     def nome(self, obj):
         return obj.usuario.first_name +' '+obj.usuario.last_name
@@ -34,14 +35,9 @@ class ProfessorAdmin(admin.ModelAdmin):
         'contratacao',
         'curso',
     ]
-    search_fields = [
-        'matricula', 
-        'curso'
-        ]    
-    list_display_links = [
-        'matricula', 
-        'usuario'
-        ]
+    search_fields = [ 'matricula', 'curso']    
+    list_display_links = ['matricula', 'usuario']
+    list_per_page = 20
 
     def nome(self, obj):
         return obj.usuario.first_name +' '+ obj.usuario.last_name
@@ -61,10 +57,8 @@ class FuncionarioAdmin(admin.ModelAdmin):
     search_fields = [
         'matricula'
         ]
-    list_display_links = [
-        'matricula', 
-        'usuario'
-        ]
+    list_display_links = ['matricula', 'usuario']
+    list_per_page = 20
 
     def nome(self, obj):
         return obj.usuario.first_name +' '+ obj.usuario.last_name
