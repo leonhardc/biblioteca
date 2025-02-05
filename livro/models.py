@@ -122,7 +122,7 @@ NACIONALIDADES = (
 
 class Autor(models.Model):
     nome = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nome do Autor')
-    cpf = models.CharField(max_length=11, blank=True, null=False, verbose_name='CPF do Autor')
+    cpf = models.CharField(default='00000000000',max_length=11, blank=True, null=False, verbose_name='CPF do Autor')
     nacionalidade = models.CharField(max_length=3, choices=NACIONALIDADES, verbose_name='Nacionalidade')
     
     def __str__(self):
