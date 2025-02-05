@@ -25,7 +25,7 @@ class Professor(models.Model):
     JORNADA = (
         ('20', '20hr'),
         ('40', '40hr'),
-        ('DE', 'DE'),
+        ('DE', 'Dedicação Exclusiva'),
     )
     usuario = models.ForeignKey(User, verbose_name='Usuário', on_delete=models.DO_NOTHING)
     matricula = models.CharField(max_length=4, blank=False, null=False, verbose_name='Matricula')
