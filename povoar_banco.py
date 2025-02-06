@@ -5,7 +5,9 @@ import random
 from django.contrib.auth.models import User
 from usuario.models import Aluno, Professor, Funcionario
 from curso.models import Curso
+from livro.models import Livro, Autor, Categoria, NACIONALIDADES
 import datetime
+from utils.utils import gerar_data
 from dateutil.relativedelta import relativedelta
 
 # Configurar o Django
@@ -154,6 +156,81 @@ def criar_usuarios(alunos, professores, funcionarios):
                 print(f'Erro ao criar funcionario {user.first_name}')
     
     print('-'*20,'\nFim da execução.')
+
+
+# Povoar banco de dados do app Livro 
+def criar_autores(n_autores):
+    for _ in range(n_autores):
+        try:
+            nome = fake.name()
+            nacionalidade = random.choice(NACIONALIDADES)[0]
+            novo_autor = Autor(
+                nome = nome, 
+                nacionalidade = nacionalidade
+            )
+            novo_autor.save()
+            print('Novo autor adicionado com sucesso.\n')
+        except Exception as e:
+            print('Erro ao adicionar novo autor.')
+            print(e)        
+
+
+def criar_categorias():
+    categorias = [
+        'Calculo',
+        'Fisica',
+        'Quimica',
+        'Programação',
+        'Inteligencia Artificial',
+        'Sistemas Operacionais',
+        'Algebra Linear',
+        'Anatomia',
+        'Economia',
+        'Sistemas Lineares',
+    ]
+    for categoria in categorias:
+        try:
+            nova_categoria = Categoria(
+                categoria = categoria,
+                descricao = fake.paragraph(nb_sentences=5)
+            )
+            nova_categoria.save()
+            print('NOva categoria adicionada com sucesso')
+        except Exception as e:
+            print('Erro ao adicionar nova categoria.')
+            print('Erro:',e)
+        
+
+
+def criar_livros(n_livros):
+    for _ in range(n_livros):
+        try:
+            isbn = ''.join([str(random.randint(0,9)) for _ in range(6)])
+            titulo = fake.sentence(nb_words=4)
+            subtitulo = fake.sentence(nb_words=10)
+            lancamento = gerar_data()
+            editora = f'Editora: {fake.sentence(nb_words=2)}'
+            copias = random.randint(10, 30)
+            ids_autores = random.choices(list(Autor.objects.values_list('id', flat=True)), k=random.randint(1,3))
+            autores = [Autor.objects.get(id=id) for id in ids_autores]
+            ids_categorias = list(Categoria.objects.values_list('id', flat=True))
+            categoria = Categoria.objects.get(id=int(random.choice(ids_categorias)))
+
+            novo_livro = Livro.objects.create(
+                isbn = isbn,
+                titulo = titulo,
+                subtitulo = subtitulo,
+                lancamento = lancamento,
+                editora = editora,
+                copias = copias,
+                categoria = categoria
+            )
+            novo_livro.autores.set(autores)
+            novo_livro.save()
+
+        except Exception as e:
+            print('Erro ao adicionar novo livro.')
+            print(e)
 
 if __name__ == '__main__':
     # TODO: Adicionar 100 alunos, 10 professores e 10 funcionarios.
