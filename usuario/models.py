@@ -54,14 +54,3 @@ class Funcionario(models.Model):
         verbose_name = 'Funcionário'
         verbose_name_plural = 'Funcionários'
 
-
-class ProfessorCurso(models.Model):
-    professor = models.ForeignKey(Professor, on_delete=models.DO_NOTHING, verbose_name='Professor')
-    curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, verbose_name='Curso')
-    data_matricula = models.DateField(null=False, blank=False, verbose_name='Data da Matricula')
-    class Meta:
-        verbose_name = 'Professor-Curso'
-        verbose_name_plural = 'Professores-Cursos'
-    def __str__(self):
-        return f'<Curso: {self.curso.curso} Professor:{self.professor} Matricula: {self.data_matricula}>'
-

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
-from usuario.models import Aluno, Professor, Funcionario, ProfessorCurso
+from usuario.models import Aluno, Professor, Funcionario
 
 class AlunoAdmin(admin.ModelAdmin):
     list_display = [
@@ -67,28 +67,8 @@ class FuncionarioAdmin(admin.ModelAdmin):
         usuario = User.objects.get(id=obj.usuario_id)
         return str(usuario.email)
 
-class ProfessorCursoAdmin(admin.ModelAdmin):
-    list_display = [
-        'matricula_professor',
-        'professor',
-        'curso_matricula',
-        'curso',
-        'data_matricula',
-    ]
-    list_display_links = [
-        'professor',
-    ]
-
-    def curso_matricula(self, obj):
-        return obj.curso.cod_curso
-
-    def matricula_professor(self, obj):
-        return obj.professor.matricula
-
 
 admin.site.register(Aluno, AlunoAdmin)
 admin.site.register(Professor, ProfessorAdmin)
 admin.site.register(Funcionario, FuncionarioAdmin)
-admin.site.register(ProfessorCurso, ProfessorCursoAdmin)
-
 
