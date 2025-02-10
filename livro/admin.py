@@ -11,6 +11,8 @@ class AutorAdmin(admin.ModelAdmin):
         'nome',
         'nacionalidade',
     ]
+    list_per_page = 20
+
 
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = [
@@ -21,6 +23,8 @@ class CategoriaAdmin(admin.ModelAdmin):
         'categoria',
         'descricao',
     ]
+    list_per_page = 20
+
 
 class LivroAdmin(admin.ModelAdmin):
     list_display = [
@@ -37,6 +41,7 @@ class LivroAdmin(admin.ModelAdmin):
         'titulo',
         'categoria',
     ]
+    list_per_page = 20
 
     # Mudar o label do campo de 'get_autores' para 'autores'
     @admin.display(description='autores')
@@ -57,6 +62,7 @@ class ReservaAdmin(admin.ModelAdmin):
         'livro',
         'data_reserva',
     ]
+    list_per_page = 20
 
 class EmprestimoAdmin(admin.ModelAdmin):
     list_display = [
@@ -70,6 +76,7 @@ class EmprestimoAdmin(admin.ModelAdmin):
         'livro',
         'data_emprestimo',
     ]
+    list_per_page = 20
 
 admin.site.register(Autor, AutorAdmin)
 admin.site.register(Categoria, CategoriaAdmin)

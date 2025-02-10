@@ -15,6 +15,6 @@ class CursoAdmin(admin.ModelAdmin):
     list_display_links = [
         'cod_curso',
     ]
-
+    list_per_page = 20
 
 admin.site.register(Curso, CursoAdmin)
