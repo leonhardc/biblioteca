@@ -170,4 +170,7 @@ class Emprestimo(models.Model):
     livro = models.ForeignKey(Livro, blank=False, null=False,on_delete=models.CASCADE, verbose_name='Livro')
     data_emprestimo = models.DateField(default=timezone.now, blank=False, null=False, verbose_name='Data da Reserva')
     # TODO: Implementar a regra de devolução
+    # * Um ALUNO pode pedir emprestado até 3 livros emprestados por até 15 dias cada.
+    # * Um PROFESSOR pode pedir até 5 livros emprestados por até 30 dias cada.
+    # * Um FUNCIONARIO pode pedir até 4 livros emprestados por até 21 dias cada.
     data_devolucao = models.DateField(default=timezone.now, blank=False, null=False, verbose_name='Data da Devolução')
