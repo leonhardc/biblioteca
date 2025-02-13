@@ -1,3 +1,48 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+# Implementação do CRUD para livro
+def criar_livro(request):
+    pass
+
+def detalhar_livro(request, id_livro):
+    pass
+
+def atualizar_livro(request, id_livro):
+    pass
+
+def deletar_livro(request, id_livro):
+    pass
+
+# Implementação de Emprestimo e Reserva de Livros
+def reservar_livro(request, id_livro, usuario):
+    pass
+
+def Emprestar_livro(request, id_livro, usuario):
+    pass
+
+# CRUD para Autor
+def criar_autor(request):
+    pass 
+
+def detalhar_autor(request, id_autor):
+    pass 
+
+def atualizar_autor(request, id_autor):
+    pass
+
+def deletar_autor(request, id_autor):
+    pass
+
+# CRUD para Categoria
+def criar_categoria(request):
+    pass
+
+def detalar_categoria(request, id_categoria):
+    pass
+
+def atualizar_categoria(request, id_categoria):
+    pass
+
+def deletar_categoria(request, id_categoria):
+    pass
