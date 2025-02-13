@@ -1,6 +1,16 @@
 from django.shortcuts import render
 
 
+# Método de Listar Livros, Autores e Categorias
+def listar_livros(request):
+    pass
+
+def listar_autores(resquest):
+    pass
+
+def listar_categorias(request):
+    pass
+
 # Implementação do CRUD para livro
 def criar_livro(request):
     pass
@@ -18,7 +28,7 @@ def deletar_livro(request, id_livro):
 def reservar_livro(request, id_livro, usuario):
     pass
 
-def Emprestar_livro(request, id_livro, usuario):
+def emprestar_livro(request, id_livro, usuario):
     pass
 
 # CRUD para Autor
@@ -38,7 +48,7 @@ def deletar_autor(request, id_autor):
 def criar_categoria(request):
     pass
 
-def detalar_categoria(request, id_categoria):
+def detalhar_categoria(request, id_categoria):
     pass
 
 def atualizar_categoria(request, id_categoria):
