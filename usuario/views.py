@@ -52,7 +52,49 @@ def autenticar(request):
             messages.info(request, 'Formulário inválido')
             return redirect('usuario:entrar')
 
-
+# TODO: Essa view só pode ser acessada se o usuário estiver logado
 def sair(request):
     logout(request)
     return redirect('usuario:entrar')
+
+
+# CRUD de Aluno
+def criar_aluno(request):
+    pass
+
+def ler_aluno(request, uid):
+    pass
+
+def atualizar_aluno(request, uid):
+    pass
+
+def deletar_aluno(request, uid):
+    pass
+
+
+# CRUD de Professor
+def criar_professor(request):
+    pass
+
+def ler_professor(request, uid):
+    pass
+
+def atualizar_professor(request, uid):
+    pass
+
+def deletar_professor(request, uid):
+    pass
+
+
+# CRUD de Funcionário
+def criar_funcionario(request):
+    pass
+
+def ler_funcionario(request, uid):
+    pass
+
+def atualizar_funcionario(request, uid):
+    pass
+
+def deletar_funcionario(request, uid):
+    pass
