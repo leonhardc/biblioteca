@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from usuario.forms.formularios import LoginForm
+from usuario.forms import LoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from usuario.forms import FormularioAluno
 
 # TODO: Essa view só pode ser acessada se o usuário estiver logado
 def index(request):
@@ -60,7 +61,16 @@ def sair(request):
 
 # CRUD de Aluno
 def criar_aluno(request):
-    pass
+    if request.method == 'GET':
+        # TODO: Carregar formulário de inserção de dados para Aluno
+        formulario_aluno = FormularioAluno()
+        return render(request, template_name='form.html', context={'form':formulario_aluno})
+        pass
+    else: 
+        if request.methof == 'POST':
+            # TODO: Salvar as informações de usuário e aluno do formulário no banco de dados
+            pass
+    
 
 def ler_aluno(request, uid):
     pass
