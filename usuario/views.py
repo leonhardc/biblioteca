@@ -62,14 +62,17 @@ def sair(request):
 # CRUD de Aluno
 def criar_aluno(request):
     if request.method == 'GET':
-        # TODO: Carregar formulário de inserção de dados para Aluno
         formulario_aluno = FormularioAluno()
         return render(request, template_name='form.html', context={'form':formulario_aluno})
-        pass
     else: 
-        if request.methof == 'POST':
+        if request.method == 'POST':
             # TODO: Salvar as informações de usuário e aluno do formulário no banco de dados
-            pass
+            formulario_novo_aluno = FormularioAluno(request.POST)
+            # TODO: Implementar página de retorno com mensagem de sucesso
+            if formulario_novo_aluno.is_valid():
+                return HttpResponse('OK')
+            else:
+                return render(request, template_name='form.html', context={'form':formulario_novo_aluno})
     
 
 def ler_aluno(request, uid):

@@ -10,49 +10,97 @@
             margin:0;
             padding: 0;
         }
-        #dados-pessoais, #endereco, #dados-curso{
-            padding: 10px;
-            background-color: #a3ceef;
-            border: solid 2px #006db2;
+        body {
+            background-color: #d0d1d2;
+        }
+        form{
+            padding: 20px;
+            background-color: #fff;
+            margin: 10px 100px;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
             border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <h2 style="text-align: center;">Criar Aluno</h2>
-    <form class="m-4 p-4" action="">
+    <form class="p-4" action="{% url 'usuario:criar-aluno' %}" method="POST">
+        <h2 class="my-4" style="text-align: center;"><strong>Criar Aluno</strong></h2>
         {% csrf_token %}
         <div id="dados-pessoais" class="mb-4">
             <h6>Dados Pessoais</h6>
             <div class="row mb-2">
+                <!-- TODO: Implementar separadamente label, campo e error -->
                 <div class="col">
-                    {{form.nome.as_field_group}}
+                    {{form.nome.label_tag}}
+                    {{form.nome}}
+                    {% if form.nome.error %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.nome.errors}}
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="col">
-                    {{form.sobrenome.as_field_group}}
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col">
-                    {{form.usuario.as_field_group}}
-                </div>
-                <div class="col">
-                    {{form.email.as_field_group}}
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col">
-                    {{form.data_nascimento.as_field_group}}
-                </div>
-                <div class="col">
+                    {{form.sobrenome.label_tag}}
+                    {{form.sobrenome}}
+                    {% if form.sobrenome.error %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.sobrenome.errors}}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="row mb-2">
                 <div class="col">
-                    {{form.senha.as_field_group}}
+                    <!-- TODO: Implementar função em javascript para sujerir usuário -->
+                    {{form.usuario.label_tag}}
+                    {{form.usuario}}
+                    {% if  form.usuario.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.usuario.errors}}
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="col">
-                    {{form.senha_confirmacao.as_field_group}}
+                    {{form.email.label_tag}}
+                    {{form.email}}
+                    {% if form.email.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.email.errors}}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col">
+                    {{form.data_nascimento.label_tag}}
+                    {{form.data_nascimento}}
+                    {% if form.data_nascimento.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.data_nascimento.errors}}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col">
+                    {{form.senha.label_tag}}
+                    {{form.senha}}
+                    {% if form.senha.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.senha.errors}}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col">
+                    {{form.senha_confirmacao.label_tag}}
+                    {{form.senha_confirmacao}}
+                    {% if form.senha_confirmacao.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.senha_confirmacao.errors}}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -60,40 +108,103 @@
             <h6>Endereço</h6>
             <div class="row mb-2">
                 <div class="col">
-                    {{form.rua.as_field_group}}
+                    {{form.rua.label_tag}}
+                    {{form.rua}}
+                    {% if form.rua.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.rua.errors}}
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="col">
-                    {{form.numero.as_field_group}}
+                    {{form.numero.label_tag}}
+                    {{form.numero}}
+                    {% if form.numero.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.numero.errors}}
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="col">
-                    {{form.bairro.as_field_group}}
+                    {{form.bairro.label_tag}}
+                    {{form.bairro}}
+                    {% if form.bairro.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.bairro.errors}}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="row mb-2">
                 <div class="col">
-                    {{form.cidade.as_field_group}}
+                    {{form.cidade.label_tag}}
+                    {{form.cidade}}
+                    {% if form.cidade.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.cidade.errors}}
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="col">
-                    {{form.estado.as_field_group}}
+                    {{form.estado.label_tag}}
+                    {{form.estado}}
+                    {% if form.estado.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.estado.errors}}
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="col">
-                    {{form.cep.as_field_group}}
+                    {{form.cep.label_tag}}
+                    {{form.cep}}
+                    {% if form.cep.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.cep.errors}}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="row mb-2">
                 <div class="col">
-                    {{form.complemento.as_field_group}}
+                    {{form.complemento.label_tag}}
+                    {{form.complemento}}
+                    {% if form.complemento.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.complemento.errors}}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
         <div id="dados-curso" class="mb-4">
             <h6>Dados de Curso</h6>
             <div class="row">
-                <div class="col">{{form.matricula.as_field_group}}</div>
-                <div class="col">{{form.curso.as_field_group}}</div>
+                <div class="col">
+                    {{form.matricula.label_tag}}
+                    {{form.matricula}}
+                    {% if form.matricula.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.matricula.errors}}
+                        </div>
+                    {% endif %}                    
+                </div>
+                <div class="col">
+                    {{form.curso.label_tag}}
+                    {{form.curso}}
+                    {% if form.curso.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{form.curso.errors}}
+                        </div>
+                    {% endif %}   
+                </div>
             </div>
         </div>
-        <button class="btn btn-primary" type="submit">Criar</button>
+        <div class="row">
+            <div class="col d-flex justify-content-center mt-5">
+                <button class="btn btn-secondary me-4" type="button">Voltar</button>
+                <button class="btn btn-primary" type="submit">Criar Aluno</button>
+            </div>
+        </div>
     </form>
 </body>
 </html>
