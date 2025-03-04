@@ -7,7 +7,12 @@ urlpatterns = [
     path('entrar/', views.entrar, name='entrar'),
     path('autenticar/', views.autenticar, name='autenticar'),
     path('sair/', views.sair, name='sair'),
+    # Páginas de administrador
+    # path('admin-page/', views.admin_page, name='admin-page'),
+    path('dashboard-admin/', views.dashboard_admin, name='dashboard_admin'),
+    path('dashboard-admin/<str:model_type>/', views.admin_page, name='admin-page'),
     # CRUD de alunos
+    path('listar-alunos/', views.listar_alunos, name='listar_alunos'),
     path('criar-aluno/', views.criar_aluno, name='criar-aluno'),
     path('ler-aluno/<int:uid>/', views.ler_aluno, name='ler-aluno'),
     path('atualizar-aluno/<int:uid>/', views.atualizar_aluno, name='atualizar-aluno'),
