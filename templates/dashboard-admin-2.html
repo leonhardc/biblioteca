@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt_BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard-Admin-2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carme&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=notifications" />
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: "Carme", serif;
+            font-style: normal;
+        }  
+        :root {
+            --cor-primaria: #0f0526;
+            --cor-secundaria: #6D27E7;
+            --background-cinza: rgba(139, 139, 139, 0.5);
+        }
+        
+        html {
+            overflow-x: hidden;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        header nav {
+            width: 100vw;
+            height: 40px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #0f0526;
+            color: #fff;
+            padding: 10px 30px;
+        }
+        header nav .logo {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .icone {
+            width: 25px;
+        }
+        header nav .logo img {
+            margin-right: 5px;
+        }
+        header nav .conteudo{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            border-left: #e3e3e3 1px solid;
+        }
+
+        header nav .conteudo .opcoes .calendario {
+            margin-left: 10px;
+        }
+
+        header nav .conteudo .opcoes .notificacoes img{
+            margin-left: 20px;
+        }
+        header nav .conteudo .usuario {
+            display: flex;
+            flex-direction: row;
+            margin-left: 20px;
+        }
+        header nav .conteudo .usuario img{
+            width: 30px;
+        }
+        header nav .conteudo .usuario .informacoes-usuario {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 10px;
+        }
+        header nav .conteudo .usuario .informacoes-usuario span:nth-child(1){
+            font-weight: bolder;
+        }
+        aside {
+            height: 90vh;
+            position: fixed;
+            padding: 20px 10px;
+            align-content: start;
+        }
+        .d-flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+        .aside-icone {
+            filter: invert(75%);
+        }
+        .icone, .aside-icone {
+            user-select: none;
+        }
+        .container {
+            margin-left: 80px;
+            padding-top: 40px;
+            height: 90vh;
+            width: 95vw;
+            color: var(--cor-primaria);
+        }
+        .container span {
+            filter: opacity(75%);
+        }
+        aside {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+        }
+        aside ul {
+            list-style: none;
+        }
+        aside ul:nth-child(1){
+            margin-top: 20px;
+        }
+        aside ul:nth-child(2){
+            margin-bottom: 20px;
+        }
+        aside ul li {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .ativo {
+            /* Icone ativo em aside */
+            background-color: rgba(15, 5, 38, 0.20);
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            padding: 5px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tabs ul {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            list-style: none;
+            display: flex;
+            flex-direction: row;
+        }
+        .tabs ul li {
+            margin-right: 30px;
+            padding-bottom: 10px;
+        }
+        .tabs ul li span {
+            background-color: var(--background-cinza);
+            border-radius: 5px;
+            padding: 0px 2px;
+        }
+        .tab-ativa {
+            /* Tab ativa em conteudo */
+            color: var(--cor-secundaria);
+            border-bottom: var(--cor-secundaria) 2px solid;
+            transition: all 100ms ease-in-out;
+
+        }
+        .tab-button{
+            cursor: pointer;
+        }
+
+        .tabela, th, td{
+            font-size: 13px;
+            border-collapse: collapse; /*define a separação entre as bordar*/
+            padding: 10px;
+            text-align: left;
+            border: 1px solid rgb(160 160 160);
+        }
+        th{
+            background-color: lightgray;
+        }
+        .conteudo-tabela{
+            margin-top: 10px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        tbody tr {
+            transition: background-color 200ms ease-in;
+        }
+        tbody tr:hover {
+            background-color: #7e7e7e;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img class="icone" src="{% static 'usuario/img/logo-1.png' %}" alt="Imagem de um livro aberto">
+            </div>
+            <div class="conteudo d-flex-row">
+                <div class="opcoes d-flex-row">
+                    <div class="notificacoes">
+                        <img class="icone" src="{%static 'usuario/img/notificacoes.png'%}" alt="Imagem de um sino de notificações">
+                    </div>
+                    <div class="calendario">
+                        <img class="icone" src="{%static 'usuario/img/calendar.png'%}" alt="Imagem de um calendário">
+                    </div>
+                </div>  
+                <div class="usuario">
+                    <img src="{%static 'usuario/img/person.png'%}" alt="">
+                    <div class="informacoes-usuario">
+                        <span>Username</span>
+                        <span>Admin</span>
+                    </div>
+                </div>  
+            </div>
+        </nav>
+    </header>
+    <aside>
+        <ul class="menu">
+            <a href="{% url 'usuario:dashboard-admin'%}">
+                <!-- Acessa o menu principal da dashboard de administrador -->
+                <li class="{%if not usuarios and not livros and not cursos%} ativo {% endif %}">
+                    <img class="icone" src="{%static 'usuario/img/home0F0526.png'%}">
+                </li>
+            </a>
+            <a href="{% url 'usuario:admin-page' 'usuarios'%}">
+                <!-- Acessa a primeira página que mostra os Alunos, Professores e os Funcionarios 
+                    cadastrados na Aplicação -->
+                <li class="{%if usuarios %} ativo {% endif %}">
+                    <img class="icone" src="{%static 'usuario/img/group0F0526.png'%}">
+                </li>
+            </a>
+            <a href="{% url 'usuario:admin-page' 'livros'%}">
+                <!-- Acessa a segunda página que mostra os Livros, autores e categorias além de reservas
+                 e emprestimos e seus respectivos usuários-->
+                <li class="{%if livros %} ativo {% endif %}">
+                    <img class="icone" src="{%static 'usuario/img/importcontacts0F0526.png'%}">
+                </li>
+            </a>
+            <a href="{% url 'usuario:admin-page' 'cursos'%}">
+                <!-- Mostra a terceira parte da aplicação que mostra os cursos cadastrados na plataforma -->
+                <li class="{%if cursos %} ativo {% endif %}">
+                    <img class="icone" src="{%static 'usuario/img/stacks0F0526.png'%}">
+                </li>
+            </a>
+        </ul>
+        <ul>
+            <li>
+                <img class="icone" src="{%static 'usuario/img/logout0F0526.png'%}">
+            </li>
+        </ul>
+    </aside>
+    <div class="container">
+        <h2>Home</h2>
+        <span>Veja todos os dados da aplicação</span>
+        <div class="conteudo">
+            <div class="tabs">
+                <ul>
+                    <li class="tab-button tab-ativa" id="aba-alunos">Alunos <span>{{contador.alunos}}</span></li>
+                    <li class="tab-button" id="aba-professores">Professores <span>{{contador.professores}}</span></li>
+                    <li class="tab-button" id="aba-funcionarios">Funcionarios <span>{{contador.funcionarios}}</span></li>
+                </ul>
+            </div>
+            <div class="tab-content" id="conteudo-aba-alunos">
+                {%if usuarios.alunos%}
+                <table class="tabela">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Matricula</th>
+                        <th>Usuario</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Curso</th>
+                        <th>Ingresso</th>
+                        <th>Conclusão</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for aluno in usuarios.alunos %}
+                    <tr>
+                        <td>{{aluno.id}}</td>
+                        <td><strong>{{aluno.matricula}}</strong></td>
+                        <td>{{aluno.usuario}}</td>
+                        <td>{{aluno.usuario.first_name}} {{aluno.usuario.last_name}}</td>
+                        <td>{{aluno.usuario.email}}</td>
+                        <td>{{aluno.curso}}</td>
+                        <td>{{aluno.ingresso}}</td>
+                        <td>{{aluno.conclusao_prevista}}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {%endif%}
+            </div>
+            <div class="tab-content" id="conteudo-aba-professores">
+                {%if usuarios.professores%}
+            <table class="tabela">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Matricula</th>
+                    <th>Usuario</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Curso</th>
+                    <th>CPF</th>
+                    <th>Regime</th>
+                    <th>Contratação</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for professor in usuarios.professores %}
+                <tr>
+                    <td>{{professor.id}}</td>
+                    <td><strong>{{professor.matricula}}</strong></td>
+                    <td>{{professor.usuario}}</td>
+                    <td>{{professor.usuario.first_name}} {{professor.usuario.last_name}}</td>
+                    <td>{{professor.usuario.email}}</td>
+                    <td>{{professor.curso}}</td>
+                    <td>{{professor.cpf}}</td>
+                    <td>{{professor.regime}}</td>
+                    <td>{{professor.contratacao}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {%endif%}
+            </div>
+            <div class="tab-content" id="conteudo-aba-funcionarios">
+                {%if usuarios.funcionarios%}
+            <table class="tabela">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Matricula</th>
+                    <th>Usuario</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for funcionario in usuarios.funcionarios %}
+                <tr>
+                    <td>{{funcionario.id}}</td>
+                    <td><strong>{{funcionario.matricula}}</strong></td>
+                    <td>{{funcionario.usuario}}</td>
+                    <td>{{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</td>
+                    <td>{{funcionario.usuario.email}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {%endif%}
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    let btAlunos = document.getElementById('aba-alunos')
+    let btProfessores = document.getElementById('aba-professores')
+    let btFuncionarios = document.getElementById('aba-funcionarios')
+
+    btAlunos.addEventListener('click',(event)=>{openTab(event,'conteudo-aba-alunos')})
+    btProfessores.addEventListener('click',(event)=>{openTab(event,'conteudo-aba-professores')})
+    btFuncionarios.addEventListener('click',(event)=>{openTab(event,'conteudo-aba-funcionarios')})
+    
+    function openTab(event, tabId) {
+    // Esconde todos os conteúdos das abas
+    let tabContents = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = "none";
+    }
+
+    // Remove a classe 'tab-ativa' de todos os botões
+    let tabButtons = document.getElementsByClassName("tab-button");
+    for (let i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove("tab-ativa");
+    }
+
+    // Mostra o conteúdo da aba selecionada
+    document.getElementById(tabId).style.display = "block";
+
+    // Adiciona a classe 'active' ao botão da aba atual
+    event.currentTarget.classList.add("tab-ativa");
+}
+</script>
+</html>
