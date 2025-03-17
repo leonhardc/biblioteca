@@ -19,7 +19,10 @@
         :root {
             --cor-primaria: #0f0526;
             --cor-secundaria: #6D27E7;
-            --background-cinza: rgba(139, 139, 139, 0.5);
+            --cor-texto-primaria:var(--cor-primaria);
+            --cor-texto-secundaria: #e3e3e3;
+            --background-cinza: rgba(139, 139, 139, 0.2);
+
         }
         
         html {
@@ -57,7 +60,7 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            border-left: #e3e3e3 1px solid;
+            border-left: var(--cor-texto-secundaria) 1px solid;
         }
 
         header nav .conteudo .opcoes .calendario {
@@ -143,6 +146,12 @@
             align-items: center;
             justify-content: center;
         }
+        .tabs {
+            display: flex;
+            flex-direction: row;
+            width: 90%;
+            justify-content: space-between;
+        }
 
         .tabs ul {
             margin-top: 20px;
@@ -150,6 +159,7 @@
             list-style: none;
             display: flex;
             flex-direction: row;
+            width: fit-content;
         }
         .tabs ul li {
             margin-right: 30px;
@@ -157,6 +167,7 @@
         }
         .tabs ul li span {
             background-color: var(--background-cinza);
+            font-size: 12px;
             border-radius: 5px;
             padding: 0px 2px;
         }
@@ -170,16 +181,21 @@
         .tab-button{
             cursor: pointer;
         }
-
+        .tabela, .step-links {
+            width: 90%;
+            border-radius: 5px;
+        }
         .tabela, th, td{
             font-size: 13px;
-            border-collapse: collapse; /*define a separação entre as bordar*/
+            border-collapse: collapse; /*define a separação entre as bordas */
             padding: 10px;
             text-align: left;
-            border: 1px solid rgb(160 160 160);
+            border: 1px solid var(--cor-primaria);
+            margin-bottom: 20px;
         }
         th{
-            background-color: lightgray;
+            background-color: var(--cor-secundaria);
+            color: var(--cor-texto-secundaria);
         }
         .conteudo-tabela{
             margin-top: 10px;
@@ -192,7 +208,39 @@
             transition: background-color 200ms ease-in;
         }
         tbody tr:hover {
-            background-color: #7e7e7e;
+            background-color: var(--cor-texto-secundaria);
+        }
+        .botoes {
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            align-items: center;
+        }
+        .botoes a, .step-links a {
+            text-decoration: none;
+            font-weight: bold;
+            color: var(--cor-texto-secundaria);
+            background-color: var(--cor-secundaria);
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 10px;
+            border: var(--cor-primaria) 1px solid;
+            border-radius: 5px;
+            transition: all 200ms ease-in-out;
+        }
+        .step-links a {
+            margin-right: 5px;
+        }
+        .botoes a:hover, .step-links a:hover {
+            background-color: #6317e7;
+        }
+        .step-links {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 
@@ -258,138 +306,549 @@
         </ul>
     </aside>
     <div class="container">
-        <h2>Home</h2>
-        <span>Veja todos os dados da aplicação</span>
-        <div class="conteudo">
-            <div class="tabs">
-                <ul>
-                    <li class="tab-button tab-ativa" id="aba-alunos">Alunos <span>{{contador.alunos}}</span></li>
-                    <li class="tab-button" id="aba-professores">Professores <span>{{contador.professores}}</span></li>
-                    <li class="tab-button" id="aba-funcionarios">Funcionarios <span>{{contador.funcionarios}}</span></li>
-                </ul>
+        {% if usuarios %}
+            <h2>Usuários</h2>
+            <span>Veja todos os detalhes sobre os usuários da aplicação.</span>
+            <div class="conteudo">
+                <div class="tabs">
+                    <ul>
+                        <li class="tab-button tab-ativa" id="aba-alunos">Alunos <span>{{contador.alunos}}</span></li>
+                        <li class="tab-button" id="aba-professores">Professores <span>{{contador.professores}}</span></li>
+                        <li class="tab-button" id="aba-funcionarios">Funcionarios <span>{{contador.funcionarios}}</span></li>
+                    </ul>
+                    <div class="botoes">
+                        <a id="botao-add-usuario" href="{% url 'usuario:criar-aluno' %}">
+                            <!-- Adicionar regra para adicionar novo aluno, professor ou funcionário -->
+                            <img class="icone" src="{% static 'usuario/img/add_E3E3E3.png' %}" alt="">
+                            Add Novo
+                        </a>
+                    </div>
+                </div>
+                <div class="tab-content" id="conteudo-aba-alunos">
+                    {%if usuarios.alunos%}
+                        <table class="tabela">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Matricula</th>
+                                <th>Usuario</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Curso</th>
+                                <th>Ingresso</th>
+                                <th>Conclusão</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for aluno in usuarios.alunos %}
+                            <tr>
+                                <td>{{aluno.id}}</td>
+                                <td><strong>{{aluno.matricula}}</strong></td>
+                                <td>{{aluno.usuario}}</td>
+                                <td>{{aluno.usuario.first_name}} {{aluno.usuario.last_name}}</td>
+                                <td>{{aluno.usuario.email}}</td>
+                                <td>{{aluno.curso}}</td>
+                                <td>{{aluno.ingresso}}</td>
+                                <td>{{aluno.conclusao_prevista}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Paginação de alunos -->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if usuarios.alunos.has_previous %}
+                                    <a href="?type=aluno&page=1">&laquo; Primeira</a>
+                                    <a href="?type=aluno&page={{ usuarios.alunos.previous_page_number }}">Anterior</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ usuarios.alunos.number }} de {{ usuarios.alunos.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if usuarios.alunos.has_next %}
+                                    <a href="?type=aluno&page={{ usuarios.alunos.next_page_number }}">Proxima</a>
+                                    <a href="?type=aluno&page={{ usuarios.alunos.paginator.num_pages }}">Ultima &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {%endif%}
+                </div>
+                <div class="tab-content" id="conteudo-aba-professores" style="display: none;">
+                    {%if usuarios.professores%}
+                        <table class="tabela">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Matricula</th>
+                                <th>Usuario</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Curso</th>
+                                <th>CPF</th>
+                                <th>Regime</th>
+                                <th>Contratação</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for professor in usuarios.professores %}
+                            <tr>
+                                <td>{{professor.id}}</td>
+                                <td><strong>{{professor.matricula}}</strong></td>
+                                <td>{{professor.usuario}}</td>
+                                <td>{{professor.usuario.first_name}} {{professor.usuario.last_name}}</td>
+                                <td>{{professor.usuario.email}}</td>
+                                <td>{{professor.curso}}</td>
+                                <td>{{professor.cpf}}</td>
+                                <td>{{professor.regime}}</td>
+                                <td>{{professor.contratacao}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Paginação de professores -->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if usuarios.professores.has_previous %}
+                                    <a href="?type=professor&page=1">&laquo; Primeira</a>
+                                    <a href="?type=professor&page={{ usuarios.professores.previous_page_number }}">Anterior</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ usuarios.professores.number }} de {{ usuarios.professores.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if usuarios.professores.has_next %}
+                                    <a href="?type=professor&page={{ usuarios.professores.next_page_number }}">Proxima</a>
+                                    <a href="?type=professor&page={{ usuarios.professores.paginator.num_pages }}">Ultima &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {%endif%}
+                </div>
+                <div class="tab-content" id="conteudo-aba-funcionarios" style="display: none;">
+                    {%if usuarios.funcionarios%}
+                        <table class="tabela">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Matricula</th>
+                                <th>Usuario</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for funcionario in usuarios.funcionarios %}
+                            <tr>
+                                <td>{{funcionario.id}}</td>
+                                <td><strong>{{funcionario.matricula}}</strong></td>
+                                <td>{{funcionario.usuario}}</td>
+                                <td>{{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</td>
+                                <td>{{funcionario.usuario.email}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Paginação de Funcionários -->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if usuarios.funcionarios.has_previous %}
+                                    <a href="?type=funcionario&page=1">&laquo; Primeira</a>
+                                    <a href="?type=funcionario&page={{ usuarios.funcionarios.previous_page_number }}">Anterior</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ usuarios.funcionarios.number }} de {{ usuarios.funcionarios.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if usuarios.funcionarios.has_next %}
+                                    <a href="?type=funcionario&page={{ usuarios.funcionarios.next_page_number }}">Proxima</a>
+                                    <a href="?type=funcionario&page={{ usuarios.funcionarios.paginator.num_pages }}">Ultima &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {%endif%}
+                </div>
             </div>
-            <div class="tab-content" id="conteudo-aba-alunos">
-                {%if usuarios.alunos%}
-                <table class="tabela">
-                    <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Matricula</th>
-                        <th>Usuario</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Curso</th>
-                        <th>Ingresso</th>
-                        <th>Conclusão</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for aluno in usuarios.alunos %}
-                    <tr>
-                        <td>{{aluno.id}}</td>
-                        <td><strong>{{aluno.matricula}}</strong></td>
-                        <td>{{aluno.usuario}}</td>
-                        <td>{{aluno.usuario.first_name}} {{aluno.usuario.last_name}}</td>
-                        <td>{{aluno.usuario.email}}</td>
-                        <td>{{aluno.curso}}</td>
-                        <td>{{aluno.ingresso}}</td>
-                        <td>{{aluno.conclusao_prevista}}</td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                {%endif%}
+        {% endif %}
+        {% if livros %}
+            <h2>Livros</h2>
+            <span>Veja detalhes sobre livros, autores, categorias, reservas e emprestimos de livros.</span>
+            <div class="conteudo">
+                <div class="tabs">
+                    <ul>
+                        <li class="tab-button tab-ativa" id="aba-livros">Livros <span>{{contador.livros}}</span></li>
+                        <li class="tab-button" id="aba-autores">Autores <span>{{contador.autores}}</span></li>
+                        <li class="tab-button" id="aba-categorias">Categorias <span>{{contador.categorias}}</span></li>
+                        <li class="tab-button" id="aba-reservas">Reservas <span>{{contador.reservas}}</span></li>
+                        <li class="tab-button" id="aba-emprestimos">Emprestimos <span>{{contador.emprestimos}}</span></li>
+                    </ul>
+                    <div class="botoes">
+                        <a id="botao-add-livro" href="{% url 'livro:criar-livro' %}">
+                            <img class="icone" src="{% static 'usuario/img/add_E3E3E3.png' %}" alt="">
+                            Add Novo
+                        </a>
+                    </div>
+                </div>
+                <!-- Implementar aqui o conteudo das abas do app livro -->
+                <div class="tab-content" id="conteudo-aba-livros">
+                    {%if livros.livros %}
+                        <table class="tabela">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>ISBN</th>
+                                <th>Titulo</th>
+                                <th>Lançamento</th>
+                                <th>Editora</th>
+                                <th>Cópias</th>
+                                <th>Autores</th>
+                                <th>Categoria</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for livro in livros.livros %}
+                            <tr>
+                                <td>{{livro.id}}</td>
+                                <td><strong>{{livro.isbn}}</strong></td>
+                                <td>{{livro.titulo}}</td>
+                                <td>{{livro.lancamento}}</td>
+                                <td>{{livro.editora}}</td>
+                                <td>{{livro.copias}}</td>
+                                <td>{% for autor in livro.autores.all %} {{autor}}, {%endfor%}</td>
+                                <td>{{livro.categoria}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Paginação de Livros -->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if livros.livros.has_previous %}
+                                    <a href="?type=livro&page=1">&laquo; Primeira</a>
+                                    <a href="?type=livro&page={{ livros.livros.previous_page_number }}">Anterior</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ livros.livros.number }} de {{ livros.livros.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if livros.livros.has_next %}
+                                    <a href="?type=livro&page={{ livros.livros.next_page_number }}">Proxima</a>
+                                    <a href="?type=livro&page={{ livros.livros.paginator.num_pages }}">Ultima &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {%endif%}
+                </div>
+                <div class="tab-content" id="conteudo-aba-autores" style="display: none;">
+                    {%if livros.livros %}
+                        <table class="tabela">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Nome</th>
+                                <th>CPF</th>
+                                <th>Nacionalidade</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for autor in livros.autores %}
+                            <tr>
+                                <td>{{autor.id}}</td>
+                                <td><strong>{{autor.nome}}</strong></td>
+                                <td>{{autor.cpf}}</td>
+                                <td>{{autor.nacionalidade}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Paginação de Autores -->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if livros.autores.has_previous %}
+                                    <a href="?type=autor&page=1">&laquo; Primeira</a>
+                                    <a href="?type=autor&page={{ livros.autores.previous_page_number }}">Anterior</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ livros.autores.number }} de {{ livros.autores.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if livros.autores.has_next %}
+                                    <a href="?type=autor&page={{ livros.autores.next_page_number }}">Proxima</a>
+                                    <a href="?type=autor&page={{ livros.autores.paginator.num_pages }}">Ultima &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {%endif%}
+                </div>
+                <div class="tab-content" id="conteudo-aba-categorias" style="display: none;">
+                    {%if livros.livros %}
+                        <table class="tabela">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Nome da Categoria</th>
+                                <th>Descrição</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for categoria in livros.categorias %}
+                            <tr>
+                                <td>{{categoria.id}}</td>
+                                <td><strong>{{categoria.categoria}}</strong></td>
+                                <td>{{categoria.categoria}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Paginação de Categorias -->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if livros.categorias.has_previous %}
+                                    <a href="?type=categoria&page=1">&laquo; Primeira</a>
+                                    <a href="?type=categoria&page={{ livros.categorias.previous_page_number }}">Anterior</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ livros.categorias.number }} de {{ livros.categorias.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if livros.categorias.has_next %}
+                                    <a href="?type=categoria&page={{ livros.categorias.next_page_number }}">Proxima</a>
+                                    <a href="?type=categoria&page={{ livros.categorias.paginator.num_pages }}">Ultima &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {%endif%}
+                </div>
+                <div class="tab-content" id="conteudo-aba-reservas" style="display: none;">
+                    {%if livros.reservas %}
+                        <table class="tabela">
+                            <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for reserva in livros.reservas %}
+                            <tr>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Paginação de Reservas -->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if livros.reservas.has_previous %}
+                                    <a href="?type=reserva&page=1">&laquo; Primeira</a>
+                                    <a href="?type=reserva&page={{ livros.reservas.previous_page_number }}">Anterior</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ livros.reservas.number }} de {{ livros.reservas.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if livros.reservas.has_next %}
+                                    <a href="?type=reserva&page={{ livros.reservas.next_page_number }}">Proxima</a>
+                                    <a href="?type=reserva&page={{ livros.reservas.paginator.num_pages }}">Ultima &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {%endif%}
+                </div>
+                <div class="tab-content" id="conteudo-aba-emprestimos" style="display: none;">
+                    {%if livros.emprestimos %}
+                        <table class="tabela">
+                            <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for emprestimo in livros.emprestimos %}
+                            <tr>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Paginação de Emprestimos -->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if livros.emprestimos.has_previous %}
+                                    <a href="?type=emprestimo&page=1">&laquo; Primeira</a>
+                                    <a href="?type=emprestimo&page={{ livros.emprestimos.previous_page_number }}">Anterior</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ livros.emprestimos.number }} de {{ livros.emprestimos.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if livros.emprestimos.has_next %}
+                                    <a href="?type=emprestimo&page={{ livros.emprestimos.next_page_number }}">Proxima</a>
+                                    <a href="?type=emprestimo&page={{ livros.emprestimos.paginator.num_pages }}">Ultima &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {%endif%}
+                </div>
             </div>
-            <div class="tab-content" id="conteudo-aba-professores">
-                {%if usuarios.professores%}
-            <table class="tabela">
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>Matricula</th>
-                    <th>Usuario</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Curso</th>
-                    <th>CPF</th>
-                    <th>Regime</th>
-                    <th>Contratação</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for professor in usuarios.professores %}
-                <tr>
-                    <td>{{professor.id}}</td>
-                    <td><strong>{{professor.matricula}}</strong></td>
-                    <td>{{professor.usuario}}</td>
-                    <td>{{professor.usuario.first_name}} {{professor.usuario.last_name}}</td>
-                    <td>{{professor.usuario.email}}</td>
-                    <td>{{professor.curso}}</td>
-                    <td>{{professor.cpf}}</td>
-                    <td>{{professor.regime}}</td>
-                    <td>{{professor.contratacao}}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {%endif%}
+        {% endif %}
+        {% if cursos %}
+            <h2>Cursos</h2>
+            <span>Veja todas as informações sobre os cursos cadastrados na plataforma</span>
+            <div class="conteudo">
+                <div class="tabs">
+                    <ul>
+                        <li class="tab-button tab-ativa" id="aba-cursos">Cursos <span>{{contador.cursos}}</span></li>
+                    </ul>
+                    <div class="botoes">
+                        <a id="botao-add-livro" href="{% url 'curso:criar-curso' %}">
+                            <img class="icone" src="{% static 'usuario/img/add_E3E3E3.png' %}" alt="">
+                            Add Novo
+                        </a>
+                    </div>
+                </div>
+                <div class="tab-content" id="conteudo-aba-cursos">
+                    {% if cursos %}
+                        <table class="tabela">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Código do Curso</th>
+                                <th>Curso</th>
+                                <th>Turno</th>
+                                <th>Duração</th>
+                                <th>Descrição</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for curso in cursos %}
+                            <tr>
+                                <td>{{curso.id}}</td>
+                                <td><strong>{{curso.cod_curso}}</strong></td>
+                                <td><strong>{{curso.curso}}</strong></td>
+                                <td>{{curso.turno}}</td>
+                                <td>{{curso.duracao}}</td>
+                                <td>{{curso.descricao}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Paginação de Reservas -->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if cursos.has_previous %}
+                                    <a href="?page=1">&laquo; Primeira</a>
+                                    <a href="?page={{ cursos.previous_page_number }}">Anterior</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ cursos.number }} de {{ cursos.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if cursos.has_next %}
+                                    <a href="?page={{ cursos.next_page_number }}">Proxima</a>
+                                    <a href="?page={{ cursos.paginator.num_pages }}">Ultima &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-            <div class="tab-content" id="conteudo-aba-funcionarios">
-                {%if usuarios.funcionarios%}
-            <table class="tabela">
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>Matricula</th>
-                    <th>Usuario</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for funcionario in usuarios.funcionarios %}
-                <tr>
-                    <td>{{funcionario.id}}</td>
-                    <td><strong>{{funcionario.matricula}}</strong></td>
-                    <td>{{funcionario.usuario}}</td>
-                    <td>{{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</td>
-                    <td>{{funcionario.usuario.email}}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {%endif%}
-            </div>
-        </div>
+        {% endif %}
     </div>
 </body>
 <script type="text/javascript">
-    let btAlunos = document.getElementById('aba-alunos')
-    let btProfessores = document.getElementById('aba-professores')
-    let btFuncionarios = document.getElementById('aba-funcionarios')
-
-    btAlunos.addEventListener('click',(event)=>{openTab(event,'conteudo-aba-alunos')})
-    btProfessores.addEventListener('click',(event)=>{openTab(event,'conteudo-aba-professores')})
-    btFuncionarios.addEventListener('click',(event)=>{openTab(event,'conteudo-aba-funcionarios')})
-    
+    // Evento assim que a página é carregada
+    window.addEventListener('load', 
+        function() {
+            if(window.location.search.includes('professor')){
+                document.getElementById('aba-professores').click()
+            }
+            if(window.location.search.includes('funcionario')){
+                document.getElementById('aba-funcionarios').click()
+            }
+            if(window.location.search.includes('autor')){
+                document.getElementById('aba-autores').click()
+            }
+            if(window.location.search.includes('categoria')){
+                document.getElementById('aba-categorias').click()
+            }
+            if(window.location.search.includes('reserva')){
+                document.getElementById('aba-reservas').click()
+            }
+            if(window.location.search.includes('emprestimo')){
+                document.getElementById('aba-emprestimos').click()
+            }
+        }
+    )
+    // Usuários
+    if(window.location.pathname === '/usuario/dashboard-admin/usuarios/'){
+        document.getElementById('aba-alunos').addEventListener('click',(event)=>{openTab(event,'conteudo-aba-alunos')})
+        document.getElementById('aba-professores').addEventListener('click',(event)=>{openTab(event,'conteudo-aba-professores')})
+        document.getElementById('aba-funcionarios').addEventListener('click',(event)=>{openTab(event,'conteudo-aba-funcionarios')})
+    }
+    // Livros
+    if(window.location.pathname === '/usuario/dashboard-admin/livros/'){
+        document.getElementById('aba-livros').addEventListener('click', (event)=> {openTab(event, 'conteudo-aba-livros')})
+        document.getElementById('aba-autores').addEventListener('click', (event)=> {openTab(event, 'conteudo-aba-autores')})
+        document.getElementById('aba-categorias').addEventListener('click', (event)=> {openTab(event, 'conteudo-aba-categorias')})
+        document.getElementById('aba-reservas').addEventListener('click', (event)=> {openTab(event, 'conteudo-aba-reservas')})
+        document.getElementById('aba-emprestimos').addEventListener('click', (event)=> {openTab(event, 'conteudo-aba-emprestimos')})
+    }
+    // Cursos
+    if(window.location.pathname === '/usuario/dashboard-admin/cursos/'){}
     function openTab(event, tabId) {
-    // Esconde todos os conteúdos das abas
-    let tabContents = document.getElementsByClassName("tab-content");
-    for (let i = 0; i < tabContents.length; i++) {
-        tabContents[i].style.display = "none";
+        // Esconde todos os conteúdos das abas
+        let tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].style.display = "none";
+        }
+
+        // Remove a classe 'tab-ativa' de todos os botões
+        let tabButtons = document.getElementsByClassName("tab-button");
+        for (let i = 0; i < tabButtons.length; i++) {
+            tabButtons[i].classList.remove("tab-ativa");
+        }
+
+        // Mostra o conteúdo da aba selecionada
+        document.getElementById(tabId).style.display = "block";
+
+        // Adiciona a classe 'active' ao botão da aba atual
+        event.currentTarget.classList.add("tab-ativa");
+        
+        // Muda o valor de href do botão de adicionar aluno, professor ou funcionario
+        let botaoAddUsuario = document.getElementById('botao-add-usuario');
+        let botaoAddLivro = document.getElementById('botao-add-livro');
+        if (event.currentTarget.id === 'aba-alunos'){
+            botaoAddUsuario.href = `${window.location.origin}/usuario/criar-aluno/`
+        }
+        if (event.currentTarget.id === 'aba-professores'){
+            botaoAddUsuario.href = `${window.location.origin}/usuario/criar-professor/`
+        }
+        if (event.currentTarget.id === 'aba-funcionarios'){
+            botaoAddUsuario.href = `${window.location.origin}/usuario/criar-funcionario/`
+        }
+        if (event.currentTarget.id === 'aba-livros'){
+            botaoAddLivro.href = `${window.location.origin}/livro/criar-livro/`
+        }
+        if (event.currentTarget.id === 'aba-autores'){
+            botaoAddLivro.href = `${window.location.origin}/livro/criar-autor/`
+        }
+        if (event.currentTarget.id === 'aba-categorias'){
+            botaoAddLivro.href = `${window.location.origin}/livro/criar-categoria/`
+        }
+        if (event.currentTarget.id === 'aba-reservas'){
+            botaoAddLivro.href = `${window.location.origin}/livro/criar-reserva/`
+        }
+        if (event.currentTarget.id === 'aba-emprestimos'){
+            botaoAddLivro.href = `${window.location.origin}/livro/criar-emprestimo/`
+        }
     }
-
-    // Remove a classe 'tab-ativa' de todos os botões
-    let tabButtons = document.getElementsByClassName("tab-button");
-    for (let i = 0; i < tabButtons.length; i++) {
-        tabButtons[i].classList.remove("tab-ativa");
-    }
-
-    // Mostra o conteúdo da aba selecionada
-    document.getElementById(tabId).style.display = "block";
-
-    // Adiciona a classe 'active' ao botão da aba atual
-    event.currentTarget.classList.add("tab-ativa");
-}
 </script>
 </html>
