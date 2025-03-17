@@ -126,7 +126,7 @@ class Autor(models.Model):
     nacionalidade = models.CharField(max_length=3, choices=NACIONALIDADES, verbose_name='Nacionalidade')
     
     def __str__(self):
-        return f'{self.id}:{self.nome}'
+        return f'{self.nome}'
     
     class Meta:
         verbose_name = 'Autor'
@@ -139,7 +139,7 @@ class Categoria(models.Model):
     
     def __str__(self):
         return f'{self.categoria}'
-          
+
 
 
 class Livro(models.Model):
@@ -157,7 +157,7 @@ class Livro(models.Model):
 
     def __str__(self):
         return f'{self.id}:{self.titulo}'
-    
+
 
 class Reserva(models.Model):
     usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE, verbose_name='Usuário')
