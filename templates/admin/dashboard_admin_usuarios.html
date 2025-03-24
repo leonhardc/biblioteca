@@ -1,0 +1,216 @@
+{% extends 'admin/dashboard-admin.html' %}
+{% load static %}
+{% block content %}
+<h2>Usuários</h2>
+<span>Veja todos os detalhes sobre os usuários da aplicação.</span>
+<div class="conteudo">
+    <div class="tabs">
+        <ul>
+            <li class="tab-button tab-ativa" id="aba-alunos">Alunos <span>{{contador.alunos}}</span></li>
+            <li class="tab-button" id="aba-professores">Professores <span>{{contador.professores}}</span></li>
+            <li class="tab-button" id="aba-funcionarios">Funcionarios <span>{{contador.funcionarios}}</span>
+            </li>
+        </ul>
+        <div class="botoes">
+            <img src="{%static 'usuario/img/search_6D27E7.png'%}" class="icone icone-pesquisa">
+            <form class="form-pesquisa" style="display: none;">
+                <input class="pesquisar" type="text" name="pesquisar" id="pesquisar-aluno" placeholder="Pesquisar">
+            </form>
+            <a id="botao-add-usuario" href="{% url 'usuario:criar-aluno' %}">
+                <!-- Adicionar regra para adicionar novo aluno, professor ou funcionário -->
+                <img class="icone" src="{% static 'usuario/img/add_E3E3E3.png' %}" alt="">
+                Add Novo
+            </a>
+        </div>
+    </div>
+    <div class="tab-content" id="conteudo-aba-alunos">
+        {%if usuarios.alunos%}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Matricula</th>
+                    <th>Usuario</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Curso</th>
+                    <th>Ingresso</th>
+                    <th>Conclusão</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in usuarios.alunos %}
+                <tr>
+                    <td>{{aluno.id}}</td>
+                    <td>
+                        <strong>
+                            <a href="{% url 'usuario:ler-aluno' aluno.id %}">
+                                {{aluno.matricula}}
+                            </a>
+                        </strong></td>
+                    <td>{{aluno.usuario}}</td>
+                    <td>{{aluno.usuario.first_name}} {{aluno.usuario.last_name}}</td>
+                    <td>{{aluno.usuario.email}}</td>
+                    <td>{{aluno.curso}}</td>
+                    <td>{{aluno.ingresso|date:"d M Y"}}</td>
+                    <td>{{aluno.conclusao_prevista|date:"d M Y"}}</td>
+                    <td>
+                        <a class="botao botao-info" href="{% url 'usuario:ler-aluno' aluno.id %}">
+                            <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
+                        </a>
+                    </td>
+                    <td>
+                        <a class="botao botao-deletar" href="{% url 'usuario:deletar-aluno' aluno.id %}">
+                            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação de alunos -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if usuarios.alunos.has_previous %}
+                <a href="?type=aluno&page=1">&laquo; Primeira</a>
+                <a href="?type=aluno&page={{ usuarios.alunos.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ usuarios.alunos.number }} de {{ usuarios.alunos.paginator.num_pages }}.
+                </span>
+
+                {% if usuarios.alunos.has_next %}
+                <a href="?type=aluno&page={{ usuarios.alunos.next_page_number }}">Proxima</a>
+                <a href="?type=aluno&page={{ usuarios.alunos.paginator.num_pages }}">Ultima &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {%endif%}
+    </div>
+    <div class="tab-content" id="conteudo-aba-professores" style="display: none;">
+        {%if usuarios.professores%}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Matricula</th>
+                    <th>Usuario</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Curso</th>
+                    <th>CPF</th>
+                    <th>Regime</th>
+                    <th>Contratação</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for professor in usuarios.professores %}
+                <tr>
+                    <td>{{professor.id}}</td>
+                    <td><strong>{{professor.matricula}}</strong></td>
+                    <td>{{professor.usuario}}</td>
+                    <td>{{professor.usuario.first_name}} {{professor.usuario.last_name}}</td>
+                    <td>{{professor.usuario.email}}</td>
+                    <td>{{professor.curso}}</td>
+                    <td>{{professor.cpf}}</td>
+                    <td>{{professor.regime}}</td>
+                    <td>{{professor.contratacao}}</td>
+                    <td>
+                        <a class="botao botao-info" href="{% url 'usuario:ler-professor' professor.id %}">
+                            <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
+                        </a>
+                    </td>
+                    <td>
+                        <a class="botao botao-deletar" href="{% url 'usuario:deletar-professor' professor.id %}">
+                            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação de professores -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if usuarios.professores.has_previous %}
+                <a href="?type=professor&page=1">&laquo; Primeira</a>
+                <a href="?type=professor&page={{ usuarios.professores.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ usuarios.professores.number }} de {{ usuarios.professores.paginator.num_pages }}.
+                </span>
+
+                {% if usuarios.professores.has_next %}
+                <a href="?type=professor&page={{ usuarios.professores.next_page_number }}">Proxima</a>
+                <a href="?type=professor&page={{ usuarios.professores.paginator.num_pages }}">Ultima &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {%endif%}
+    </div>
+    <div class="tab-content" id="conteudo-aba-funcionarios" style="display: none;">
+        {%if usuarios.funcionarios%}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Matricula</th>
+                    <th>Usuario</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for funcionario in usuarios.funcionarios %}
+                <tr>
+                    <td>{{funcionario.id}}</td>
+                    <td><strong>{{funcionario.matricula}}</strong></td>
+                    <td>{{funcionario.usuario}}</td>
+                    <td>{{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</td>
+                    <td>{{funcionario.usuario.email}}</td>
+                    <td>
+                        <a class="botao botao-info" href="{% url 'usuario:ler-funcionario' funcionario.id %}">
+                            <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
+                        </a>
+                    </td>
+                    <td>
+                        <a class="botao botao-info" href="{% url 'usuario:deletar-funcionario' funcionario.id %}">
+                            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação de Funcionários -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if usuarios.funcionarios.has_previous %}
+                <a href="?type=funcionario&page=1">&laquo; Primeira</a>
+                <a href="?type=funcionario&page={{ usuarios.funcionarios.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ usuarios.funcionarios.number }} de {{ usuarios.funcionarios.paginator.num_pages
+                    }}.
+                </span>
+
+                {% if usuarios.funcionarios.has_next %}
+                <a href="?type=funcionario&page={{ usuarios.funcionarios.next_page_number }}">Proxima</a>
+                <a href="?type=funcionario&page={{ usuarios.funcionarios.paginator.num_pages }}">Ultima
+                    &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {%endif%}
+    </div>
+</div>
+{% endblock content %}

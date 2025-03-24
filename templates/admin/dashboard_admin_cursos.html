@@ -1,0 +1,69 @@
+{% extends 'admin/dashboard-admin.html' %}
+{% load static %}
+{% block content %}
+<h2>Cursos</h2>
+<span>Veja todas as informações sobre os cursos cadastrados na plataforma</span>
+<div class="conteudo">
+    <div class="tabs">
+        <ul>
+            <li class="tab-button tab-ativa" id="aba-cursos">Cursos <span>{{contador.cursos}}</span></li>
+        </ul>
+        <div class="botoes">
+            <img src="{%static 'usuario/img/search_6D27E7.png'%}" class="icone icone-pesquisa">
+            <form class="form-pesquisa" style="display: none;">
+                <input class="pesquisar" type="text" name="pesquisar" id="pesquisar-aluno" placeholder="Pesquisar">
+            </form>
+            <a id="botao-add-livro" href="{% url 'curso:criar-curso' %}">
+                <img class="icone" src="{% static 'usuario/img/add_E3E3E3.png' %}" alt="">
+                Add Novo
+            </a>
+        </div>
+    </div>
+    <div class="tab-content" id="conteudo-aba-cursos">
+        {% if cursos %}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Código do Curso</th>
+                    <th>Curso</th>
+                    <th>Turno</th>
+                    <th>Duração</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for curso in cursos %}
+                <tr>
+                    <td>{{curso.id}}</td>
+                    <td><strong>{{curso.cod_curso}}</strong></td>
+                    <td><strong>{{curso.curso}}</strong></td>
+                    <td>{{curso.turno}}</td>
+                    <td>{{curso.duracao}}</td>
+                    <td>{{curso.descricao}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação de Reservas -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if cursos.has_previous %}
+                <a href="?page=1">&laquo; Primeira</a>
+                <a href="?page={{ cursos.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ cursos.number }} de {{ cursos.paginator.num_pages }}.
+                </span>
+
+                {% if cursos.has_next %}
+                <a href="?page={{ cursos.next_page_number }}">Proxima</a>
+                <a href="?page={{ cursos.paginator.num_pages }}">Ultima &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

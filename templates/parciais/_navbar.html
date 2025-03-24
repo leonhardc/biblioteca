@@ -1,0 +1,26 @@
+{% load static %}
+<header>
+    <nav>
+        <div class="logo">
+            <img class="icone" src="{% static 'usuario/img/logo-1.png' %}" alt="Imagem de um livro aberto">
+        </div>
+        <div class="conteudo d-flex-row">
+            <div class="opcoes d-flex-row">
+                <div class="notificacoes">
+                    <img class="icone" src="{%static 'usuario/img/notificacoes.png'%}"
+                        alt="Imagem de um sino de notificações">
+                </div>
+                <div class="calendario">
+                    <img class="icone" src="{%static 'usuario/img/calendar.png'%}" alt="Imagem de um calendário">
+                </div>
+            </div>
+            <div class="usuario">
+                <img src="{%static 'usuario/img/person.png'%}" alt="">
+                <div class="informacoes-usuario">
+                    <span>Username</span>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

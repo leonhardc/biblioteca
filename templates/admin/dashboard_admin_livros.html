@@ -1,0 +1,232 @@
+{% extends 'admin/dashboard-admin.html' %}
+{% load static %}
+{% block content %}
+<h2>Livros</h2>
+<span>Veja detalhes sobre livros, autores, categorias, reservas e emprestimos de livros.</span>
+<div class="conteudo">
+    <div class="tabs">
+        <ul>
+            <li class="tab-button tab-ativa" id="aba-livros">Livros <span>{{contador.livros}}</span></li>
+            <li class="tab-button" id="aba-autores">Autores <span>{{contador.autores}}</span></li>
+            <li class="tab-button" id="aba-categorias">Categorias <span>{{contador.categorias}}</span></li>
+            <li class="tab-button" id="aba-reservas">Reservas <span>{{contador.reservas}}</span></li>
+            <li class="tab-button" id="aba-emprestimos">Emprestimos <span>{{contador.emprestimos}}</span></li>
+        </ul>
+        <div class="botoes">
+            <img src="{%static 'usuario/img/search_6D27E7.png'%}" class="icone icone-pesquisa">
+            <form class="form-pesquisa" style="display: none;">
+                <input class="pesquisar" type="text" name="pesquisar" id="pesquisar-aluno" placeholder="Pesquisar">
+            </form>
+            <a id="botao-add-livro" href="{% url 'livro:criar-livro' %}">
+                <img class="icone" src="{% static 'usuario/img/add_E3E3E3.png' %}" alt="">
+                Add Novo
+            </a>
+        </div>
+    </div>
+    <!-- Implementar aqui o conteudo das abas do app livro -->
+    <div class="tab-content" id="conteudo-aba-livros">
+        {%if livros.livros %}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>ISBN</th>
+                    <th>Titulo</th>
+                    <th>Lançamento</th>
+                    <th>Editora</th>
+                    <th>Cópias</th>
+                    <th>Autores</th>
+                    <th>Categoria</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for livro in livros.livros %}
+                <tr>
+                    <td>{{livro.id}}</td>
+                    <td><strong>{{livro.isbn}}</strong></td>
+                    <td>{{livro.titulo}}</td>
+                    <td>{{livro.lancamento}}</td>
+                    <td>{{livro.editora}}</td>
+                    <td>{{livro.copias}}</td>
+                    <td>{% for autor in livro.autores.all %} {{autor}}, {%endfor%}</td>
+                    <td>{{livro.categoria}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação de Livros -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if livros.livros.has_previous %}
+                <a href="?type=livro&page=1">&laquo; Primeira</a>
+                <a href="?type=livro&page={{ livros.livros.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ livros.livros.number }} de {{ livros.livros.paginator.num_pages }}.
+                </span>
+
+                {% if livros.livros.has_next %}
+                <a href="?type=livro&page={{ livros.livros.next_page_number }}">Proxima</a>
+                <a href="?type=livro&page={{ livros.livros.paginator.num_pages }}">Ultima &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {%endif%}
+    </div>
+    <div class="tab-content" id="conteudo-aba-autores" style="display: none;">
+        {%if livros.livros %}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Nacionalidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for autor in livros.autores %}
+                <tr>
+                    <td>{{autor.id}}</td>
+                    <td><strong>{{autor.nome}}</strong></td>
+                    <td>{{autor.cpf}}</td>
+                    <td>{{autor.nacionalidade}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação de Autores -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if livros.autores.has_previous %}
+                <a href="?type=autor&page=1">&laquo; Primeira</a>
+                <a href="?type=autor&page={{ livros.autores.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ livros.autores.number }} de {{ livros.autores.paginator.num_pages }}.
+                </span>
+
+                {% if livros.autores.has_next %}
+                <a href="?type=autor&page={{ livros.autores.next_page_number }}">Proxima</a>
+                <a href="?type=autor&page={{ livros.autores.paginator.num_pages }}">Ultima &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {%endif%}
+    </div>
+    <div class="tab-content" id="conteudo-aba-categorias" style="display: none;">
+        {%if livros.livros %}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Nome da Categoria</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria in livros.categorias %}
+                <tr>
+                    <td>{{categoria.id}}</td>
+                    <td><strong>{{categoria.categoria}}</strong></td>
+                    <td>{{categoria.categoria}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação de Categorias -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if livros.categorias.has_previous %}
+                <a href="?type=categoria&page=1">&laquo; Primeira</a>
+                <a href="?type=categoria&page={{ livros.categorias.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ livros.categorias.number }} de {{ livros.categorias.paginator.num_pages }}.
+                </span>
+
+                {% if livros.categorias.has_next %}
+                <a href="?type=categoria&page={{ livros.categorias.next_page_number }}">Proxima</a>
+                <a href="?type=categoria&page={{ livros.categorias.paginator.num_pages }}">Ultima &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {%endif%}
+    </div>
+    <div class="tab-content" id="conteudo-aba-reservas" style="display: none;">
+        {%if livros.reservas %}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in livros.reservas %}
+                <tr>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação de Reservas -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if livros.reservas.has_previous %}
+                <a href="?type=reserva&page=1">&laquo; Primeira</a>
+                <a href="?type=reserva&page={{ livros.reservas.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ livros.reservas.number }} de {{ livros.reservas.paginator.num_pages }}.
+                </span>
+
+                {% if livros.reservas.has_next %}
+                <a href="?type=reserva&page={{ livros.reservas.next_page_number }}">Proxima</a>
+                <a href="?type=reserva&page={{ livros.reservas.paginator.num_pages }}">Ultima &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {%endif%}
+    </div>
+    <div class="tab-content" id="conteudo-aba-emprestimos" style="display: none;">
+        {%if livros.emprestimos %}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emprestimo in livros.emprestimos %}
+                <tr>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação de Emprestimos -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if livros.emprestimos.has_previous %}
+                <a href="?type=emprestimo&page=1">&laquo; Primeira</a>
+                <a href="?type=emprestimo&page={{ livros.emprestimos.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ livros.emprestimos.number }} de {{ livros.emprestimos.paginator.num_pages }}.
+                </span>
+
+                {% if livros.emprestimos.has_next %}
+                <a href="?type=emprestimo&page={{ livros.emprestimos.next_page_number }}">Proxima</a>
+                <a href="?type=emprestimo&page={{ livros.emprestimos.paginator.num_pages }}">Ultima &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {%endif%}
+    </div>
+</div>
+{% endblock content %}

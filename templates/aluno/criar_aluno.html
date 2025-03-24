@@ -1,0 +1,187 @@
+{% extends 'admin/dashboard-admin.html' %}
+{% load static %}
+{% block content %}
+<form class="p-4" action="{% url 'usuario:criar-aluno' %}" method="POST">
+    <h2 class="my-4" style="text-align: center;"><strong>Criar Aluno</strong></h2>
+    {% csrf_token %}
+    <div id="dados-pessoais" class="mb-4">
+        <h6>Dados Pessoais</h6>
+        <div class="row mb-2">
+            <!-- TODO: Implementar separadamente label, campo e error -->
+            <div class="col">
+                {{form.nome.label_tag}}
+                {{form.nome}}
+                {% if form.nome.error %}
+                <div class="alert alert-danger mt-2">
+                    {{form.nome.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+                {{form.sobrenome.label_tag}}
+                {{form.sobrenome}}
+                {% if form.sobrenome.error %}
+                <div class="alert alert-danger mt-2">
+                    {{form.sobrenome.errors}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <!-- TODO: Implementar função em javascript para sujerir usuário -->
+                {{form.usuario.label_tag}}
+                {{form.usuario}}
+                {% if form.usuario.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.usuario.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+                {{form.email.label_tag}}
+                {{form.email}}
+                {% if form.email.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.email.errors}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                {{form.data_nascimento.label_tag}}
+                {{form.data_nascimento}}
+                {% if form.data_nascimento.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.data_nascimento.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                {{form.senha.label_tag}}
+                {{form.senha}}
+                {% if form.senha.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.senha.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+                {{form.senha_confirmacao.label_tag}}
+                {{form.senha_confirmacao}}
+                {% if form.senha_confirmacao.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.senha_confirmacao.errors}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div id="endereco" class="mb-4">
+        <h6>Endereço</h6>
+        <div class="row mb-2">
+            <div class="col">
+                {{form.rua.label_tag}}
+                {{form.rua}}
+                {% if form.rua.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.rua.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+                {{form.numero.label_tag}}
+                {{form.numero}}
+                {% if form.numero.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.numero.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+                {{form.bairro.label_tag}}
+                {{form.bairro}}
+                {% if form.bairro.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.bairro.errors}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                {{form.cidade.label_tag}}
+                {{form.cidade}}
+                {% if form.cidade.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.cidade.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+                {{form.estado.label_tag}}
+                {{form.estado}}
+                {% if form.estado.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.estado.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+                {{form.cep.label_tag}}
+                {{form.cep}}
+                {% if form.cep.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.cep.errors}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                {{form.complemento.label_tag}}
+                {{form.complemento}}
+                {% if form.complemento.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.complemento.errors}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div id="dados-curso" class="mb-4">
+        <h6>Dados de Curso</h6>
+        <div class="row">
+            <div class="col">
+                {{form.matricula.label_tag}}
+                {{form.matricula}}
+                {% if form.matricula.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.matricula.errors}}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col">
+                {{form.curso.label_tag}}
+                {{form.curso}}
+                {% if form.curso.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{form.curso.errors}}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center mt-5">
+            <button class="btn btn-secondary me-4" type="button">Voltar</button>
+            <button class="btn btn-primary" type="submit">Criar Aluno</button>
+        </div>
+    </div>
+</form>
+{% endblock content %}
