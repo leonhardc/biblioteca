@@ -10,7 +10,9 @@ urlpatterns = [
     # Páginas de administrador
     # path('admin-page/', views.admin_page, name='admin-page'),
     path('dashboard-admin/', views.dashboard_admin, name='dashboard-admin'),
-    path('dashboard-admin/<str:model_type>/', views.admin_page, name='admin-page'),
+    path('dashboard-admin/usuarios/', views.dashboard_admin_usuarios, name='dashboard-admin-usuarios'),
+    path('dashboard-admin/livros/', views.dashboard_admin_livros, name='dashboard-admin-livros'),
+    path('dashboard-admin/cursos/', views.dashboard_admin_cursos, name='dashboard-admin-cursos'),
     # CRUD de alunos
     path('listar-alunos/', views.listar_alunos, name='listar-alunos'),
     path('criar-aluno/', views.criar_aluno, name='criar-aluno'),

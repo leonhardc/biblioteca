@@ -65,104 +65,101 @@ def sair(request):
 # Views de administrador
 def dashboard_admin(request):
     if request.method == 'GET':
-        return render(request, 'dashboard-admin-2.html')
-    
-def admin_page(request, model_type):
-    if request.method == 'GET':
-        if model_type=='usuarios':
-            """
-                Checa se a entidade selecionada no template é do tipo 'usuário', se for, faz as seguintes operações:
-                1. Seleciona todos os usuarios alunos, professores e funcionários
-                2. Conta o total de cada um desses tipos de usuários
-                3. Faz uma paginação de acordo com o tipo de usuário e a página selecionada no template
-                4. Retorna os dados de usuários requeridos no template.
-            """
-            alunos = Aluno.objects.all()
-            professores = Professor.objects.all()
-            funcionarios = Funcionario.objects.all()
-            contador = {
-                'alunos':len(alunos),
-                'professores':len(professores),
-                'funcionarios':len(funcionarios)
-            }
-            paginador_alunos = Paginator(alunos, 20) # 20 alunos por página
-            paginador_professores = Paginator(professores, 20) # 20 professores por página
-            paginador_funcionarios = Paginator(funcionarios, 20) # 20 funcionarios por página
-            numero_da_pagina = request.GET.get('page')
-            tipo_de_endidade = request.GET.get('type')
+        template_name = 'admin/dashboard-admin.html'
+        return render(request, template_name)
 
-            if numero_da_pagina and tipo_de_endidade=='aluno':
-                alunos = paginador_alunos.get_page(numero_da_pagina)
-                professores = paginador_professores.get_page(1)
-                funcionarios = paginador_funcionarios.get_page(1)
-            elif numero_da_pagina and tipo_de_endidade=='professor':
-                professores = paginador_professores.get_page(numero_da_pagina)
-                alunos = paginador_alunos.get_page(1)
-                funcionarios = paginador_funcionarios.get_page(1)
-            elif numero_da_pagina and tipo_de_endidade=='funcionario':
-                funcionarios = paginador_funcionarios.get_page(numero_da_pagina)
-                alunos = paginador_alunos.get_page(1)
-                professores = paginador_professores.get_page(1)
-            else:
-                numero_da_pagina = 1
-                alunos = paginador_alunos.get_page(numero_da_pagina)
-                professores = paginador_professores.get_page(numero_da_pagina)
-                funcionarios = paginador_funcionarios.get_page(numero_da_pagina)
-            
-            return render(
-                    request, 
-                    'dashboard-admin-2.html', 
-                    context={'usuarios':{'alunos':alunos, 'professores':professores, 'funcionarios':funcionarios}, 'contador':contador}
-                )
-        
-        elif model_type=='livros':
-            livros = Livro.objects.all()
-            autores = Autor.objects.all()
-            categorias = Categoria.objects.all()
-            reservas = Reserva.objects.all()
-            emprestimos = Emprestimo.objects.all()
-            contador = {
-                'livros':len(livros),
-                'autores':len(autores),
-                'categorias':len(categorias),
-                'reservas':len(reservas),
-                'emprestimos':len(emprestimos),
-            }
-            paginador_livros = Paginator(livros, 20)
-            paginador_autores = Paginator(autores, 20)
-            paginador_categorias = Paginator(categorias, 20)
-            paginador_reservas = Paginator(reservas, 20)
-            paginador_emprestimos = Paginator(emprestimos, 20)
-            numero_da_pagina = request.GET.get('page')
-            tipo_de_endidade = request.GET.get('type')
-            livros = paginador_livros.get_page(1)
-            autores = paginador_autores.get_page(1)
-            categorias = paginador_categorias.get_page(1)
-            reservas = paginador_reservas.get_page(1)
-            emprestimos = paginador_emprestimos.get_page(1)
-            if numero_da_pagina and tipo_de_endidade == 'livro':
-                livros = paginador_livros.get_page(numero_da_pagina)
-            elif numero_da_pagina and tipo_de_endidade == 'autor':
-                autores = paginador_autores.get_page(numero_da_pagina)
-            elif numero_da_pagina and tipo_de_endidade == 'categoria':
-                categorias = paginador_categorias.get_page(numero_da_pagina)
-            if numero_da_pagina and tipo_de_endidade == 'reserva':
-                reservas = paginador_reservas.get_page(numero_da_pagina)
-            if numero_da_pagina and tipo_de_endidade == 'emprestimo':
-                emprestimos = paginador_emprestimos.get_page(numero_da_pagina)
-            return render(
-                    request, 
-                    'dashboard-admin-2.html', 
-                    context={'livros':{'livros':livros, 'autores':autores, 'categorias':categorias, 'reservas':reservas, 'emprestimos':emprestimos}, 'contador':contador}
-                )
-        elif model_type=='cursos':
-            cursos = Curso.objects.all()
-            contador = {'cursos':len(cursos)}
-            paginador_cursos = Paginator(cursos, 20)
-            cursos = paginador_cursos.get_page(request.GET.get('page'))
-            return render(request, 'dashboard-admin-2.html',context={'cursos':cursos, 'contador':contador})
+def dashboard_admin_usuarios(request):
+    template_name = 'admin/dashboard_admin_usuarios.html'
+    if request.method == 'GET':
+        alunos = Aluno.objects.all()
+        professores = Professor.objects.all()
+        funcionarios = Funcionario.objects.all()
+        contador = {
+            'alunos':len(alunos),
+            'professores':len(professores),
+            'funcionarios':len(funcionarios)
+        }
+        paginador_alunos = Paginator(alunos, 20) # 20 alunos por página
+        paginador_professores = Paginator(professores, 20) # 20 professores por página
+        paginador_funcionarios = Paginator(funcionarios, 20) # 20 funcionarios por página
+        numero_da_pagina = request.GET.get('page')
+        tipo_de_endidade = request.GET.get('type')
+
+        if numero_da_pagina and tipo_de_endidade=='aluno':
+            alunos = paginador_alunos.get_page(numero_da_pagina)
+            professores = paginador_professores.get_page(1)
+            funcionarios = paginador_funcionarios.get_page(1)
+        elif numero_da_pagina and tipo_de_endidade=='professor':
+            professores = paginador_professores.get_page(numero_da_pagina)
+            alunos = paginador_alunos.get_page(1)
+            funcionarios = paginador_funcionarios.get_page(1)
+        elif numero_da_pagina and tipo_de_endidade=='funcionario':
+            funcionarios = paginador_funcionarios.get_page(numero_da_pagina)
+            alunos = paginador_alunos.get_page(1)
+            professores = paginador_professores.get_page(1)
         else:
-            pass
+            numero_da_pagina = 1
+            alunos = paginador_alunos.get_page(numero_da_pagina)
+            professores = paginador_professores.get_page(numero_da_pagina)
+            funcionarios = paginador_funcionarios.get_page(numero_da_pagina)
+        
+        return render(
+                request, 
+                template_name, 
+                context={'usuarios':{'alunos':alunos, 'professores':professores, 'funcionarios':funcionarios}, 'contador':contador}
+            )
+
+def dashboard_admin_livros(request):
+    template_name = 'admin/dashboard_admin_livros.html'
+    if request.method == 'GET':
+        livros = Livro.objects.all()
+        autores = Autor.objects.all()
+        categorias = Categoria.objects.all()
+        reservas = Reserva.objects.all()
+        emprestimos = Emprestimo.objects.all()
+        contador = {
+            'livros':len(livros),
+            'autores':len(autores),
+            'categorias':len(categorias),
+            'reservas':len(reservas),
+            'emprestimos':len(emprestimos),
+        }
+        paginador_livros = Paginator(livros, 20)
+        paginador_autores = Paginator(autores, 20)
+        paginador_categorias = Paginator(categorias, 20)
+        paginador_reservas = Paginator(reservas, 20)
+        paginador_emprestimos = Paginator(emprestimos, 20)
+        numero_da_pagina = request.GET.get('page')
+        tipo_de_endidade = request.GET.get('type')
+        livros = paginador_livros.get_page(1)
+        autores = paginador_autores.get_page(1)
+        categorias = paginador_categorias.get_page(1)
+        reservas = paginador_reservas.get_page(1)
+        emprestimos = paginador_emprestimos.get_page(1)
+        if numero_da_pagina and tipo_de_endidade == 'livro':
+            livros = paginador_livros.get_page(numero_da_pagina)
+        elif numero_da_pagina and tipo_de_endidade == 'autor':
+            autores = paginador_autores.get_page(numero_da_pagina)
+        elif numero_da_pagina and tipo_de_endidade == 'categoria':
+            categorias = paginador_categorias.get_page(numero_da_pagina)
+        if numero_da_pagina and tipo_de_endidade == 'reserva':
+            reservas = paginador_reservas.get_page(numero_da_pagina)
+        if numero_da_pagina and tipo_de_endidade == 'emprestimo':
+            emprestimos = paginador_emprestimos.get_page(numero_da_pagina)
+        return render(
+                request, 
+                template_name, 
+                context={'livros':{'livros':livros, 'autores':autores, 'categorias':categorias, 'reservas':reservas, 'emprestimos':emprestimos}, 'contador':contador}
+            )
+
+def dashboard_admin_cursos(request):
+    template_name = 'admin/dashboard_admin_cursos.html'
+    if request.method == 'GET':
+        cursos = Curso.objects.all()
+        contador = {'cursos':len(cursos)}
+        paginador_cursos = Paginator(cursos, 20)
+        cursos = paginador_cursos.get_page(request.GET.get('page'))
+        return render(request, template_name,context={'cursos':cursos, 'contador':contador})
 
 # CRUD de Aluno
 def listar_alunos(request):
@@ -173,7 +170,8 @@ def listar_alunos(request):
 def criar_aluno(request):
     if request.method == 'GET':
         formulario_aluno = FormularioAluno()
-        return render(request, template_name='form.html', context={'form':formulario_aluno})
+        template_name = 'formulario-cadastro-aluno.html'
+        return render(request, template_name, context={'form':formulario_aluno})
     else: 
         if request.method == 'POST':
             # TODO: Salvar as informações de usuário e aluno do formulário no banco de dados
@@ -186,8 +184,12 @@ def criar_aluno(request):
     
 
 def ler_aluno(request, uid):
-    # Página de detalhes de aluno
-    pass
+    if request.method == 'GET':
+        template_name = 'aluno/aluno_info.html'
+        aluno = Aluno.objects.filter(id=uid)
+        formulario = FormularioAluno(aluno)
+        contexto = {'aluno': aluno, 'form':formulario}
+        return render(request, template_name, context=contexto)
 
 def atualizar_aluno(request, uid):
     pass
