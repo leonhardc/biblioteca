@@ -9,6 +9,7 @@ from livro.models import Livro, Autor, Categoria, NACIONALIDADES
 import datetime
 from utils.utils import gerar_data
 from dateutil.relativedelta import relativedelta
+from django.db.models import F
 
 # Configurar o Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'seu_projeto.settings')
@@ -232,8 +233,17 @@ def criar_livros(n_livros):
             print('Erro ao adicionar novo livro.')
             print(e)
 
+
+def corrigir_email():
+    # Substitui o espaco que existe em alguns emails pelo caractere "_"
+    usuarios = User.objects.all()
+    for usuario in usuarios:
+        usuario.email = f'{usuario.first_name.lower().replace(' ', '_')}{usuario.last_name.lower().replace(' ', '_')}@exemple.com'
+        usuario.save()
+
 if __name__ == '__main__':
     # TODO: Adicionar 100 alunos, 10 professores e 10 funcionarios.
-    criar_cursos()
-    criar_usuarios(100, 10, 10)
+    # criar_cursos()
+    # criar_usuarios(100, 10, 10)
+    corrigir_email()
     pass
