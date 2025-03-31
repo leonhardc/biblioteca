@@ -152,15 +152,29 @@ aside ul li {
 /* Estilos do corpo do documento */
 .container {
     margin-left: 80px;
-    padding-top: 40px;
+    padding-bottom: 50px;
     height: 90vh;
     width: 95vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     color: var(--cor-primaria);
 }
 
-.container span {
+.titulo {
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    /* TODO: Corrigir bug do padding esquerdo do titulo */
+    padding-left: 10%;
+    display: flex;
+    flex-direction: column;
+}
+
+.titulo span{
     filter: opacity(75%);
 }
+
 
 .tabs {
     display: flex;
