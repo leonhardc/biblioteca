@@ -1,8 +1,10 @@
 {% extends 'admin/dashboard-admin.html' %}
 {% load static %}
 {% block content %}
-<h2>Usuários</h2>
-<span>Veja todos os detalhes sobre os usuários da aplicação.</span>
+<div class="titulo">
+    <h2>Usuários</h2>
+    <span>Veja todos os detalhes sobre os usuários da aplicação.</span>
+</div>
 <div class="conteudo">
     <div class="tabs">
         <ul>
@@ -46,10 +48,11 @@
                     <td>{{aluno.id}}</td>
                     <td>
                         <strong>
-                            <a href="{% url 'usuario:ler-aluno' aluno.id %}">
+                            <a href="{% url 'usuario:detalhes-aluno' aluno.id %}">
                                 {{aluno.matricula}}
                             </a>
-                        </strong></td>
+                        </strong>
+                    </td>
                     <td>{{aluno.usuario}}</td>
                     <td>{{aluno.usuario.first_name}} {{aluno.usuario.last_name}}</td>
                     <td>{{aluno.usuario.email}}</td>
@@ -57,7 +60,7 @@
                     <td>{{aluno.ingresso|date:"d M Y"}}</td>
                     <td>{{aluno.conclusao_prevista|date:"d M Y"}}</td>
                     <td>
-                        <a class="botao botao-info" href="{% url 'usuario:ler-aluno' aluno.id %}">
+                        <a class="botao botao-info" href="{% url 'usuario:detalhes-aluno' aluno.id %}">
                             <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
                         </a>
                     </td>
@@ -112,7 +115,13 @@
                 {% for professor in usuarios.professores %}
                 <tr>
                     <td>{{professor.id}}</td>
-                    <td><strong>{{professor.matricula}}</strong></td>
+                    <td>
+                        <strong>
+                            <a href="{%url 'usuario:detalhes-professor' professor.id%}">
+                                {{professor.matricula}}
+                            </a>
+                        </strong>
+                    </td>
                     <td>{{professor.usuario}}</td>
                     <td>{{professor.usuario.first_name}} {{professor.usuario.last_name}}</td>
                     <td>{{professor.usuario.email}}</td>
@@ -121,7 +130,7 @@
                     <td>{{professor.regime}}</td>
                     <td>{{professor.contratacao}}</td>
                     <td>
-                        <a class="botao botao-info" href="{% url 'usuario:ler-professor' professor.id %}">
+                        <a class="botao botao-info" href="{% url 'usuario:detalhes-professor' professor.id %}">
                             <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
                         </a>
                     </td>
@@ -172,17 +181,23 @@
                 {% for funcionario in usuarios.funcionarios %}
                 <tr>
                     <td>{{funcionario.id}}</td>
-                    <td><strong>{{funcionario.matricula}}</strong></td>
+                    <td>
+                        <strong>
+                            <a href="{% url 'usuario:detalhes-funcionario' funcionario.id %}">
+                                {{funcionario.matricula}}
+                            </a>
+                        </strong>
+                    </td>
                     <td>{{funcionario.usuario}}</td>
                     <td>{{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</td>
                     <td>{{funcionario.usuario.email}}</td>
                     <td>
-                        <a class="botao botao-info" href="{% url 'usuario:ler-funcionario' funcionario.id %}">
+                        <a class="botao botao-info" href="{% url 'usuario:detalhes-funcionario' funcionario.id %}">
                             <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
                         </a>
                     </td>
                     <td>
-                        <a class="botao botao-info" href="{% url 'usuario:deletar-funcionario' funcionario.id %}">
+                        <a class="botao botao-deletar" href="{% url 'usuario:deletar-funcionario' funcionario.id %}">
                             <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
                         </a>
                     </td>
