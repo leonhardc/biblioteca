@@ -1,0 +1,165 @@
+{%extends 'admin/dashboard-admin.html'%}
+{% load static%}
+{% block content %}
+<style>
+    .conteudo-usuario {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .dados-pessoais h4,
+    .dados-curso h4 {
+        margin-bottom: 10px;
+    }
+
+    .dados-pessoais,
+    .dados-curso {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .label {
+        margin-bottom: 5px;
+    }
+
+    .botoes-de-usuario {
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        gap: 30px;
+    }
+</style>
+{% if aluno %}
+<div class="container">
+    <!-- Bloco de detalhes para aluno -->
+    <div class="botoes-de-usuario">
+        <a class="botao botao-info" href="{% url 'usuario:atualizar-aluno' aluno.id %}">
+            Atualizar Informações
+            <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+        </a>
+        <!-- TODO: Corrigir bug. A classe botao não reconhece a classe botao-deletar-->
+        <a class="botao botao-deletar" href="{% url 'usuario:deletar-aluno' aluno.id %}">
+            Deletar Aluno
+            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+        </a>
+    </div>
+    <div class="dados-pessoais">
+        <h4>Dados Pessoais</h4>
+        <div class="label">
+            Nome:
+            <span>{{ aluno.usuario.first_name}} {{ aluno.usuario.last_name}}</span>
+        </div>
+        <div class="label">
+            CPF:
+            <span>{{ aluno.cpf}}</span>
+        </div>
+        <div class="label">
+            Endereço:
+            <span>{{ aluno.endereco}}</span>
+        </div>
+        <div class="label">
+            Email:
+            <span>{{ aluno.usuario.email}}</span>
+        </div>
+    </div>
+    <div class="dados-curso">
+        <h4>Dados do curso</h4>
+        <div class="label">
+            Matricula:
+            <span>{{ aluno.matricula}}</span>
+        </div>
+        <div class="label">
+            Curso:
+            <span>{{ aluno.curso}}</span>
+        </div>
+        <div class="label">
+            Ingresso:
+            <span>{{ aluno.ingresso}}</span>
+        </div>
+        <div class="label">
+            Conclusão:
+            <span>{{ aluno.conclusao_prevista}}</span>
+        </div>
+    </div>
+</div>
+<div class="conteudo-usuario">
+</div>
+{% elif professor %}
+<!-- Bloco de detalhes para professor -->
+<div class="botoes-de-usuario">
+    <a class="botao botao-info" href="{% url 'usuario:atualizar-professor' professor.id %}">
+        Atualizar Informações
+        <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+    </a>
+    <!-- TODO: Corrigir bug. A classe botao não reconhece a classe botao-deletar-->
+    <a class="botao botao-deletar" href="{% url 'usuario:deletar-professor' professor.id %}">
+        Deletar Professor
+        <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+    </a>
+</div>
+<div class="conteudo-usuario">
+    <div class="dados-pessoais">
+        <h4>Dados Pessoais</h4>
+        <div class="label">
+            Nome:
+            <span>{{ professor.usuario.first_name }} {{ professor.usuario.last_name }}</span>
+        </div>
+        <div class="label">
+            Email:
+            <span>{{ professor.usuario.email }}</span>
+        </div>
+        <div class="label">
+            CPF:
+            <span>{{ professor.cpf }}</span>
+        </div>
+    </div>
+    <div class="dados-curso">
+        <h4>Dados do Curso</h4>
+        <div class="label">
+            Curso:
+            <span>{{ professor.curso }}</span>
+        </div>
+        <div class="label">
+            Matricula:
+            <span>{{ professor.matricula }}</span>
+        </div>
+        <div class="label">
+            Regime:
+            <span>{{ professor.regime }}</span>
+        </div>
+        <div class="label">
+            Data de Contratação:
+            <span>{{ professor.contratacao }}</span>
+        </div>
+    </div>
+</div>
+{% elif funcionario %}
+<!-- Bloco de detalhes para funcionario -->
+<div class="botoes-de-usuario">
+    <a class="botao botao-info" href="{% url 'usuario:atualizar-funcionario' funcionario.id %}">
+        Atualizar Informações
+        <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+    </a>
+    <!-- TODO: Corrigir bug. A classe botao não reconhece a classe botao-deletar-->
+    <a class="botao botao-deletar" href="{% url 'usuario:deletar-funcionario' funcionario.id %}">
+        Deletar Funcionario
+        <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+    </a>
+</div>
+<div class="conteudo-usuario">
+    <div class="dados-pessoais">
+        <h4>Dados Pessoais</h4>
+        <div class="label">
+            Nome:
+            <span>{{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</span>
+        </div>
+        <div class="label">
+            Matricula:
+            <span>{{funcionario.matricula}}</span>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
