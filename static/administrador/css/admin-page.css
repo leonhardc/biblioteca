@@ -19,16 +19,17 @@
 
 
 html { overflow-x: hidden;}
+body { width: 100vw; }
 
 /* Estilos da navbar */
 header {
-    width: 100%;
+    width: 100vw;
     display: flex;
     justify-content: center;
 }
 
-header nav {
-    width: 100vw;
+nav {
+    width: 100%;
     height: 40px;
     display: flex;
     flex-direction: row;
@@ -151,22 +152,20 @@ aside ul li {
 
 /* Estilos do corpo do documento */
 .container {
-    margin-left: 80px;
-    padding-bottom: 50px;
-    height: 90vh;
-    width: 95vw;
+    color: var(--cor-primaria);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    color: var(--cor-primaria);
+    justify-content: center;
+    padding: 2% 5%;
+}
+.conteudo {
+    
 }
 
 .titulo {
     width: 100%;
     margin-top: 50px;
     margin-bottom: 30px;
-    /* TODO: Corrigir bug do padding esquerdo do titulo */
-    padding-left: 10%;
     display: flex;
     flex-direction: column;
 }
@@ -179,7 +178,7 @@ aside ul li {
 .tabs {
     display: flex;
     flex-direction: row;
-    width: 90%;
+    width: 100%;
     justify-content: space-between;
 }
 
@@ -374,3 +373,46 @@ tbody tr:hover {
     background-color: #ff2e2e;
     border: var(--cor-primaria) 1px solid;
 }
+
+.dados {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 20px
+}
+
+/* Styles of 'admin/dashboard_admin_detalhes_usuarios.html' */
+.dados .dados-pessoais h4,
+.dados .dados-curso h4 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.label {
+    margin-bottom: 5px;
+}
+
+.label span {
+    font-weight: bold;
+}
+
+.botoes-de-usuario {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    margin-top: 20px;
+    gap: 10px;
+}
+/* styles of 'admin/dashboard_admin_usuarios.html' */
+.tab-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+.tab-content table {
+    min-width: 100%;
+}
+

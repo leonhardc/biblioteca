@@ -22,13 +22,14 @@ window.addEventListener('load',
     }
 )
 // Usuários
-if(window.location.pathname === '/usuario/dashboard-admin/usuarios/'){
+if(window.location.pathname === '/administrador/usuarios/'){
+    console.log('Entrou!')
     document.getElementById('aba-alunos').addEventListener('click',(event)=>{openTab(event,'conteudo-aba-alunos')})
     document.getElementById('aba-professores').addEventListener('click',(event)=>{openTab(event,'conteudo-aba-professores')})
     document.getElementById('aba-funcionarios').addEventListener('click',(event)=>{openTab(event,'conteudo-aba-funcionarios')})
 }
 // Livros
-if(window.location.pathname === '/usuario/dashboard-admin/livros/'){
+if(window.location.pathname === '/administrador/livros/'){
     document.getElementById('aba-livros').addEventListener('click', (event)=> {openTab(event, 'conteudo-aba-livros')})
     document.getElementById('aba-autores').addEventListener('click', (event)=> {openTab(event, 'conteudo-aba-autores')})
     document.getElementById('aba-categorias').addEventListener('click', (event)=> {openTab(event, 'conteudo-aba-categorias')})
@@ -36,7 +37,7 @@ if(window.location.pathname === '/usuario/dashboard-admin/livros/'){
     document.getElementById('aba-emprestimos').addEventListener('click', (event)=> {openTab(event, 'conteudo-aba-emprestimos')})
 }
 // Cursos
-if(window.location.pathname === '/usuario/dashboard-admin/cursos/'){}
+if(window.location.pathname === '/administrador/cursos/'){}
 
 function openTab(event, tabId) {
     // Esconde todos os conteúdos das abas
