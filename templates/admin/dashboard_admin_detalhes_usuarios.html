@@ -110,32 +110,33 @@
 
 {% elif funcionario %}
 <!-- Bloco de detalhes para funcionario -->
-
-<div class="conteudo-usuario">
-    <div class="dados">
-        <div class="dados-pessoais">
-            <h4>Dados Pessoais</h4>
-            <div class="label">
-                <span>Nome:</span>
-                {{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}
-            </div>
-            <div class="label">
-                <span>Matricula:</span>
-                {{funcionario.matricula}}
+<div class="container">
+    <div class="conteudo-usuario">
+        <div class="dados">
+            <div class="dados-pessoais">
+                <h4>Dados Pessoais</h4>
+                <div class="label">
+                    <span>Nome:</span>
+                    {{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}
+                </div>
+                <div class="label">
+                    <span>Matricula:</span>
+                    {{funcionario.matricula}}
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="botoes-de-usuario">
-    <a class="botao botao-info" href="{% url 'usuario:atualizar-funcionario' funcionario.id %}">
-        Atualizar Informações
-        <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
-    </a>
-    <!-- TODO: Corrigir bug. A classe botao não reconhece a classe botao-deletar-->
-    <a class="botao botao-deletar" href="{% url 'usuario:deletar-funcionario' funcionario.id %}">
-        Deletar Funcionario
-        <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
-    </a>
+    <div class="botoes-de-usuario">
+        <a class="botao botao-info" href="{% url 'usuario:atualizar-funcionario' funcionario.id %}">
+            Atualizar Informações
+            <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+        </a>
+        <!-- TODO: Corrigir bug. A classe botao não reconhece a classe botao-deletar-->
+        <a class="botao botao-deletar" href="{% url 'usuario:deletar-funcionario' funcionario.id %}">
+            Deletar Funcionario
+            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+        </a>
+    </div>
 </div>
 {% endif %}
 {% endblock content %}

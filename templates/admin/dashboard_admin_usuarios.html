@@ -5,9 +5,6 @@
     <h2>Usuários</h2>
     <span>Veja todos os detalhes sobre os usuários da aplicação.</span>
 </div>
-<style>
-
-</style>
 <div class="conteudo">
     <div class="tabs">
         <ul>
@@ -79,19 +76,25 @@
         <!-- Paginação de alunos -->
         <div class="pagination">
             <span class="step-links">
-                {% if usuarios.alunos.has_previous %}
-                <a href="?type=aluno&page=1">&laquo; Primeira</a>
-                <a href="?type=aluno&page={{ usuarios.alunos.previous_page_number }}">Anterior</a>
-                {% endif %}
-
-                <span class="current">
-                    Página {{ usuarios.alunos.number }} de {{ usuarios.alunos.paginator.num_pages }}.
-                </span>
-
-                {% if usuarios.alunos.has_next %}
-                <a href="?type=aluno&page={{ usuarios.alunos.next_page_number }}">Proxima</a>
-                <a href="?type=aluno&page={{ usuarios.alunos.paginator.num_pages }}">Ultima &raquo;</a>
-                {% endif %}
+                <div class="current">
+                    Página {{ usuarios.alunos.number }} de {{ usuarios.alunos.paginator.num_pages }}
+                </div>
+                <div class="links-pagination">
+                    {% if usuarios.alunos.has_previous %}
+                    <a href="?type=aluno&page=1">Primeira</a>
+                    <a href="?type=aluno&page={{ usuarios.alunos.previous_page_number }}">Anterior</a>
+                    {% else %}
+                    <span>Primeira</span>
+                    <span>Anterior</span>
+                    {% endif %}
+                    {% if usuarios.alunos.has_next %}
+                    <a href="?type=aluno&page={{ usuarios.alunos.next_page_number }}">Proxima</a>
+                    <a href="?type=aluno&page={{ usuarios.alunos.paginator.num_pages }}">Ultima</a>
+                    {% else %}
+                    <span>Proxima</span>
+                    <span>Ultima</span>
+                    {% endif %}
+                </div>
             </span>
         </div>
         {%endif%}
@@ -149,19 +152,25 @@
         <!-- Paginação de professores -->
         <div class="pagination">
             <span class="step-links">
-                {% if usuarios.professores.has_previous %}
-                <a href="?type=professor&page=1">&laquo; Primeira</a>
-                <a href="?type=professor&page={{ usuarios.professores.previous_page_number }}">Anterior</a>
-                {% endif %}
-
-                <span class="current">
+                <div class="current">
                     Página {{ usuarios.professores.number }} de {{ usuarios.professores.paginator.num_pages }}.
-                </span>
-
-                {% if usuarios.professores.has_next %}
-                <a href="?type=professor&page={{ usuarios.professores.next_page_number }}">Proxima</a>
-                <a href="?type=professor&page={{ usuarios.professores.paginator.num_pages }}">Ultima &raquo;</a>
-                {% endif %}
+                </div>
+                <div class="links-pagination">
+                    {% if usuarios.professores.has_previous %}
+                    <a href="?type=professor&page=1">Primeira</a>
+                    <a href="?type=professor&page={{ usuarios.professores.previous_page_number }}">Anterior</a>
+                    {% else %}
+                    <span>Primeira</span>
+                    <span>Anterior</span>
+                    {% endif %}
+                    {% if usuarios.professores.has_next %}
+                    <a href="?type=professor&page={{ usuarios.professores.next_page_number }}">Proxima</a>
+                    <a href="?type=professor&page={{ usuarios.professores.paginator.num_pages }}">Ultima</a>
+                    {% else %}
+                    <span>Proxima</span>
+                    <span>Ultima</span>
+                    {% endif %}
+                </div>
             </span>
         </div>
         {%endif%}
@@ -211,21 +220,25 @@
         <!-- Paginação de Funcionários -->
         <div class="pagination">
             <span class="step-links">
-                {% if usuarios.funcionarios.has_previous %}
-                <a href="?type=funcionario&page=1">&laquo; Primeira</a>
-                <a href="?type=funcionario&page={{ usuarios.funcionarios.previous_page_number }}">Anterior</a>
-                {% endif %}
-
-                <span class="current">
-                    Página {{ usuarios.funcionarios.number }} de {{ usuarios.funcionarios.paginator.num_pages
-                    }}.
-                </span>
-
-                {% if usuarios.funcionarios.has_next %}
-                <a href="?type=funcionario&page={{ usuarios.funcionarios.next_page_number }}">Proxima</a>
-                <a href="?type=funcionario&page={{ usuarios.funcionarios.paginator.num_pages }}">Ultima
-                    &raquo;</a>
-                {% endif %}
+                <div class="current">
+                    Página {{ usuarios.funcionarios.number }} de {{ usuarios.funcionarios.paginator.num_pages}}
+                </div>
+                <div class="links-pagination">
+                    {% if usuarios.funcionarios.has_previous %}
+                    <a href="?type=funcionario&page=1">Primeira</a>
+                    <a href="?type=funcionario&page={{ usuarios.funcionarios.previous_page_number }}">Anterior</a>
+                    {% else %}
+                    <span>Primeira</span>
+                    <span>Anterior</span>
+                    {% endif %}
+                    {% if usuarios.funcionarios.has_next %}
+                    <a href="?type=funcionario&page={{ usuarios.funcionarios.next_page_number }}">Proxima</a>
+                    <a href="?type=funcionario&page={{ usuarios.funcionarios.paginator.num_pages }}">Ultima</a>
+                    {% else %}
+                    <span>Proxima</span>
+                    <span>Ultima</span>
+                    {% endif %}
+                </div>
             </span>
         </div>
         {%endif%}
