@@ -45,12 +45,12 @@
         </div>
     </div>
     <div class="botoes-de-usuario">
-        <a class="botao botao-info" href="{% url 'usuario:atualizar-aluno' aluno.id %}">
+        <a class="botao botao-info" href="{% url 'administrador:atualizar_aluno' aluno.id %}">
             Atualizar Informações
             <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
         </a>
         <!-- TODO: Corrigir bug. A classe botao não reconhece a classe botao-deletar-->
-        <a class="botao botao-deletar" href="{% url 'usuario:deletar-aluno' aluno.id %}">
+        <a class="botao botao-deletar" href="{% url 'administrador:deletar_aluno' aluno.id %}">
             Deletar Aluno
             <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
         </a>

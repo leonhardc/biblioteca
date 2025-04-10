@@ -9,6 +9,7 @@ class Aluno(models.Model):
     matricula = models.CharField(unique=True,max_length=6, blank=False, null=False, verbose_name='Matricula')
     curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, blank=False, null=False, verbose_name='Curso')
     endereco = models.CharField(max_length=255, blank=False, null=False, verbose_name='Endereço')
+    complemento = models.CharField(max_length=200, blank=True, null=True, verbose_name='Complemento')
     cpf = models.CharField(unique=True,max_length=11, blank=False, null=False, verbose_name='CPF')
     ingresso = models.DateField(default=datetime.date.today, null=False, blank=False, verbose_name='Data de ingresso')
     conclusao_prevista = models.DateField(default=datetime.date.today,blank=False, null=False, verbose_name='Conclusão')

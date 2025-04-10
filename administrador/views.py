@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from usuario.models import Aluno, Professor, Funcionario
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
+from usuario.forms import FormularioAluno
 from curso.models import Curso
+from utils.utils import *
 
 # Create your views here.
 # Views de administrador
@@ -51,6 +53,21 @@ def dashboard_admin_usuarios(request):
                 template_name, 
                 context={'usuarios':{'alunos':alunos, 'professores':professores, 'funcionarios':funcionarios}, 'contador':contador}
             )
+
+def atualizar_infomacoes_aluno(request, uid):
+    """ Em desenvolvimento """
+    if request.method == "GET":
+        template_name = "admin/dashboard_admin_atualizar_aluno.html"
+        aluno = Aluno.objects.get(id=uid)
+        endereco = separar_endereco(aluno.endereco)
+        data = informacoes_formulario_aluno(aluno, endereco)
+        formulario = FormularioAluno(initial=data)
+        return render(request, template_name, context={"form": formulario, 'aluno': aluno})
+    if request.method == "POST":
+        pass
+
+def deletar_aluno(request, uid):
+    pass
 
 def dashboard_admin_livros(request):
     template_name = 'admin/dashboard_admin_livros.html'

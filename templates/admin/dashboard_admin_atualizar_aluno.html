@@ -1,0 +1,55 @@
+{% extends 'admin/dashboard-admin.html' %}
+{% load static %}
+{% block content %}
+<!-- Formulário de Usuários - Aluno -->
+<style>
+    .separador {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+    #formulario-aluno {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px
+    }
+    input, select {
+        height: 30px;
+        padding-left: 10px;
+    }
+    label {
+        margin-bottom: 5px;
+    }
+    h3 {
+        margin-bottom: 30px;
+    }
+    .botao-submit {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+
+    }
+    .botao-submit button {
+        font-size: 20px;
+        padding: 10px 30px;
+    }
+</style>
+<h3>Editar informações de {{aluno.usuario.first_name}} {{aluno.usuario.last_name}}</h3>
+<form action="" id="formulario-aluno">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="separador">
+        {{ field.errors }}
+        {{ field.label_tag }} {{ field }}
+    </div>
+    {% endfor %}
+    <div></div>
+    <div></div>
+    <div class="botao-submit">
+        <button style="display: block;" class="botao botao-info" type="submit">Salvar</button>
+    </div>
+</form>
+<!-- Formulário de Usuários - Professor -->
+<!-- Formulário de Usuários - Funcionário -->
+{% endblock content %}
