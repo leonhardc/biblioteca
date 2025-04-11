@@ -440,7 +440,7 @@ tbody tr:hover {
     flex-direction: column;
     margin-bottom: 10px;
 }
-#formulario-aluno {
+#formulario-aluno, #formulario-professor, #formulario-funcionario {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px

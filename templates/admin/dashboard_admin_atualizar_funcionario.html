@@ -2,8 +2,8 @@
 {% load static %}
 {% block content %}
 <!-- Formulário de Usuários - Professor -->
-<h3>Editar informações de {{professor.usuario.first_name}} {{professor.usuario.last_name}}</h3>
-<form action="" id="formulario-professor">
+<h3>Editar informações de {{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</h3>
+<form action="" id="formulario-funcionario">
     {% csrf_token %}
     {% for field in form %}
     <div class="separador">

@@ -107,7 +107,7 @@ class FormularioAluno(forms.Form):
             raise ValidationError('O CEP deve conter 8 caracteres.') 
         if re.match(r'[a-zA-Z]', cep):
             raise ValidationError('O campo CEP não deve conter letras.')
-        
+
 class FormularioProfessor(forms.Form):
     nome = forms.CharField(label='Nome', max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o nome do aluno'}))
     sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o sobrenome do aluno'}))
@@ -118,4 +118,12 @@ class FormularioProfessor(forms.Form):
     cpf = forms.CharField(label='CPF', widget=forms.TextInput(attrs={'class':'form-control'}))
     regime = forms.ChoiceField(label='Regime', choices=JORNADA, widget=forms.Select(attrs={'class':'form-control'}))
     contratacao = forms.DateField(label='Contratação', widget=forms.DateInput(attrs={'type':'date'}))
+    # TODO: Implementar os metodos _clean dos atributos do formulário
+
+class FormularioFuncionario(forms.Form):
+    nome = forms.CharField(label='Nome', max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o nome do aluno'}))
+    sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o sobrenome do aluno'}))
+    email = forms.CharField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control', 'placeholder':'Email do aluno'}))
+    usuario = forms.CharField(label='Usuário', max_length=20, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite seu nome de usuário'}))
+    matricula = forms.CharField(label='Matricula', max_length=4, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Matricula do professor'}))
     # TODO: Implementar os metodos _clean dos atributos do formulário

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from usuario.models import Aluno, Professor, Funcionario
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
-from usuario.forms import FormularioAluno, FormularioProfessor
+from usuario.forms import FormularioAluno, FormularioProfessor, FormularioFuncionario
 from curso.models import Curso
 from utils.utils import *
 
@@ -82,10 +82,26 @@ def atualizar_informacoes_professor(request, uid):
         # Lembrar de validar os dados antes de salvar no banco de dados
         pass
 
+def atualizar_informacoes_funcionario(request, uid):
+    if request.method == "GET":
+        template_name = 'admin/dashboard_admin_atualizar_funcionario.html'
+        funcionario = Funcionario.objects.get(id=uid)
+        data = informacoes_formulario_funcionario(funcionario)
+        formulario = FormularioFuncionario(initial=data)
+        return render(request, template_name, context={"form": formulario, 'funcionario':funcionario})
+        pass
+    if request.method == "POST":
+        # Implementar o método POST e salvar os dados alterados no banco de dados
+        # Lembrar de validar os dados antes de salvar no banco de dados
+        pass
+
 def deletar_aluno(request, uid):
     pass
 
 def deletar_professor(request, uid):
+    pass
+
+def deletar_funcionario(request, uid):
     pass
 
 def dashboard_admin_livros(request):
