@@ -435,4 +435,35 @@ tbody tr:hover {
 .tab-content table {
     min-width: 100%;
 }
+.separador {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+#formulario-aluno {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px
+}
+input, select {
+    height: 30px;
+    padding-left: 10px;
+}
+label {
+    margin-bottom: 5px;
+}
+h3 {
+    margin-bottom: 30px;
+}
+.botao-submit {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+
+}
+.botao-submit button {
+    font-size: 20px;
+    padding: 10px 30px;
+}
 

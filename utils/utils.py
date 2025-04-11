@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from usuario.forms import FormularioAluno
-from usuario.models import Aluno
+from usuario.models import Aluno, Professor
 import random
 
 def gerar_data():
@@ -41,5 +41,19 @@ def informacoes_formulario_aluno(aluno:Aluno, endereco):
         'curso' : aluno.curso.cod_curso,
         'ingresso' : aluno.ingresso,
         'conclusao_prevista' : aluno.conclusao_prevista
+    }
+    return data
+
+def informacoes_formulario_professor(professor:Professor):
+    data = {
+        'nome': professor.usuario.first_name,
+        'sobrenome': professor.usuario.last_name,
+        'email': professor.usuario.email,
+        'username': professor.usuario.username,
+        'matricula': professor.matricula,
+        'curso': professor.curso.cod_curso,
+        'cpf': professor.cpf,
+        'regime': professor.regime,
+        'contratacao': professor.contratacao
     }
     return data

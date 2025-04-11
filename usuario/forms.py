@@ -35,6 +35,12 @@ ESTADOS_BRASIL = (
     ('SE', 'Sergipe'),
     ('TO', 'Tocantins'),
 )
+OPCOES_CURSOS = tuple([(e.cod_curso, f'{e.cod_curso} - {e.curso}') for e in Curso.objects.all()])
+JORNADA = (
+        ('20', '20hr'),
+        ('40', '40hr'),
+        ('DE', 'Dedicação Exclusiva'),
+    )
 
 class LoginForm(forms.Form):
     usuario = forms.CharField(label='Usuário', max_length=255, 
@@ -43,7 +49,6 @@ class LoginForm(forms.Form):
                             widget=forms.PasswordInput(attrs={'class':'form-control', 'placeholder':'Senha', 'style': 'background-color:#e5ebf4'}))
 
 class FormularioAluno(forms.Form):
-    OPCOES_CURSOS = tuple([(e.cod_curso, f'{e.cod_curso} - {e.curso}') for e in Curso.objects.all()])
     # Dados Pessoais
     nome = forms.CharField(label='Nome', max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o nome do aluno'}))
     sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o sobrenome do aluno'}))
@@ -102,3 +107,15 @@ class FormularioAluno(forms.Form):
             raise ValidationError('O CEP deve conter 8 caracteres.') 
         if re.match(r'[a-zA-Z]', cep):
             raise ValidationError('O campo CEP não deve conter letras.')
+        
+class FormularioProfessor(forms.Form):
+    nome = forms.CharField(label='Nome', max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o nome do aluno'}))
+    sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o sobrenome do aluno'}))
+    email = forms.CharField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control', 'placeholder':'Email do aluno'}))
+    usuario = forms.CharField(label='Usuário', max_length=20, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite seu nome de usuário'}))
+    matricula = forms.CharField(label='Matricula', max_length=4, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Matricula do professor'}))
+    curso = forms.ChoiceField(label='Curso',choices=OPCOES_CURSOS, widget=forms.Select(attrs={'class':'form-control'}))
+    cpf = forms.CharField(label='CPF', widget=forms.TextInput(attrs={'class':'form-control'}))
+    regime = forms.ChoiceField(label='Regime', choices=JORNADA, widget=forms.Select(attrs={'class':'form-control'}))
+    contratacao = forms.DateField(label='Contratação', widget=forms.DateInput(attrs={'type':'date'}))
+    # TODO: Implementar os metodos _clean dos atributos do formulário
