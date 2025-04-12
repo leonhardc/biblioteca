@@ -93,7 +93,6 @@ class FormularioAluno(forms.Form):
         if not re.match(formato_email, email):
             raise ValidationError('Formato inválido.')
         return email
-                    
 
     def clean_matricula(self):
         matricula = self.cleaned_data['matricula']
@@ -119,6 +118,30 @@ class FormularioProfessor(forms.Form):
     regime = forms.ChoiceField(label='Regime', choices=JORNADA, widget=forms.Select(attrs={'class':'form-control'}))
     contratacao = forms.DateField(label='Contratação', widget=forms.DateInput(attrs={'type':'date'}))
     # TODO: Implementar os metodos _clean dos atributos do formulário
+    def clean_nome(self):
+        nome = self.cleaned_data['nome']
+        if re.search(r'[0-9]', nome):
+            raise ValidationError('O nome do aluno não pode conter números.')
+        return nome
+
+    def clean_sobrenome(self):
+        sobrenome = self.cleaned_data['sobrenome']
+        if re.search(r'[0-9]', sobrenome):
+            raise ValidationError('O sobrenome do aluno não pode conter números.')
+        return sobrenome
+
+    def clean_email(self):
+        formato_email = r'^[a-zA-Z0-9.-_]+@[a-zA-Z0-9]+\.[a-zA-Z\.a-zA-Z]{1,3}'
+        email = self.cleaned_data['email']
+        if not re.match(formato_email, email):
+            raise ValidationError('Formato inválido.')
+        return email
+
+    def clean_matricula(self):
+        matricula = self.cleaned_data['matricula']
+        if re.search(r'[a-zA-Z]', matricula):
+            raise ValidationError('O campo de matricula deve conter somente numeros.')
+        return matricula
 
 class FormularioFuncionario(forms.Form):
     nome = forms.CharField(label='Nome', max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o nome do aluno'}))
@@ -127,3 +150,27 @@ class FormularioFuncionario(forms.Form):
     usuario = forms.CharField(label='Usuário', max_length=20, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite seu nome de usuário'}))
     matricula = forms.CharField(label='Matricula', max_length=4, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Matricula do professor'}))
     # TODO: Implementar os metodos _clean dos atributos do formulário
+    def clean_nome(self):
+        nome = self.cleaned_data['nome']
+        if re.search(r'[0-9]', nome):
+            raise ValidationError('O nome do aluno não pode conter números.')
+        return nome
+
+    def clean_sobrenome(self):
+        sobrenome = self.cleaned_data['sobrenome']
+        if re.search(r'[0-9]', sobrenome):
+            raise ValidationError('O sobrenome do aluno não pode conter números.')
+        return sobrenome
+
+    def clean_email(self):
+        formato_email = r'^[a-zA-Z0-9.-_]+@[a-zA-Z0-9]+\.[a-zA-Z\.a-zA-Z]{1,3}'
+        email = self.cleaned_data['email']
+        if not re.match(formato_email, email):
+            raise ValidationError('Formato inválido.')
+        return email
+
+    def clean_matricula(self):
+        matricula = self.cleaned_data['matricula']
+        if re.search(r'[a-zA-Z]', matricula):
+            raise ValidationError('O campo de matricula deve conter somente numeros.')
+        return matricula
