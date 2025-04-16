@@ -48,7 +48,7 @@
                     <td>{{aluno.id}}</td>
                     <td>
                         <strong>
-                            <a href="{% url 'usuario:detalhes-aluno' aluno.id %}">
+                            <a href="{% url 'administrador:informacoes_aluno' aluno.id %}">
                                 {{aluno.matricula}}
                             </a>
                         </strong>
@@ -60,12 +60,12 @@
                     <td>{{aluno.ingresso|date:"d M Y"}}</td>
                     <td>{{aluno.conclusao_prevista|date:"d M Y"}}</td>
                     <td>
-                        <a class="botao botao-info" href="{% url 'usuario:detalhes-aluno' aluno.id %}">
+                        <a class="botao botao-info" href="{% url 'administrador:informacoes_aluno' aluno.id %}">
                             <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
                         </a>
                     </td>
                     <td>
-                        <a class="botao botao-deletar" href="{% url 'usuario:deletar-aluno' aluno.id %}">
+                        <a class="botao botao-deletar" href="{% url 'administrador:deletar_aluno' aluno.id %}">
                             <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
                         </a>
                     </td>
@@ -123,7 +123,7 @@
                     <td>{{professor.id}}</td>
                     <td>
                         <strong>
-                            <a href="{%url 'usuario:detalhes-professor' professor.id%}">
+                            <a href="{%url 'administrador:informacoes_professor' professor.id%}">
                                 {{professor.matricula}}
                             </a>
                         </strong>
@@ -136,12 +136,12 @@
                     <td>{{professor.regime}}</td>
                     <td>{{professor.contratacao}}</td>
                     <td>
-                        <a class="botao botao-info" href="{% url 'usuario:detalhes-professor' professor.id %}">
+                        <a class="botao botao-info" href="{% url 'administrador:informacoes_professor' professor.id %}">
                             <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
                         </a>
                     </td>
                     <td>
-                        <a class="botao botao-deletar" href="{% url 'usuario:deletar-professor' professor.id %}">
+                        <a class="botao botao-deletar" href="{% url 'administrador:deletar_professor' professor.id %}">
                             <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
                         </a>
                     </td>
@@ -195,7 +195,7 @@
                     <td>{{funcionario.id}}</td>
                     <td>
                         <strong>
-                            <a href="{% url 'usuario:detalhes-funcionario' funcionario.id %}">
+                            <a href="{% url 'administrador:informacoes_funcionario' funcionario.id %}">
                                 {{funcionario.matricula}}
                             </a>
                         </strong>
@@ -204,12 +204,12 @@
                     <td>{{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</td>
                     <td>{{funcionario.usuario.email}}</td>
                     <td>
-                        <a class="botao botao-info" href="{% url 'usuario:detalhes-funcionario' funcionario.id %}">
+                        <a class="botao botao-info" href="{% url 'administrador:informacoes_funcionario' funcionario.id %}">
                             <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
                         </a>
                     </td>
                     <td>
-                        <a class="botao botao-deletar" href="{% url 'usuario:deletar-funcionario' funcionario.id %}">
+                        <a class="botao botao-deletar" href="{% url 'administrador:deletar_funcionario' funcionario.id %}">
                             <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
                         </a>
                     </td>

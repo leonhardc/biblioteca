@@ -95,6 +95,7 @@ def atualizar_aluno(request, uid):
 def deletar_aluno(request, uid):
     pass
 
+# TODO: Mudar as views de detalhes para o app de administrador
 def detalhes_aluno(request, uid):
     if request.method == 'GET':
         template_name = 'admin/dashboard_admin_detalhes_usuarios.html'

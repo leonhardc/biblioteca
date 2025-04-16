@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from usuario.models import Aluno, Professor, Funcionario
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
@@ -54,6 +54,13 @@ def dashboard_admin_usuarios(request):
                 context={'usuarios':{'alunos':alunos, 'professores':professores, 'funcionarios':funcionarios}, 'contador':contador}
             )
 
+def informacoes_aluno(request, uid):
+    if request.method == 'GET':
+        template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
+        aluno = Aluno.objects.get(id=uid)
+        contexto = {'aluno': aluno}
+        return render(request, template_name, context=contexto)
+
 def atualizar_infomacoes_aluno(request, uid):
     """ Em desenvolvimento """
     if request.method == "GET":
@@ -64,9 +71,48 @@ def atualizar_infomacoes_aluno(request, uid):
         formulario = FormularioAluno(initial=data)
         return render(request, template_name, context={"form": formulario, 'aluno': aluno})
     if request.method == "POST":
-        # Implementar o método POST e salvar os dados alterados no banco de dados
-        # Lembrar de validar os dados antes de salvar no banco de dados
-        pass
+        formulario = FormularioAluno(request.POST)
+        if formulario.is_valid():
+            # Salvar os dados do formulário no banco de dados
+            aluno = Aluno.objects.get(id = uid)
+            if aluno:
+                # Carregando dados do formulário
+                nome = formulario.cleaned_data['nome']
+                sobrenome = formulario.cleaned_data['sobrenome']
+                email = formulario.cleaned_data['email']
+                usuario = formulario.cleaned_data['usuario']
+                rua = formulario.cleaned_data['rua']
+                bairro = formulario.cleaned_data['bairro']
+                numero = formulario.cleaned_data['numero']
+                cep = formulario.cleaned_data['cep']
+                cidade = formulario.cleaned_data['cidade']
+                estado = formulario.cleaned_data['estado']
+                complemento = formulario.cleaned_data['complemento']
+                matricula = formulario.cleaned_data['matricula']
+                curso = formulario.cleaned_data['curso']
+                ingresso = formulario.cleaned_data['ingresso']
+                conclusao_prevista = formulario.cleaned_data['conclusao_prevista']
+                # Salvando os dados do formulário no banco de dados
+                aluno.usuario.first_name = nome
+                aluno.usuario.last_name = sobrenome
+                aluno.usuario.email = email
+                aluno.usuario.username = usuario
+                aluno.endereco = f'{rua}, {numero} - {bairro}. {cep}. {cidade}-{estado}.'
+                aluno.complemento = complemento
+                aluno.curso = Curso.objects.get(cod_curso = curso)
+                aluno.matricula = matricula
+                aluno.ingresso = ingresso
+                aluno.conclusao_prevista = conclusao_prevista
+                # Retornar o template anterior com uma mensagem de !Sucesso! se der certo
+                return redirect('')
+
+def informacoes_professor(request, uid):
+    if request.method=='GET':
+        template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
+        professor = Professor.objects.get(id=uid)
+        contexto = {}
+        contexto['professor'] = professor
+        return render(request, template_name, context=contexto)
 
 def atualizar_informacoes_professor(request, uid):
     """ Em desenvolvimento """
@@ -81,6 +127,14 @@ def atualizar_informacoes_professor(request, uid):
         # Implementar o método POST e salvar os dados alterados no banco de dados
         # Lembrar de validar os dados antes de salvar no banco de dados
         pass
+
+def informacoes_funcionario(request, uid):
+    if request.method=='GET':
+        template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
+        funcionario = Funcionario.objects.get(id=uid)
+        contexto = {}
+        contexto['funcionario'] = funcionario
+        return render(request, template_name, context=contexto)
 
 def atualizar_informacoes_funcionario(request, uid):
     if request.method == "GET":

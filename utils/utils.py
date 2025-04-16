@@ -49,7 +49,7 @@ def informacoes_formulario_professor(professor:Professor):
         'nome': professor.usuario.first_name,
         'sobrenome': professor.usuario.last_name,
         'email': professor.usuario.email,
-        'username': professor.usuario.username,
+        'usuario': professor.usuario.username,
         'matricula': professor.matricula,
         'curso': professor.curso.cod_curso,
         'cpf': professor.cpf,
@@ -63,7 +63,7 @@ def informacoes_formulario_funcionario(funcionario:Funcionario):
         'nome': funcionario.usuario.first_name,
         'sobrenome': funcionario.usuario.last_name,
         'email': funcionario.usuario.email,
-        'username': funcionario.usuario.username,
+        'usuario': funcionario.usuario.username,
         'matricula': funcionario.matricula,
     }
     return data
