@@ -3,7 +3,7 @@
 {% block content %}
 <!-- Formulário de Usuários - Professor -->
 <h3>Editar informações de {{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</h3>
-<form action="" id="formulario-funcionario">
+<form action="{% url 'administrador:atualizar_funcionario' funcionario.id %}" method="POST" id="formulario-funcionario">
     {% csrf_token %}
     {% for field in form %}
     <div class="separador">

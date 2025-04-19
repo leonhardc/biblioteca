@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from usuario.models import Aluno, Professor, Funcionario
+from django.contrib.auth.models import User
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
 from usuario.forms import FormularioAluno, FormularioProfessor, FormularioFuncionario
 from curso.models import Curso
 from utils.utils import *
-
 # Create your views here.
 # Views de administrador
 def dashboard_admin(request):
@@ -76,36 +76,25 @@ def atualizar_infomacoes_aluno(request, uid):
             # Salvar os dados do formulário no banco de dados
             aluno = Aluno.objects.get(id = uid)
             if aluno:
-                # Carregando dados do formulário
-                nome = formulario.cleaned_data['nome']
-                sobrenome = formulario.cleaned_data['sobrenome']
-                email = formulario.cleaned_data['email']
-                usuario = formulario.cleaned_data['usuario']
-                rua = formulario.cleaned_data['rua']
-                bairro = formulario.cleaned_data['bairro']
-                numero = formulario.cleaned_data['numero']
-                cep = formulario.cleaned_data['cep']
-                cidade = formulario.cleaned_data['cidade']
-                estado = formulario.cleaned_data['estado']
-                complemento = formulario.cleaned_data['complemento']
-                matricula = formulario.cleaned_data['matricula']
-                curso = formulario.cleaned_data['curso']
-                ingresso = formulario.cleaned_data['ingresso']
-                conclusao_prevista = formulario.cleaned_data['conclusao_prevista']
+                usuario = User.objects.get(id = aluno.usuario.id)
                 # Salvando os dados do formulário no banco de dados
-                aluno.usuario.first_name = nome
-                aluno.usuario.last_name = sobrenome
-                aluno.usuario.email = email
-                aluno.usuario.username = usuario
-                aluno.endereco = f'{rua}, {numero} - {bairro}. {cep}. {cidade}-{estado}.'
-                aluno.complemento = complemento
-                aluno.curso = Curso.objects.get(cod_curso = curso)
-                aluno.matricula = matricula
-                aluno.ingresso = ingresso
-                aluno.conclusao_prevista = conclusao_prevista
-                # Retornar o template anterior com uma mensagem de !Sucesso! se der certo
-                return redirect('')
-
+                usuario.first_name = formulario.cleaned_data['nome']
+                usuario.last_name = formulario.cleaned_data['sobrenome']
+                usuario.email = formulario.cleaned_data['email']
+                usuario.username = formulario.cleaned_data['usuario']
+                aluno.endereco = formatar_endereco(formulario)
+                aluno.curso = Curso.objects.get(cod_curso = formulario.cleaned_data['curso'])
+                aluno.matricula = formulario.cleaned_data['matricula']
+                aluno.ingresso = formulario.cleaned_data['ingresso']
+                aluno.conclusao_prevista = formulario.cleaned_data['conclusao_prevista']
+                usuario.save()
+                aluno.save()
+                # Adicionar mensagem de sucesso!
+                return redirect(f'/administrador/informacoes-aluno/{uid}/')
+        else:
+            # TODO: adicionar mensagem de erro
+            return redirect(f'/administrador/informacoes-aluno/{uid}/')
+        
 def informacoes_professor(request, uid):
     if request.method=='GET':
         template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
