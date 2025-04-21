@@ -16,7 +16,54 @@
 }
 
 /* Classes gerais do projeto */
+/* styles de Mensagens */
+.messages {
+    width: 100%;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
 
+.alert {
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 60px;
+}
+.alert-success {
+    background-color: #cce5ff;
+    color: #004085;
+    /* border: 1px solid #004085; */
+}
+.alert-info {
+    background-color: #e2e3e5;    
+    color: #383d41;   
+    /* border: 1px solid #383d41; */
+}
+.alert-error {
+    background-color: #f8d7da;    
+    color: #721c24;   
+    /* border: 1px solid #721c24; */
+}
+.alert-warning {
+    background-color: #fff3cd;    
+    color: #856404;   
+    /* border: 1px solid #856404; */
+}
+.icone-fechar {
+    transition: all 200ms ease-in;
+    margin-left: 5px;
+    border-radius: 5px;
+}
+.icone-fechar:hover {
+    background-color: rgba(173, 173, 173, 0.6)
+}
+
+/* TODO: Fazer os styles de 'mensage_tags' */
 
 html { overflow-x: hidden;}
 body { width: 100vw; }

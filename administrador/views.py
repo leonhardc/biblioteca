@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from usuario.models import Aluno, Professor, Funcionario
 from django.contrib.auth.models import User
+from django.contrib import messages
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
 from usuario.forms import FormularioAluno, FormularioProfessor, FormularioFuncionario
 from curso.models import Curso
@@ -73,7 +74,6 @@ def atualizar_infomacoes_aluno(request, uid):
     if request.method == "POST":
         formulario = FormularioAluno(request.POST)
         if formulario.is_valid():
-            # Salvar os dados do formulário no banco de dados
             aluno = Aluno.objects.get(id = uid)
             if aluno:
                 usuario = User.objects.get(id = aluno.usuario.id)
@@ -89,10 +89,11 @@ def atualizar_infomacoes_aluno(request, uid):
                 aluno.conclusao_prevista = formulario.cleaned_data['conclusao_prevista']
                 usuario.save()
                 aluno.save()
-                # Adicionar mensagem de sucesso!
+
+                messages.add_message(request, messages.SUCCESS, 'Os dados foram salvos com sucesso.')
                 return redirect(f'/administrador/informacoes-aluno/{uid}/')
-        else:
-            # TODO: adicionar mensagem de erro
+        else:            
+            messages.add_message(request, messages.ERROR, 'Os dados não foram salvos.')
             return redirect(f'/administrador/informacoes-aluno/{uid}/')
         
 def informacoes_professor(request, uid):

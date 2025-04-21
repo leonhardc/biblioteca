@@ -138,7 +138,7 @@ from django.contrib.messages import constants
 MESSAGE_TAGS = {
     constants.INFO:'alert-info',
     constants.DEBUG:'alert-info',
-    constants.SUCCESS:'alert-sucess',
+    constants.SUCCESS:'alert-success',
     constants.ERROR:'alert-error',
     constants.WARNING:'alert-warning',
 }

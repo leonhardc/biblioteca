@@ -10,6 +10,17 @@
     {% include 'parciais/_navbar.html' %}
     {% include 'parciais/_aside.html' %}
     <div class="container">
+        <!-- Mensagens -->
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="alert {{ message.tags }}"{% endif %}>
+                {{ message }} 
+                <img src="{% static 'usuario/img/close_E3E3E3.png' %}" class="icone icone-fechar {{ message.tags }}" alt="icone de fechar mensagem">
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         {% block content %}{% endblock content %} 
     </div>
 </body>

@@ -84,7 +84,17 @@ function openTab(event, tabId) {
 }
 
 // Evento para exibir o campo de pesquisa
-document.querySelector('.icone-pesquisa').addEventListener('click', function(event) {
-    event.currentTarget.style.display = "none"
-    document.querySelector('.form-pesquisa').style.display = "block"
-})
+const iconePesqusar = document.querySelector('.icone-pesquisa')
+if (iconePesqusar){
+    iconePesqusar.addEventListener('click', function(event) {
+        event.currentTarget.style.display = "none"
+        document.querySelector('.form-pesquisa').style.display = "block"
+    })
+}
+
+const iconeFechar =  document.querySelector('.icone-fechar')
+if (iconeFechar) {
+    iconeFechar.addEventListener('click', function() {
+        document.querySelector('.icone-fechar').parentElement.style.display = "none"
+    })
+}
