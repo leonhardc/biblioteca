@@ -64,8 +64,8 @@ def informacoes_aluno(request, uid):
 
 def atualizar_infomacoes_aluno(request, uid):
     """ Em desenvolvimento """
+    template_name = "admin/dashboard_admin_atualizar_aluno.html"
     if request.method == "GET":
-        template_name = "admin/dashboard_admin_atualizar_aluno.html"
         aluno = Aluno.objects.get(id=uid)
         endereco = separar_endereco(aluno.endereco)
         data = informacoes_formulario_aluno(aluno, endereco)
@@ -89,12 +89,14 @@ def atualizar_infomacoes_aluno(request, uid):
                 aluno.conclusao_prevista = formulario.cleaned_data['conclusao_prevista']
                 usuario.save()
                 aluno.save()
-
                 messages.add_message(request, messages.SUCCESS, 'Os dados foram salvos com sucesso.')
                 return redirect(f'/administrador/informacoes-aluno/{uid}/')
-        else:            
-            messages.add_message(request, messages.ERROR, 'Os dados não foram salvos.')
-            return redirect(f'/administrador/informacoes-aluno/{uid}/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
+                return redirect(f'/administrador/informacoes-aluno/{uid}/')
+        else:
+            aluno = Aluno.objects.get(id=uid)
+            return render(request, template_name, context={"form": formulario, 'aluno': aluno})
         
 def informacoes_professor(request, uid):
     if request.method=='GET':
@@ -106,17 +108,38 @@ def informacoes_professor(request, uid):
 
 def atualizar_informacoes_professor(request, uid):
     """ Em desenvolvimento """
+    template_name = "admin/dashboard_admin_atualizar_professor.html"
     if request.method == 'GET':
-        template_name = "admin/dashboard_admin_atualizar_professor.html"
         professor = Professor.objects.get(id=uid)
         data = informacoes_formulario_professor(professor)
         formulario = FormularioProfessor(initial=data)
         return render(request, template_name, context={"form": formulario, 'professor':professor})
-        pass
     if request.method == 'POST':
-        # Implementar o método POST e salvar os dados alterados no banco de dados
-        # Lembrar de validar os dados antes de salvar no banco de dados
-        pass
+        formulario = FormularioProfessor(request.POST)
+        if formulario.is_valid():
+            professor = Professor.objects.get(id=uid)
+            if professor:
+                usuario = User.objects.get(id = professor.usuario.id)
+                # Salvando os dados do formulário no banco de dados
+                usuario.first_name = formulario.cleaned_data['nome']
+                usuario.last_name = formulario.cleaned_data['sobrenome']
+                usuario.email = formulario.cleaned_data['email']
+                usuario.username = formulario.cleaned_data['usuario']
+                professor.curso = Curso.objects.get(cod_curso = formulario.cleaned_data['curso'])
+                professor.matricula = formulario.cleaned_data['matricula']
+                professor.cpf = formulario.cleaned_data['cpf']
+                professor.regime = formulario.cleaned_data['regime']
+                professor.contratacao = formulario.cleaned_data['contratacao']
+                usuario.save()
+                professor.save()
+                messages.add_message(request, messages.SUCCESS, 'Os dados foram salvos com sucesso.')
+                return redirect(f'/administrador/informacoes-professor/{uid}/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Professor não encontrado.')
+                return redirect(f'/administrador/informacoes-professor/{uid}/')
+        else: 
+            professor = Professor.objects.get(id=uid)
+            return render(request, template_name, context={"form": formulario, 'professor': professor})
 
 def informacoes_funcionario(request, uid):
     if request.method=='GET':
@@ -127,17 +150,34 @@ def informacoes_funcionario(request, uid):
         return render(request, template_name, context=contexto)
 
 def atualizar_informacoes_funcionario(request, uid):
+    template_name = 'admin/dashboard_admin_atualizar_funcionario.html'
     if request.method == "GET":
-        template_name = 'admin/dashboard_admin_atualizar_funcionario.html'
         funcionario = Funcionario.objects.get(id=uid)
         data = informacoes_formulario_funcionario(funcionario)
         formulario = FormularioFuncionario(initial=data)
         return render(request, template_name, context={"form": formulario, 'funcionario':funcionario})
-        pass
     if request.method == "POST":
-        # Implementar o método POST e salvar os dados alterados no banco de dados
-        # Lembrar de validar os dados antes de salvar no banco de dados
-        pass
+        formulario = FormularioFuncionario(request.POST)
+        if formulario.is_valid():
+            funcionario = Funcionario.objects.get(id=uid)
+            if funcionario:
+                usuario = User.objects.get(id = funcionario.usuario.id)
+                # Salvando os dados do formulário no banco de dados
+                usuario.first_name = formulario.cleaned_data['nome']
+                usuario.last_name = formulario.cleaned_data['sobrenome']
+                usuario.email = formulario.cleaned_data['email']
+                usuario.username = formulario.cleaned_data['usuario']
+                funcionario.matricula = formulario.cleaned_data['matricula']
+                usuario.save()
+                funcionario.save()
+                messages.add_message(request, messages.SUCCESS, 'Os dados foram salvos com sucesso.')
+                return redirect(f'/administrador/informacoes-professor/{uid}/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Funcionario não encontrado.')
+                return redirect(f'/administrador/informacoes-professor/{uid}/')
+        else:
+            funcionario = Funcionario.objects.get(id=uid)
+            return render(request, template_name, context={"form": formulario, 'funcionario': funcionario})
 
 def deletar_aluno(request, uid):
     pass

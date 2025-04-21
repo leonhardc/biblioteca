@@ -97,37 +97,38 @@ class FormularioAluno(forms.Form):
     #         raise ValidationError('As senhas digitadas não são iguais.')
     #     return senha_confirmacao
     
-    # def clean_nome(self):
-    #     nome = self.cleaned_data['nome']
-    #     if re.search(r'[0-9]', nome):
-    #         raise ValidationError('O nome do aluno não pode conter números.')
-    #     return nome
+    def clean_nome(self):
+        nome = self.cleaned_data['nome']
+        if re.search(r'[0-9]', nome):
+            raise ValidationError('O nome do aluno não pode conter números.')
+        return nome
 
-    # def clean_sobrenome(self):
-    #     sobrenome = self.cleaned_data['sobrenome']
-    #     if re.search(r'[0-9]', sobrenome):
-    #         raise ValidationError('O sobrenome do aluno não pode conter números.')
-    #     return sobrenome
+    def clean_sobrenome(self):
+        sobrenome = self.cleaned_data['sobrenome']
+        if re.search(r'[0-9]', sobrenome):
+            raise ValidationError('O sobrenome do aluno não pode conter números.')
+        return sobrenome
 
-    # def clean_email(self):
-    #     formato_email = r'^[a-zA-Z0-9.-_]+@[a-zA-Z0-9]+\.[a-zA-Z\.a-zA-Z]{1,3}'
-    #     email = self.cleaned_data['email']
-    #     if not re.match(formato_email, email):
-    #         raise ValidationError('Formato inválido.')
-    #     return email
+    def clean_email(self):
+        formato_email = r'^[a-zA-Z0-9.-_]+@[a-zA-Z0-9]+\.[a-zA-Z\.a-zA-Z]{1,3}'
+        email = self.cleaned_data['email']
+        if not re.match(formato_email, email):
+            raise ValidationError('Formato inválido.')
+        return email
 
-    # def clean_matricula(self):
-    #     matricula = self.cleaned_data['matricula']
-    #     if re.search(r'[a-zA-Z]', matricula):
-    #         raise ValidationError('O campo de matricula deve conter somente numeros.')
-    #     return matricula
+    def clean_matricula(self):
+        matricula = self.cleaned_data['matricula']
+        if re.search(r'[a-zA-Z]', matricula):
+            raise ValidationError('O campo de matricula deve conter somente numeros.')
+        return matricula
 
-    # def clean_cep(self):
-    #     cep = self.cleaned_data['cep']
-    #     if len(cep) != 8:
-    #         raise ValidationError('O CEP deve conter 8 caracteres.') 
-    #     if re.match(r'[a-zA-Z]', cep):
-    #         raise ValidationError('O campo CEP não deve conter letras.')
+    def clean_cep(self):
+        cep = self.cleaned_data['cep']
+        if len(cep) != 8:
+            raise ValidationError('O CEP deve conter 8 caracteres.') 
+        if re.match(r'[a-zA-Z]', cep):
+            raise ValidationError('O campo CEP não deve conter letras.')
+        return cep
 
 class FormularioProfessor(forms.Form):
     nome = forms.CharField(label='Nome', max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o nome do aluno'}))

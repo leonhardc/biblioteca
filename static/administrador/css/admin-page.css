@@ -17,7 +17,7 @@
 
 /* Classes gerais do projeto */
 /* styles de Mensagens */
-.messages {
+.messages, .errorlist{
     width: 100%;
     list-style: none;
     display: flex;
@@ -25,6 +25,14 @@
     justify-content: start;
 }
 
+.errorlist {
+    margin-top: 5px;
+}
+
+.errorlist li {
+    padding: 5px 10px;
+    border-radius: 5px;
+}
 .alert {
     padding: 10px 20px;
     border-radius: 10px;
@@ -44,7 +52,7 @@
     color: #383d41;   
     /* border: 1px solid #383d41; */
 }
-.alert-error {
+.alert-error, .errorlist li {
     background-color: #f8d7da;    
     color: #721c24;   
     /* border: 1px solid #721c24; */
