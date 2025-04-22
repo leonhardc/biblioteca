@@ -1,0 +1,20 @@
+{% extends 'admin/dashboard-admin.html' %}
+{% load static %}
+{% block content %}
+<!-- Formulário de Usuários - Aluno -->
+<h3>Criar Funcionario</h3>
+<form action="{% url 'administrador:criar_funcionario'%}" method="POST" id="formulario-aluno">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="separador">
+        {{ field.label_tag }} {{ field }}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+    <div></div>
+    <div></div>
+    <div class="botao-submit">
+        <button style="display: block;" class="botao botao-info" type="submit">Salvar</button>
+    </div>
+</form>
+{% endblock content %}

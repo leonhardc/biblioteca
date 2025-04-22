@@ -85,7 +85,7 @@ class FormularioAluno(forms.Form):
     cep = forms.CharField(label='CEP',max_length=8,widget=forms.TextInput(attrs={'placeholder':'Digite o CEP'}))
     complemento = forms.CharField(label='Complemento',max_length=200,widget=forms.TextInput(attrs={'class':'form-control' , 'placeholder':''}))
     # Curso
-    matricula = forms.CharField(label='Matricula', max_length=6,widget=forms.TextInput(attrs={'placeholder':'Digite a matricula do aluno'}))
+    matricula = forms.CharField(label='Matricula', max_length=6,widget=forms.TextInput(attrs={'placeholder':'Digite a matricula do aluno', 'disabled':False}))
     curso = forms.ChoiceField(label='Curso',choices=OPCOES_CURSOS, widget=forms.Select(attrs={}))
     ingresso = forms.DateField(label="Data de Ingresso")
     conclusao_prevista = forms.DateField(label="Data de Conclusão")
@@ -135,7 +135,7 @@ class FormularioProfessor(forms.Form):
     sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o sobrenome do aluno'}))
     email = forms.CharField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control', 'placeholder':'Email do aluno'}))
     usuario = forms.CharField(label='Usuário', max_length=20, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite seu nome de usuário'}))
-    matricula = forms.CharField(label='Matricula', max_length=4, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Matricula do professor'}))
+    matricula = forms.CharField(label='Matricula', max_length=4, widget=forms.TextInput(attrs={'placeholder': 'Matricula do professor', 'disabled': False}))
     curso = forms.ChoiceField(label='Curso',choices=OPCOES_CURSOS, widget=forms.Select(attrs={'class':'form-control'}))
     cpf = forms.CharField(label='CPF', widget=forms.TextInput(attrs={'class':'form-control'}))
     regime = forms.ChoiceField(label='Regime', choices=JORNADA, widget=forms.Select(attrs={'class':'form-control'}))
@@ -171,7 +171,7 @@ class FormularioFuncionario(forms.Form):
     sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o sobrenome do aluno'}))
     email = forms.CharField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control', 'placeholder':'Email do aluno'}))
     usuario = forms.CharField(label='Usuário', max_length=20, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite seu nome de usuário'}))
-    matricula = forms.CharField(label='Matricula', max_length=4, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Matricula do professor'}))
+    matricula = forms.CharField(label='Matricula', max_length=4, widget=forms.TextInput(attrs={'placeholder':'Matricula do professor', 'disabled':False }))
     # TODO: Implementar os metodos _clean dos atributos do formulário
     def clean_nome(self):
         nome = self.cleaned_data['nome']

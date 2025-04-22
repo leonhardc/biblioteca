@@ -46,7 +46,8 @@ class Professor(models.Model):
 class Funcionario(models.Model):
     usuario = models.ForeignKey(User, verbose_name='Usuário', on_delete=models.DO_NOTHING)
     matricula = models.CharField(unique=True, max_length=4, blank=False, null=False, verbose_name='Matricula')
-    
+    # TODO: Inserir campo de cpf no model de Funcionario
+    cpf = models.CharField(unique=True, max_length=11, blank=False, null=False, verbose_name='CPF')
     def __str__(self):
         return f'<{self.usuario}>'
 

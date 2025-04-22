@@ -106,3 +106,19 @@ def formatar_endereco(formulario):
     estado = formulario.cleaned_data['estado']
     complemento = formulario.cleaned_data['complemento']
     return f'{tipo_logadouro} {logadouro}, {numero}, {complemento} - {bairro}. CEP: {cep}. {cidade}/{estado}'
+
+def gerar_matricula_aluno():
+    while(True):
+        matricula = f'{random.randint(100000, 999999)}'
+        aluno = Aluno.objects.get(matricula=matricula)
+        if not aluno:
+            break
+    return matricula
+
+def gerar_matricula_professor():
+    while(True):
+        matricula = f'{random.randint(1000, 9999)}'
+        professor = Aluno.objects.get(matricula=matricula)
+        if not professor:
+            break
+    return matricula

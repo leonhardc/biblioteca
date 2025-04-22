@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from django.core.paginator import Paginator
 from usuario.models import Aluno, Professor, Funcionario
 from django.contrib.auth.models import User
@@ -55,6 +56,121 @@ def dashboard_admin_usuarios(request):
                 context={'usuarios':{'alunos':alunos, 'professores':professores, 'funcionarios':funcionarios}, 'contador':contador}
             )
 
+# TODO: Finalizar o CRUD de alunos, professor e funcionarios com as viwes de criar e deletar cada componente.
+
+def criar_aluno(request):
+    template_name = "admin/dashboard_admin_criar_aluno.html"
+    if request.method == 'GET':
+        formulario = FormularioAluno()
+        formulario.matricula.widget.attrs['disabled'] = True # Desabilita o campo matricula para um aluno que está sendo criado.
+        return render(request, template_name, context={'form':formulario})
+    if request.method == 'POST':
+        formulario = FormularioAluno(request.POST)
+        if formulario.is_valid():
+            usuario = User.objects.get(username=formulario.cleaned_data['usuario'])
+            if not usuario:
+                aluno = Aluno.objects.get(cpf=formulario.cleaned_data['cpf'])
+                if not aluno:
+                    # criar novo usuario
+                    try:
+                        usuario = User.objects.create_user(
+                            username = formulario.cleaned_data['usuario'],
+                            first_name = formulario.cleaned_data['nome'],
+                            last_name =  formulario.cleaned_data['sobrenome'],
+                            email = formulario.cleaned_data['email'],
+                            password = '1234'
+                        )
+                        curso = Curso.objects.get(curso=formulario.cleaned_data['curso'])
+                        aluno = Aluno.objects.create(
+                            usuario = usuario,
+                            matricula = gerar_matricula_aluno(),
+                            curso = curso,
+                            endereco = formatar_endereco(formulario),
+                            cpf = formulario.cleaned_data['cpf'],
+                            ingresso = formulario.cleaned_data['ingresso'],
+                            conclusao_prevista = formulario.cleaned_data['conclusao_prevista'],
+                        )
+                        messages.add_message(request, messages.SUCCESS, 'Aluno adicionado com sucesso.')
+                        return redirect('/administrador/usuarios/')
+                    except Exception as e:
+                        messages.add_message(request, messages.ERROR, f'Erro ao criar Usuário ou Aluno:\n{e}')
+                        return redirect('/administrador/usuarios/')
+                else:
+                    messages.add_message(request, messages.ERROR, 'O Aluno já existe na base de dados.')
+                    return render(request, template_name, context={'form':formulario})
+            else: 
+                messages.add_message(request, messages.ERROR, 'A base de dados já contem um usuário com esse nome.')
+                return render(request, template_name, context={'form':formulario})
+        else:
+            # Retorna o formulário com mensagem de erro
+            messages.add_message(request, messages.ERROR, 'Problemas ao salvar os dados do formulario no banco de dados.')
+            return render(request, template_name, context={'form':formulario})
+
+def criar_professor(request):
+    template_name = "admin/dashboard_admin_criar_professor.html"
+    if request.method == 'GET':
+        formulario = FormularioProfessor()
+        formulario.matricula.widget.attrs['disabled'] = True
+        return render(request, template_name, context={'form':formulario})
+    if request.method == 'POST':
+        formulario = FormularioProfessor(request.POST)
+        if formulario.is_valid():
+            usuario = User.objects.get(username=formulario.cleaned_data['usuario'])
+            if not usuario:
+                professor = Professor.objects.get(cpf=formulario.cleaned_data['cpf'])
+                if not professor:
+                    try:
+                        usuario = User.objects.create_user(
+                            username = formulario.cleaned_data['usuario'],
+                            first_name = formulario.cleaned_data['nome'],
+                            last_name =  formulario.cleaned_data['sobrenome'],
+                            email = formulario.cleaned_data['email'],
+                            password = '1234'
+                        )
+                        curso = Curso.objects.get(curso=formulario.cleaned_data['curso'])
+                        professor = Professor.objects.create(
+                            usuario = usuario, 
+                            matricula = gerar_matricula_professor(),
+                            curso = curso,
+                            cpf = formulario.cleaned_data['cpf'],
+                            regime = formulario.cleaned_data['regime'],
+                            contratacao = formulario.cleaned_data['contratacao']
+                        )
+                        messages.add_message(request, messages.SUCCESS, 'Professor adicionado com sucesso.')
+                    except Exception as e:
+                        messages.add_message(request, messages.ERROR, 'Erro ao criar Usuário ou Professor.')
+                        return redirect('/administrador/usuarios/')
+                else:
+                    messages.add_message(request, messages.ERROR, 'Professor já existe na base de dados.')
+                    return render(request, template_name, context={'form':formulario})
+            else:
+                messages.add_message(request, messages.ERROR, 'A base de dados já contem um usuário com esse nome.')
+                return render(request, template_name, context={'form':formulario})
+        else:
+            messages.add_message(request, messages.ERROR, 'Problemas ao salvar os dados do formulario no banco de dados.')
+            return render(request, template_name, context={'form':formulario})
+
+def criar_funcionario(request):
+    template_name = 'admin/dashboard_admin_criar_funcionario.html'
+    if request.method == 'GET':
+        formulario = FormularioFuncionario()
+        formulario.matricula.widget.attrs['disabled'] = True
+        return render(request, template_name, context={'form':formulario})
+    if request.method == 'POST':
+        formulario = FormularioFuncionario(request.POST)
+        if formulario.is_valid():
+            usuario = User.objects.get(username=formulario.cleaned_data['usuario'])
+            if not usuario:
+                # TODO: Fazer primeira validação por cpf
+                funcionario = Funcionario.objects.get()
+            else:
+                messages.add_message(request, messages.ERROR, 'A base de dados já contem um usuário com esse nome.')
+                return render(request, template_name, context={'form':formulario})
+        else:
+            messages.add_message(request, messages.ERROR, 'Problemas ao salvar os dados do formulario no banco de dados.')
+            return render(request, template_name, context={'form':formulario})
+
+
 def informacoes_aluno(request, uid):
     if request.method == 'GET':
         template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
@@ -97,7 +213,7 @@ def atualizar_infomacoes_aluno(request, uid):
         else:
             aluno = Aluno.objects.get(id=uid)
             return render(request, template_name, context={"form": formulario, 'aluno': aluno})
-        
+
 def informacoes_professor(request, uid):
     if request.method=='GET':
         template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
