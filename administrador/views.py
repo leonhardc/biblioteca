@@ -62,7 +62,6 @@ def criar_aluno(request):
     template_name = "admin/dashboard_admin_criar_aluno.html"
     if request.method == 'GET':
         formulario = FormularioAluno()
-        formulario.matricula.widget.attrs['disabled'] = True # Desabilita o campo matricula para um aluno que está sendo criado.
         return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
         formulario = FormularioAluno(request.POST)
@@ -110,7 +109,6 @@ def criar_professor(request):
     template_name = "admin/dashboard_admin_criar_professor.html"
     if request.method == 'GET':
         formulario = FormularioProfessor()
-        formulario.matricula.widget.attrs['disabled'] = True
         return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
         formulario = FormularioProfessor(request.POST)
@@ -154,7 +152,6 @@ def criar_funcionario(request):
     template_name = 'admin/dashboard_admin_criar_funcionario.html'
     if request.method == 'GET':
         formulario = FormularioFuncionario()
-        formulario.matricula.widget.attrs['disabled'] = True
         return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
         formulario = FormularioFuncionario(request.POST)
@@ -169,7 +166,6 @@ def criar_funcionario(request):
         else:
             messages.add_message(request, messages.ERROR, 'Problemas ao salvar os dados do formulario no banco de dados.')
             return render(request, template_name, context={'form':formulario})
-
 
 def informacoes_aluno(request, uid):
     if request.method == 'GET':
@@ -284,13 +280,14 @@ def atualizar_informacoes_funcionario(request, uid):
                 usuario.email = formulario.cleaned_data['email']
                 usuario.username = formulario.cleaned_data['usuario']
                 funcionario.matricula = formulario.cleaned_data['matricula']
+                funcionario.cpf = formulario.cleaned_data['cpf']
                 usuario.save()
                 funcionario.save()
                 messages.add_message(request, messages.SUCCESS, 'Os dados foram salvos com sucesso.')
-                return redirect(f'/administrador/informacoes-professor/{uid}/')
+                return redirect(f'/administrador/informacoes-funcionario/{uid}/')
             else:
                 messages.add_message(request, messages.ERROR, 'Funcionario não encontrado.')
-                return redirect(f'/administrador/informacoes-professor/{uid}/')
+                return redirect(f'/administrador/informacoes-funcionario/{uid}/')
         else:
             funcionario = Funcionario.objects.get(id=uid)
             return render(request, template_name, context={"form": formulario, 'funcionario': funcionario})

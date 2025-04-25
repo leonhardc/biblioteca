@@ -93,6 +93,7 @@ def informacoes_formulario_funcionario(funcionario:Funcionario):
         'email': funcionario.usuario.email,
         'usuario': funcionario.usuario.username,
         'matricula': funcionario.matricula,
+        'cpf': funcionario.cpf
     }
     return data
 

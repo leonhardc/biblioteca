@@ -172,6 +172,7 @@ class FormularioFuncionario(forms.Form):
     email = forms.CharField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control', 'placeholder':'Email do aluno'}))
     usuario = forms.CharField(label='Usuário', max_length=20, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite seu nome de usuário'}))
     matricula = forms.CharField(label='Matricula', max_length=4, widget=forms.TextInput(attrs={'placeholder':'Matricula do professor', 'disabled':False }))
+    cpf = forms.CharField(label='CPF', widget=forms.TextInput(attrs={'class':'form-control'}))
     # TODO: Implementar os metodos _clean dos atributos do formulário
     def clean_nome(self):
         nome = self.cleaned_data['nome']

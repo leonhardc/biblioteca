@@ -133,6 +133,7 @@ def criar_usuarios(alunos, professores, funcionarios):
         last_name = fake.last_name()
         username = f'{first_name.lower()}{last_name.lower()}{random.randint(0, 999)}'
         email = f'{first_name.lower()}{last_name.lower()}@example.com'
+        cpf = ''.join([str(random.randint(0,9)) for _ in range(11)])
         password = '123456'  # Pode mudar para algo mais seguro
         if not User.objects.filter(username=username).exists():
             user = User.objects.create_user(
@@ -149,7 +150,8 @@ def criar_usuarios(alunos, professores, funcionarios):
                 matricula = f'{random.randint(1000, 9999)}'
                 novo_funcionario = Funcionario(
                     usuario = user, 
-                    matricula = matricula
+                    matricula = matricula, 
+                    cpf = cpf
                 )
                 novo_funcionario.save()
                 print('Novo funcionario criado com sucesso.')
@@ -165,9 +167,11 @@ def criar_autores(n_autores):
         try:
             nome = fake.name()
             nacionalidade = random.choice(NACIONALIDADES)[0]
+            cpf = ''.join([str(random.randint(0,9)) for _ in range(11)])
             novo_autor = Autor(
                 nome = nome, 
-                nacionalidade = nacionalidade
+                nacionalidade = nacionalidade,
+                cpf = cpf
             )
             novo_autor.save()
             print('Novo autor adicionado com sucesso.\n')
@@ -240,6 +244,24 @@ def corrigir_email():
     for usuario in usuarios:
         usuario.email = f'{usuario.first_name.lower().replace(' ', '_')}{usuario.last_name.lower().replace(' ', '_')}@exemple.com'
         usuario.save()
+
+
+def apagar_usuarios_vazios():
+    # Apaga usuários que não são admins e que não estão associados a nenhum outro model.
+    usuarios = User.objects.all()
+    for usuario in usuarios:
+        aluno = Aluno.objects.filter(usuario__username = usuario.username).exists()
+        if aluno:
+            continue
+        professor = Professor.objects.filter(usuario__username = usuario.username).exists()
+        if professor:
+            continue
+        funcionario = Funcionario.objects.filter(usuario__username = usuario.username).exists()
+        if funcionario:
+            continue
+        if not usuario.is_superuser:
+            usuario.delete()
+
 
 if __name__ == '__main__':
     # TODO: Adicionar 100 alunos, 10 professores e 10 funcionarios.

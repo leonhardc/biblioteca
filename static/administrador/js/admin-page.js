@@ -58,13 +58,13 @@ function openTab(event, tabId) {
     let botaoAddUsuario = document.getElementById('botao-add-usuario');
     let botaoAddLivro = document.getElementById('botao-add-livro');
     if (event.currentTarget.id === 'aba-alunos'){
-        botaoAddUsuario.href = `${window.location.origin}/usuario/criar-aluno/`
+        botaoAddUsuario.href = `${window.location.origin}/administrador/criar-aluno/`
     }
     if (event.currentTarget.id === 'aba-professores'){
-        botaoAddUsuario.href = `${window.location.origin}/usuario/criar-professor/`
+        botaoAddUsuario.href = `${window.location.origin}/administrador/criar-professor/`
     }
     if (event.currentTarget.id === 'aba-funcionarios'){
-        botaoAddUsuario.href = `${window.location.origin}/usuario/criar-funcionario/`
+        botaoAddUsuario.href = `${window.location.origin}/administrador/criar-funcionario/`
     }
     if (event.currentTarget.id === 'aba-livros'){
         botaoAddLivro.href = `${window.location.origin}/livro/criar-livro/`
