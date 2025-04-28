@@ -66,9 +66,9 @@ def criar_aluno(request):
     if request.method == 'POST':
         formulario = FormularioAluno(request.POST)
         if formulario.is_valid():
-            usuario = User.objects.get(username=formulario.cleaned_data['usuario'])
+            usuario = User.objects.filter(username=formulario.cleaned_data['usuario']).exists()
             if not usuario:
-                aluno = Aluno.objects.get(cpf=formulario.cleaned_data['cpf'])
+                aluno = Aluno.objects.filter(cpf=formulario.cleaned_data['cpf']).exists()
                 if not aluno:
                     # criar novo usuario
                     try:
@@ -79,7 +79,7 @@ def criar_aluno(request):
                             email = formulario.cleaned_data['email'],
                             password = '1234'
                         )
-                        curso = Curso.objects.get(curso=formulario.cleaned_data['curso'])
+                        curso = Curso.objects.get(cod_curso=formulario.cleaned_data['curso'])
                         aluno = Aluno.objects.create(
                             usuario = usuario,
                             matricula = gerar_matricula_aluno(),
@@ -113,9 +113,9 @@ def criar_professor(request):
     if request.method == 'POST':
         formulario = FormularioProfessor(request.POST)
         if formulario.is_valid():
-            usuario = User.objects.get(username=formulario.cleaned_data['usuario'])
+            usuario = User.objects.filter(username=formulario.cleaned_data['usuario']).exists()
             if not usuario:
-                professor = Professor.objects.get(cpf=formulario.cleaned_data['cpf'])
+                professor = Professor.objects.filter(cpf=formulario.cleaned_data['cpf']).exists()
                 if not professor:
                     try:
                         usuario = User.objects.create_user(
@@ -125,7 +125,7 @@ def criar_professor(request):
                             email = formulario.cleaned_data['email'],
                             password = '1234'
                         )
-                        curso = Curso.objects.get(curso=formulario.cleaned_data['curso'])
+                        curso = Curso.objects.get(cod_curso=formulario.cleaned_data['curso'])
                         professor = Professor.objects.create(
                             usuario = usuario, 
                             matricula = gerar_matricula_professor(),
@@ -135,8 +135,9 @@ def criar_professor(request):
                             contratacao = formulario.cleaned_data['contratacao']
                         )
                         messages.add_message(request, messages.SUCCESS, 'Professor adicionado com sucesso.')
+                        return redirect('/administrador/usuarios/')
                     except Exception as e:
-                        messages.add_message(request, messages.ERROR, 'Erro ao criar Usuário ou Professor.')
+                        messages.add_message(request, messages.ERROR, f'Erro ao criar Usuário ou Professor.\n{e}')
                         return redirect('/administrador/usuarios/')
                 else:
                     messages.add_message(request, messages.ERROR, 'Professor já existe na base de dados.')
@@ -156,10 +157,31 @@ def criar_funcionario(request):
     if request.method == 'POST':
         formulario = FormularioFuncionario(request.POST)
         if formulario.is_valid():
-            usuario = User.objects.get(username=formulario.cleaned_data['usuario'])
+            usuario = User.objects.filter(username=formulario.cleaned_data['usuario']).exists()
             if not usuario:
-                # TODO: Fazer primeira validação por cpf
-                funcionario = Funcionario.objects.get()
+                funcionario = Funcionario.objects.filter(cpf=formulario.cleaned_data['cpf']).exists()
+                if not funcionario:
+                    try:
+                        usuario = User.objects.create_user(
+                            username = formulario.cleaned_data['usuario'],
+                            first_name = formulario.cleaned_data['nome'],
+                            last_name =  formulario.cleaned_data['sobrenome'],
+                            email = formulario.cleaned_data['email'],
+                            password = '1234'
+                        )
+                        funcionario = Funcionario.objects.create(
+                            usuario = usuario,
+                            matricula = gerar_matricula_funcionario(),
+                            cpf = formulario.cleaned_data['cpf']
+                        )
+                        messages.add_message(request, messages.SUCCESS, f'Funcionario criado com sucesso.')
+                        return redirect('/administrador/usuarios/')
+                    except Exception as e:
+                        messages.add_message(request, messages.ERROR, f'Erro ao criar Usuário ou Funcionario.\n{e}')
+                        return redirect('/administrador/usuarios/')
+                else:
+                    messages.add_message(request, messages.ERROR, 'Funcionário já existe na base de dados.')
+                    return render(request, template_name, context={'form':formulario})
             else:
                 messages.add_message(request, messages.ERROR, 'A base de dados já contem um usuário com esse nome.')
                 return render(request, template_name, context={'form':formulario})

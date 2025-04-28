@@ -75,6 +75,7 @@ class FormularioAluno(forms.Form):
     sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput(attrs={'placeholder':'Digite o sobrenome do aluno'}))
     email = forms.CharField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'placeholder':'Email do aluno'}))
     usuario = forms.CharField(label='Usuário', max_length=20, widget=forms.TextInput(attrs={'placeholder':'Digite seu nome de usuário'}))
+    cpf = forms.CharField(label='CPF', max_length=11, widget=forms.TextInput(attrs={'placeholder':'Digite cpf de usuário'}))
     # Endereço
     tipo_logradouro = forms.ChoiceField(label='Tipo de Logradouro', choices=LOGRADOUROS, widget=forms.Select(attrs={}))
     logradouro = forms.CharField(label='Logradouro', max_length=100, widget=forms.TextInput(attrs={'placeholder':'Digite o nome da rua'}))

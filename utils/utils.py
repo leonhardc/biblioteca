@@ -111,7 +111,7 @@ def formatar_endereco(formulario):
 def gerar_matricula_aluno():
     while(True):
         matricula = f'{random.randint(100000, 999999)}'
-        aluno = Aluno.objects.get(matricula=matricula)
+        aluno = Aluno.objects.filter(matricula=matricula).exists()
         if not aluno:
             break
     return matricula
@@ -119,7 +119,15 @@ def gerar_matricula_aluno():
 def gerar_matricula_professor():
     while(True):
         matricula = f'{random.randint(1000, 9999)}'
-        professor = Aluno.objects.get(matricula=matricula)
+        professor = Professor.objects.filter(matricula=matricula).exists()
         if not professor:
+            break
+    return matricula
+
+def gerar_matricula_funcionario():
+    while(True):
+        matricula = f'{random.randint(1000, 9999)}'
+        funcionario = Funcionario.objects.filter(matricula=matricula).exists()
+        if not funcionario:
             break
     return matricula

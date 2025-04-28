@@ -3,7 +3,7 @@
 {% block content %}
 <!-- Formulário de Usuários - Aluno -->
 <h3>Criar Funcionario</h3>
-<form action="{% url 'administrador:criar_funcionario'%}" method="POST" id="formulario-aluno">
+<form action="{% url 'administrador:criar_funcionario'%}" method="POST" id="formulario-funcionario">
     {% csrf_token %}
     {% for field in form %}
     <div class="separador">
