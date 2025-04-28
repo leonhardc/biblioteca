@@ -355,6 +355,8 @@ def deletar_funcionario(request, uid):
 
 # Livros: dashboard e crud
 
+# Views de Livros
+
 def dashboard_admin_livros(request):
     template_name = 'admin/dashboard_admin_livros.html'
     if request.method == 'GET':
@@ -398,6 +400,70 @@ def dashboard_admin_livros(request):
                 context={'livros':{'livros':livros, 'autores':autores, 'categorias':categorias, 'reservas':reservas, 'emprestimos':emprestimos}, 'contador':contador}
             )
 
+def criar_livro(request):
+    if request.method == 'GET':
+        pass
+    if request.method == 'POST':
+        pass
+
+def informacoes_livro(request, lid):
+    pass
+
+def atualizar_informacoes_livro(request, lid):
+    pass
+
+def deletar_livro(request, lid):
+    pass
+
+## Views de Autores
+def criar_autor(request):
+    pass
+
+def informacoes_autor(request, aid):
+    pass
+
+def atualizar_informacoes_autor(request, aid):
+    pass
+
+def deletar_autor(request, aid):
+    pass
+## Views de Categorias
+def criar_categoria(request):
+    pass
+
+def informacoes_categoria(request, cid):
+    pass
+
+def atualizar_informacoes_categoria(request, cid):
+    pass
+
+def deletar_categoria(request, cid):
+    pass
+## Views de Reservas
+def criar_reserva(request):
+    pass
+
+def informacoes_reserva(request, rid):
+    pass
+
+def atualizar_informacoes_reserva(request, rid):
+    pass
+
+def deletar_reserva(request, rid):
+    pass
+## Views de Emprestimos
+def criar_emprestimo(request):
+    pass
+
+def informacoes_emprestimo(request, eid):
+    pass
+
+def atualizar_informacoes_emprestimo(request, eid):
+    pass
+
+def deletar_emprestimo(request, eid):
+    pass
+
 # Cursos: dashboard e crud
 
 def dashboard_admin_cursos(request):
@@ -408,3 +474,15 @@ def dashboard_admin_cursos(request):
         paginador_cursos = Paginator(cursos, 20)
         cursos = paginador_cursos.get_page(request.GET.get('page'))
         return render(request, template_name,context={'cursos':cursos, 'contador':contador})
+
+def criar_curso(request):
+    pass
+
+def informacoes_curso(request, cid):
+    pass
+
+def atualizar_informacoes_curso(request, cid):
+    pass
+
+def deletar_curso(request, cid):
+    pass
