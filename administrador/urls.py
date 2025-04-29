@@ -28,10 +28,10 @@ urlpatterns = [
     path('atualizar-livro/<int:lid>/', views.atualizar_informacoes_livro, name='atualizar_livro'),
     path('deletar-livro/<int:lid>/', views.deletar_livro, name='deletar_livro'),
     ## Urls Autor
-    path('criar-livro/', views.criar_livro, name='criar_livro'),
-    path('informacoes-livro/<int:lid>/', views.informacoes_livro, name='informacoes_livro'),
-    path('atualizar-livro/<int:lid>/', views.atualizar_informacoes_livro, name='atualizar_livro'),
-    path('deletar-livro/<int:lid>/', views.deletar_livro, name='deletar_livro'),
+    path('criar-autor/', views.criar_autor, name='criar_autor'),
+    path('informacoes-autor/<int:aid>/', views.informacoes_autor, name='informacoes_autor'),
+    path('atualizar-autor/<int:aid>/', views.atualizar_informacoes_autor, name='atualizar_autor'),
+    path('deletar-autor/<int:aid>/', views.deletar_autor, name='deletar_autor'),
     ## Urls Categoria
     path('criar-categoria/', views.criar_categoria, name='criar_categoria'),
     path('informacoes-categoria/<int:cid>/', views.informacoes_categoria, name='informacoes_categoria'),
