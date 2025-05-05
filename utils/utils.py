@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from usuario.forms import FormularioAluno
 from usuario.models import Aluno, Professor, Funcionario
+from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
 import random
 import re
 
@@ -94,6 +95,51 @@ def informacoes_formulario_funcionario(funcionario:Funcionario):
         'usuario': funcionario.usuario.username,
         'matricula': funcionario.matricula,
         'cpf': funcionario.cpf
+    }
+    return data
+
+def informacoes_formulario_livro(livro:Livro):
+    data = {
+        'isbn': livro.isbn,
+        'titulo': livro.titulo,
+        'subtitulo': livro.subtitulo,
+        'lancamento': livro.lancamento,
+        'editora': livro.editora,
+        'copias': livro.copias,
+        'autores': livro.autores.all(),
+        'categoria': livro.categoria.id
+    }
+    return data
+
+def informacoes_formulario_autor(autor:Autor):
+    data = {
+        'nome': autor.nome,
+        'cpf': autor.cpf,
+        'nacionalidade': autor.nacionalidade
+    }
+    return data
+
+def informacoes_formulario_categoria(categoria:Categoria):
+    data = {
+        'categoria': categoria.categoria,
+        'descricao': categoria.descricao
+    }
+    return data
+
+def informacoes_formulario_reserva(reserva:Reserva):
+    data = {
+        'usuario': reserva.usuario.username,
+        'livro': reserva.livro.isbn,
+        'data_reserva': reserva.data_reserva
+    }
+    return data
+
+def informacoes_formulario_emprestimo(emprestimo:Emprestimo):
+    data = {
+        'usuario': emprestimo.usuario.username,
+        'livro': emprestimo.livro.isbn,
+        'data_emprestimo': emprestimo.data_emprestimo,
+        'data_devolucao': emprestimo.data_devolucao
     }
     return data
 

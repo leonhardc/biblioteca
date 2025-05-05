@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
 from usuario.forms import FormularioAluno, FormularioProfessor, FormularioFuncionario
+from livro.forms import FormularioLivro, FormularioAutor, FormularioCategoria, FormularioEmprestimo, FormularioReserva
 from curso.models import Curso
 from utils.utils import *
 
@@ -407,10 +408,30 @@ def criar_livro(request):
         pass
 
 def informacoes_livro(request, lid):
-    pass
+    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    if request.method == 'GET':
+        livro = Livro.objects.get(id=lid)
+        if livro:
+            return render(request, template_name, context={'livro':livro})
+        else:
+            messages.add_message(request, messages.ERROR, 'Não foi possivel encontra o livro solicitado.')
+            return redirect('/administrador/livros/')
+
 
 def atualizar_informacoes_livro(request, lid):
-    pass
+    template_name = 'admin/dashboard_admin_atualizar_livro.html'
+    if request.method=='GET':
+        livro = Livro.objects.filter(id=lid).exists()
+        if livro:
+            livro = Livro.objects.get(id=lid)
+            data = informacoes_formulario_livro(livro)
+            formulario = FormularioLivro(initial=data)
+            return render(request, template_name, context={'form':formulario, 'livro':livro})
+        else:
+            messages.add_message(request, messages.ERROR, 'Livro não encontrado.')
+            return redirect('/administrador/livros/')
+    if request.method=='POST':
+        pass
 
 def deletar_livro(request, lid):
     pass
@@ -420,7 +441,14 @@ def criar_autor(request):
     pass
 
 def informacoes_autor(request, aid):
-    pass
+    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    if request.method=='GET':
+        autor = Autor.objects.get(id=aid)
+        if autor:
+            return render(request, template_name, context={'autor':autor})
+        else:
+            messages.add_message(request, messages.ERROR, 'Autor não encontrado.')
+            return redirect('/administrador/livros/')
 
 def atualizar_informacoes_autor(request, aid):
     pass
@@ -432,7 +460,14 @@ def criar_categoria(request):
     pass
 
 def informacoes_categoria(request, cid):
-    pass
+    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    if request.method=='GET':
+        categoria = Categoria.objects.get(id=cid)
+        if categoria:
+            return render(request, template_name, context={'categoria':categoria})
+        else:
+            messages.add_message(request, messages.ERROR, 'Categoria não encontrada')
+            return redirect('/administrador/livros/')
 
 def atualizar_informacoes_categoria(request, cid):
     pass
@@ -444,7 +479,14 @@ def criar_reserva(request):
     pass
 
 def informacoes_reserva(request, rid):
-    pass
+    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    if request.method=='GET':
+        reserva=Reserva.objects.get(id=rid)
+        if reserva:
+            return render(request, template_name, context={'reserva':reserva})
+        else:
+            messages.add_message(request, messages.ERROR, 'Reserva não encontrada.')
+            return redirect('/administrador/livros/')
 
 def atualizar_informacoes_reserva(request, rid):
     pass
@@ -456,7 +498,14 @@ def criar_emprestimo(request):
     pass
 
 def informacoes_emprestimo(request, eid):
-    pass
+    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    if request.method=='GET':
+        emprestimo=Emprestimo.objects.get(id=eid)
+        if emprestimo:
+            return render(request, template_name, context={'emprestimo':emprestimo})
+        else:
+            messages.add_message(request, messages.ERROR, 'Emprestimo não encontrado.')
+            return redirect('/administrador/livros/')
 
 def atualizar_informacoes_emprestimo(request, eid):
     pass

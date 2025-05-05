@@ -500,7 +500,7 @@ tbody tr:hover {
     grid-template-columns: 1fr 1fr;
     gap: 10px
 }
-input, select {
+input {
     height: 30px;
     padding-left: 10px;
 }
@@ -522,3 +522,9 @@ h3 {
     padding: 10px 30px;
 }
 
+
+/* styles de livro do app adm */
+
+select {
+    min-height: 35px;
+}

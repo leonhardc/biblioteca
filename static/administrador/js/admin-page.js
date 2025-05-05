@@ -67,19 +67,19 @@ function openTab(event, tabId) {
         botaoAddUsuario.href = `${window.location.origin}/administrador/criar-funcionario/`
     }
     if (event.currentTarget.id === 'aba-livros'){
-        botaoAddLivro.href = `${window.location.origin}/livro/criar-livro/`
+        botaoAddLivro.href = `${window.location.origin}/administrador/criar-livro/`
     }
     if (event.currentTarget.id === 'aba-autores'){
-        botaoAddLivro.href = `${window.location.origin}/livro/criar-autor/`
+        botaoAddLivro.href = `${window.location.origin}/administrador/criar-autor/`
     }
     if (event.currentTarget.id === 'aba-categorias'){
-        botaoAddLivro.href = `${window.location.origin}/livro/criar-categoria/`
+        botaoAddLivro.href = `${window.location.origin}/administrador/criar-categoria/`
     }
     if (event.currentTarget.id === 'aba-reservas'){
-        botaoAddLivro.href = `${window.location.origin}/livro/criar-reserva/`
+        botaoAddLivro.href = `${window.location.origin}/administrador/criar-reserva/`
     }
     if (event.currentTarget.id === 'aba-emprestimos'){
-        botaoAddLivro.href = `${window.location.origin}/livro/criar-emprestimo/`
+        botaoAddLivro.href = `${window.location.origin}/administrador/criar-emprestimo/`
     }
 }
 

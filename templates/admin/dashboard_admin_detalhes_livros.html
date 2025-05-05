@@ -1,0 +1,111 @@
+{%extends 'admin/dashboard-admin.html'%}
+{% load static%}
+{% block content %}
+{% if livro %}
+<div class="container">
+    <!-- Detalhes do Aluno -->
+    <div class="dados">
+        <div class="dados-pessoais">
+            <h4>Dados do Livro</h4>
+            <div class="label">
+                <span>Titulo:</span>
+                {{ livro.titulo }} {{livro.subtitulo}}
+            </div>
+            <div class="label">
+                <span>Ano de Lançamento:</span>
+                {{livro.lancamento}}
+            </div>
+            <div class="label">
+                <span>Editora:</span>
+                {{ livro.editora }}
+            </div>
+            <div class="label">
+                <span>Quantidade de cópias:</span>
+                {{ livro.copias }}
+            </div>
+            <div class="label">
+                <span>Autores:</span>
+                {% for autor in livro.autores.all %}
+                    {{ autor }}.
+                {% endfor %}
+            </div>
+            <div class="label">
+                <span>Categoria:</span>
+                {{livro.categoria}}
+            </div>
+        </div>
+    </div>
+    <div class="botoes-de-usuario">
+        <a class="botao botao-info" href="{% url 'administrador:atualizar_livro' livro.id %}">
+            Atualizar Informações
+            <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+        </a>
+        
+        <a class="botao botao-deletar" href="{% url 'administrador:deletar_livro' livro.id %}">
+            Deletar Aluno
+            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+        </a>
+    </div>
+</div>
+{% elif autor %}
+<div class="container">
+    <div class="dados">
+        <div class="dados-pessoais">
+            <h4>Dados do Autor</h4>
+            <div class="label">
+                <span>Nome:</span>
+                {{autor.nome}}
+            </div>
+            <div class="label">
+                <span>CPF:</span>
+                {{autor.cpf}}
+            </div>
+            <div class="label">
+                <span>Nacionalidade:</span>
+                {{autor.nacionalidade}}
+            </div>
+        </div>
+    </div>
+    <div class="botoes-de-usuario">
+        <a class="botao botao-info" href="{% url 'administrador:atualizar_autor' autor.id %}">
+            Atualizar Informações
+            <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+        </a>
+        <a class="botao botao-deletar" href="{% url 'administrador:deletar_autor' autor.id %}">
+            Deletar Professor
+            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+        </a>
+    </div>
+</div>
+
+{% elif categoria %}
+<div class="container">
+    <div class="conteudo-usuario">
+        <div class="dados">
+            <div class="dados-pessoais">
+                <h4>Dados da Categoria</h4>
+                <div class="label">
+                    <span>Categoria:</span>
+                    {{categoria.categoria}}
+                </div>
+                <div class="label">
+                    <span>Descrição:</span>
+                    {{categoria.descricao}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="botoes-de-usuario">
+        <a class="botao botao-info" href="{% url 'administrador:atualizar_categoria' categoria.id %}">
+            Atualizar Informações
+            <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+        </a>
+        <a class="botao botao-deletar" href="{% url 'administrador:deletar_categoria' categoria.id %}">
+            Deletar Funcionario
+            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+        </a>
+    </div>
+</div>
+
+{% endif %}
+{% endblock content %}
