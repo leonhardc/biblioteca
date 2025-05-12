@@ -628,3 +628,17 @@ h3
 select {
     min-height: 35px;
 }
+
+#id_autores 
+{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#id_autores div label
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}

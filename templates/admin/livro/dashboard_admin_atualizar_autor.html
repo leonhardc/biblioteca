@@ -1,8 +1,8 @@
 {% extends 'admin/dashboard-admin.html' %}
 {% load static %}
 {% block content %}
-<!-- Formulário de Livros - Atualizar Livros -->
-<h3>Atualizar Livro</h3>
+<!-- Formulário de Livros - Atualizar Autor -->
+<h3>Atualizar Autor</h3>
 <form action="{% url 'administrador:atualizar_livro' livro.id %}" method="POST" id="formulario-livro">
     {% csrf_token %}
     {% for field in form %}

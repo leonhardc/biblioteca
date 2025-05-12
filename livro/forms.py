@@ -14,11 +14,20 @@ class FormularioLivro(forms.Form):
     lancamento = forms.DateField(label='Ano de Lançamento', widget=forms.DateInput())
     editora = forms.CharField(label='Editora', widget=forms.TextInput(attrs={'placeholder':'Digite a Editora do livro'}))    
     copias = forms.IntegerField(label='Quantidade de cópias', max_value=999, min_value=0)
-    autores = forms.ChoiceField(label='Autores', choices=AUTORES, widget=forms.SelectMultiple())
+    autores = forms.MultipleChoiceField(label='Autores', choices=AUTORES, widget=forms.SelectMultiple())
     categoria = forms.ChoiceField(label='Categoria', choices=CATEGORIAS, widget=forms.Select(attrs={}))
 
-class FormularioAutor(forms.ModelForm):
-    pass
+    def clean_categoria(self):
+        categoria_id = self.cleaned_data['categoria']
+        categoria = Categoria.objects.get(id=categoria_id)
+        if not categoria:
+            raise ValidationError('Categoria não existe na base de dados.')
+        return categoria
+
+class FormularioAutor(forms.Form):
+    nome = forms.CharField(label='Nome', max_length=100, widget=forms.TextInput())
+    cpf = forms.CharField(label='CPF', max_length=100, widget=forms.TextInput())
+    nacionalidade = forms.CharField(label='Nome', max_length=100, choices=NACIONALIDADES, widget=forms.Select())
 
 class FormularioCategoria(forms.ModelForm):
     pass

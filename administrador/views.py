@@ -400,10 +400,38 @@ def dashboard_admin_livros(request):
             )
 
 def criar_livro(request):
+    template_name = 'admin/livro/dashboard_admin_criar_livro.html'
     if request.method == 'GET':
-        pass
+        formulario = FormularioLivro()
+        return render(request,template_name, context={'form':formulario})
     if request.method == 'POST':
-        pass
+        formulario = FormularioLivro(request.POST)
+        if formulario.is_valid():
+            livro = Livro.objects.filter(isbn=formulario.cleaned_data['isbn']).exists()
+            if not livro:
+                try:
+                    livro = Livro(
+                        isbn=formulario.cleaned_data['isbn'],
+                        titulo=formulario.cleaned_data['titulo'],
+                        subtitulo=formulario.cleaned_data['subtitulo'],
+                        lancamento=formulario.cleaned_data['lancamento'],
+                        editora=formulario.cleaned_data['editora'],
+                        copias=formulario.cleaned_data['copias'],
+                        categoria=formulario.cleaned_data['categoria'],
+                    )
+                    livro.save()
+                    livro.autores.set(formulario.cleaned_data['autores'])
+                    messages.add_message(request, messages.SUCCESS, 'Livro adicionado com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao adicionar novo livro.\n{e}.')
+                    return render(request, template_name, context={'form':formulario})
+            else:
+                messages.add_message(request, messages.ERROR, 'O livro já existe na base de dados.')
+                return render(request, template_name, context={'form':formulario})
+        else:
+            messages.add_message(request, messages.ERROR, 'Não foi possível criar o livro. Formulário inválido.')
+            return render(request, template_name, context={'form':formulario})
 
 def informacoes_livro(request, lid):
     template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
@@ -428,14 +456,71 @@ def atualizar_informacoes_livro(request, lid):
             messages.add_message(request, messages.ERROR, 'Livro não encontrado.')
             return redirect('/administrador/livros/')
     if request.method=='POST':
-        pass
+        formulario = FormularioLivro(request.POST)
+        if formulario.is_valid():
+            livro = Livro.objects.filter(id=lid).exists()
+            if livro:
+                try:
+                    livro = Livro.objects.get(id=lid)
+                    livro.titulo = formulario.cleaned_data['titulo']
+                    livro.subtitulo = formulario.cleaned_data['subtitulo']
+                    livro.lancamento = formulario.cleaned_data['lancamento']
+                    livro.editora = formulario.cleaned_data['editora']
+                    livro.copias = formulario.cleaned_data['copias']
+                    livro.autores.set(formulario.cleaned_data['autores'])
+                    livro.categoria = formulario.cleaned_data['categoria']
+                    livro.save()
+                    messages.add_message(request, messages.SUCCESS, 'Livro atualizado com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao atualizar os dados. {e}.')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Erro ao atualizar os dados. Livro não encontrado.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Erro ao atualizar os dados. Formulário Inválido.')
+            return redirect('/administrador/livros/')
 
 def deletar_livro(request, lid):
-    pass
+    if request.method=='GET':
+        livro = Livro.objects.get(id=lid)
+        if livro:
+            livro.delete()
+            messages.add_message(request, messages.INFO, 'Livro deletado com sucesso.')
+            return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.INFO, 'Livro não encontrado.')
+            return redirect('/administrador/livros/')
 
 ## Views de Autores
 def criar_autor(request):
-    pass
+    template_name = 'admin/livro/dashboard_admin_criar_autor.html'
+    if request.method == 'GET':
+        formulario = FormularioAutor()
+        return render(request, template_name, context={'form':formulario})
+    if request.method == 'POST':
+        formulario = FormularioAutor(request.POST)
+        if formulario.is_valid():
+            autor = Autor.objects.filter(cpf=formulario.cleaned_data['cpf']).exists()
+            if not autor:
+                try:
+                    autor = Autor.objects.create(
+                        nome = formulario.cleaned_data['nome'],
+                        cpf = formulario.cleaned_data['cpf'],
+                        nacionalidade = formulario.cleaned_data['nacionalidade'],
+                    )
+                    messages.add_message(request, messages.SUCCESS, 'Autor salvo com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao salvar informações na base de dados. {e}.')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'O Autor já existe.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Erro ao salvar informações do autor. Formulário inválido.')
+            return redirect('/administrador/livros/')
 
 def informacoes_autor(request, aid):
     template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
@@ -448,7 +533,15 @@ def informacoes_autor(request, aid):
             return redirect('/administrador/livros/')
 
 def atualizar_informacoes_autor(request, aid):
-    pass
+    template_name = '/admin/livro/dashboard_admin_atualizar_autor.html'
+    if request.method == 'GET':
+        autor = Autor.objects.get(id=aid)
+        data = informacoes_formulario_autor(autor)
+        formulario = FormularioAutor(initial=data)
+        return render(request, template_name, context={'form':formulario})
+    if request.method == 'POST':
+        # TODO: Escrever código para atualizar os dados de autor
+        pass
 
 def deletar_autor(request, aid):
     pass

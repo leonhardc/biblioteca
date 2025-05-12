@@ -1,9 +1,9 @@
 {% extends 'admin/dashboard-admin.html' %}
 {% load static %}
 {% block content %}
-<!-- Formulário de Livros - Atualizar Livros -->
-<h3>Atualizar Livro</h3>
-<form action="{% url 'administrador:atualizar_livro' livro.id %}" method="POST" id="formulario-livro">
+<!-- Formulário de Livros - Criar Livro -->
+<h3>Criar Livro</h3>
+<form action="{% url 'administrador:criar_livro' %}" method="POST" id="formulario-livro">
     {% csrf_token %}
     {% for field in form %}
     <div class="separador">
@@ -11,8 +11,6 @@
         {{ field.errors }}
     </div>
     {% endfor %}
-    <div></div>
-    <div></div>
     <div class="botao-submit">
         <button style="display: block;" class="botao botao-info" type="submit">Salvar</button>
     </div>

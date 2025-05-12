@@ -53,7 +53,7 @@
                     <td>{{livro.lancamento}}</td>
                     <td>{{livro.editora}}</td>
                     <td>{{livro.copias}}</td>
-                    <td>{% for autor in livro.autores.all %} {{autor}}, {%endfor%}</td>
+                    <td>{% for autor in livro.autores.all %} {{autor}}. {%endfor%}</td>
                     <td>{{livro.categoria}}</td>
                 </tr>
                 {% endfor %}
