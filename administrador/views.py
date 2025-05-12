@@ -20,7 +20,7 @@ def dashboard_admin(request):
 # Usuários: dashboard e crud
 
 def dashboard_admin_usuarios(request):
-    template_name = 'admin/dashboard_admin_usuarios.html'
+    template_name = 'admin/usuario/dashboard_admin_usuarios.html'
     if request.method == 'GET':
         alunos = Aluno.objects.all()
         professores = Professor.objects.all()
@@ -63,7 +63,7 @@ def dashboard_admin_usuarios(request):
 # views de Alunos
 
 def criar_aluno(request):
-    template_name = "admin/dashboard_admin_criar_aluno.html"
+    template_name = "admin/usuario/dashboard_admin_criar_aluno.html"
     if request.method == 'GET':
         formulario = FormularioAluno()
         return render(request, template_name, context={'form':formulario})
@@ -111,14 +111,14 @@ def criar_aluno(request):
 
 def informacoes_aluno(request, uid):
     if request.method == 'GET':
-        template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
+        template_name = 'admin/usuario/dashboard_admin_detalhes_usuarios.html'
         aluno = Aluno.objects.get(id=uid)
         contexto = {'aluno': aluno}
         return render(request, template_name, context=contexto)
 
 def atualizar_infomacoes_aluno(request, uid):
     """ Em desenvolvimento """
-    template_name = "admin/dashboard_admin_atualizar_aluno.html"
+    template_name = "admin/usuario/dashboard_admin_atualizar_aluno.html"
     if request.method == "GET":
         aluno = Aluno.objects.get(id=uid)
         endereco = separar_endereco(aluno.endereco)
@@ -165,7 +165,7 @@ def deletar_aluno(request, uid):
 # views de Professores
 
 def criar_professor(request):
-    template_name = "admin/dashboard_admin_criar_professor.html"
+    template_name = "admin/usuario/dashboard_admin_criar_professor.html"
     if request.method == 'GET':
         formulario = FormularioProfessor()
         return render(request, template_name, context={'form':formulario})
@@ -210,7 +210,7 @@ def criar_professor(request):
 
 def informacoes_professor(request, uid):
     if request.method=='GET':
-        template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
+        template_name = 'admin/usuario/dashboard_admin_detalhes_usuarios.html'
         professor = Professor.objects.get(id=uid)
         contexto = {}
         contexto['professor'] = professor
@@ -218,7 +218,7 @@ def informacoes_professor(request, uid):
 
 def atualizar_informacoes_professor(request, uid):
     """ Em desenvolvimento """
-    template_name = "admin/dashboard_admin_atualizar_professor.html"
+    template_name = "admin/usuario/dashboard_admin_atualizar_professor.html"
     if request.method == 'GET':
         professor = Professor.objects.get(id=uid)
         data = informacoes_formulario_professor(professor)
@@ -264,7 +264,7 @@ def deletar_professor(request, uid):
 # views de Funcionarios
 
 def criar_funcionario(request):
-    template_name = 'admin/dashboard_admin_criar_funcionario.html'
+    template_name = 'admin/usuario/dashboard_admin_criar_funcionario.html'
     if request.method == 'GET':
         formulario = FormularioFuncionario()
         return render(request, template_name, context={'form':formulario})
@@ -305,14 +305,14 @@ def criar_funcionario(request):
 
 def informacoes_funcionario(request, uid):
     if request.method=='GET':
-        template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
+        template_name = 'admin/usuario/dashboard_admin_detalhes_usuarios.html'
         funcionario = Funcionario.objects.get(id=uid)
         contexto = {}
         contexto['funcionario'] = funcionario
         return render(request, template_name, context=contexto)
 
 def atualizar_informacoes_funcionario(request, uid):
-    template_name = 'admin/dashboard_admin_atualizar_funcionario.html'
+    template_name = 'admin/usuario/dashboard_admin_atualizar_funcionario.html'
     if request.method == "GET":
         funcionario = Funcionario.objects.get(id=uid)
         data = informacoes_formulario_funcionario(funcionario)
@@ -343,8 +343,6 @@ def atualizar_informacoes_funcionario(request, uid):
             return render(request, template_name, context={"form": formulario, 'funcionario': funcionario})
 
 def deletar_funcionario(request, uid):
-
-
     funcionario = Funcionario.objects.get(id=uid)
     if funcionario:
         funcionario.delete()
@@ -359,7 +357,7 @@ def deletar_funcionario(request, uid):
 # Views de Livros
 
 def dashboard_admin_livros(request):
-    template_name = 'admin/dashboard_admin_livros.html'
+    template_name = 'admin/livro/dashboard_admin_livros.html'
     if request.method == 'GET':
         livros = Livro.objects.all()
         autores = Autor.objects.all()
@@ -408,7 +406,7 @@ def criar_livro(request):
         pass
 
 def informacoes_livro(request, lid):
-    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
     if request.method == 'GET':
         livro = Livro.objects.get(id=lid)
         if livro:
@@ -417,9 +415,8 @@ def informacoes_livro(request, lid):
             messages.add_message(request, messages.ERROR, 'Não foi possivel encontra o livro solicitado.')
             return redirect('/administrador/livros/')
 
-
 def atualizar_informacoes_livro(request, lid):
-    template_name = 'admin/dashboard_admin_atualizar_livro.html'
+    template_name = 'admin/livro/dashboard_admin_atualizar_livro.html'
     if request.method=='GET':
         livro = Livro.objects.filter(id=lid).exists()
         if livro:
@@ -441,7 +438,7 @@ def criar_autor(request):
     pass
 
 def informacoes_autor(request, aid):
-    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
     if request.method=='GET':
         autor = Autor.objects.get(id=aid)
         if autor:
@@ -460,7 +457,7 @@ def criar_categoria(request):
     pass
 
 def informacoes_categoria(request, cid):
-    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
     if request.method=='GET':
         categoria = Categoria.objects.get(id=cid)
         if categoria:
@@ -479,7 +476,7 @@ def criar_reserva(request):
     pass
 
 def informacoes_reserva(request, rid):
-    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
     if request.method=='GET':
         reserva=Reserva.objects.get(id=rid)
         if reserva:
@@ -498,7 +495,7 @@ def criar_emprestimo(request):
     pass
 
 def informacoes_emprestimo(request, eid):
-    template_name = 'admin/dashboard_admin_detalhes_livros.html'
+    template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
     if request.method=='GET':
         emprestimo=Emprestimo.objects.get(id=eid)
         if emprestimo:
@@ -516,7 +513,7 @@ def deletar_emprestimo(request, eid):
 # Cursos: dashboard e crud
 
 def dashboard_admin_cursos(request):
-    template_name = 'admin/dashboard_admin_cursos.html'
+    template_name = 'admin/curso/dashboard_admin_cursos.html'
     if request.method == 'GET':
         cursos = Curso.objects.all()
         contador = {'cursos':len(cursos)}

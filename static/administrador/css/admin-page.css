@@ -1,12 +1,6 @@
 /* Estilos do Documento */
-*{
-    margin: 0;
-    padding: 0;
-    font-family: "Carme", serif;
-    font-style: normal;
-}
-
-:root {
+:root 
+{
     --cor-primaria: #0f0526;
     --cor-secundaria: #6D27E7;
     --cor-texto-primaria: var(--cor-primaria);
@@ -15,9 +9,19 @@
     --font-family-default: "Carme", serif;
 }
 
+*
+{
+    margin: 0;
+    padding: 0;
+    font-family: "Carme", serif;
+    font-style: normal;
+}
+
 /* Classes gerais do projeto */
 /* styles de Mensagens */
-.messages, .errorlist{
+.messages, 
+.errorlist
+{
     width: 100%;
     list-style: none;
     display: flex;
@@ -25,15 +29,19 @@
     justify-content: start;
 }
 
-.errorlist {
+.errorlist 
+{
     margin-top: 5px;
 }
 
-.errorlist li {
+.errorlist li 
+{
     padding: 5px 10px;
     border-radius: 5px;
 }
-.alert {
+
+.alert 
+{
     padding: 10px 20px;
     border-radius: 10px;
     display: flex;
@@ -42,32 +50,41 @@
     align-items: center;
     margin-left: 60px;
 }
-.alert-success {
+
+.alert-success 
+{
     background-color: #cce5ff;
     color: #004085;
-    /* border: 1px solid #004085; */
 }
-.alert-info {
+
+.alert-info 
+{
     background-color: #e2e3e5;    
     color: #383d41;   
-    /* border: 1px solid #383d41; */
 }
-.alert-error, .errorlist li {
+
+.alert-error, 
+.errorlist li 
+{
     background-color: #f8d7da;    
     color: #721c24;   
-    /* border: 1px solid #721c24; */
 }
-.alert-warning {
+
+.alert-warning 
+{
     background-color: #fff3cd;    
     color: #856404;   
-    /* border: 1px solid #856404; */
 }
-.icone-fechar {
+
+.icone-fechar 
+{
     transition: all 200ms ease-in;
     margin-left: 5px;
     border-radius: 5px;
 }
-.icone-fechar:hover {
+
+.icone-fechar:hover 
+{
     background-color: rgba(173, 173, 173, 0.6)
 }
 
@@ -77,13 +94,15 @@ html { overflow-x: hidden;}
 body { width: 100vw; }
 
 /* Estilos da navbar */
-header {
+header 
+{
     width: 100vw;
     display: flex;
     justify-content: center;
 }
 
-nav {
+nav 
+{
     width: 100%;
     height: 40px;
     display: flex;
@@ -95,104 +114,125 @@ nav {
     padding: 10px 30px;
 }
 
-header nav .logo {
+header nav .logo 
+{
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.icone {
+.icone 
+{
     width: 25px;
 }
 
-header nav .logo img {
+header nav .logo img 
+{
     margin-right: 5px;
 }
 
-header nav .conteudo{
+header nav .conteudo
+{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     border-left: var(--cor-texto-secundaria) 1px solid;
 }
 
-header nav .conteudo .opcoes .calendario {
+header nav .conteudo .opcoes .calendario 
+{
     margin-left: 10px;
 }
 
-header nav .conteudo .opcoes .notificacoes img{
+header nav .conteudo .opcoes .notificacoes img
+{
     margin-left: 20px;
 }
 
-header nav .conteudo .usuario {
+header nav .conteudo .usuario 
+{
     display: flex;
     flex-direction: row;
     margin-left: 20px;
 }
 
-header nav .conteudo .usuario img {
+header nav .conteudo .usuario img 
+{
     width: 30px;
 }
 
-header nav .conteudo .usuario .informacoes-usuario {
+header nav .conteudo .usuario .informacoes-usuario 
+{
     display: flex;
     flex-direction: column;
     justify-content: center;
     font-size: 10px;
 }
 
-header nav .conteudo .usuario .informacoes-usuario span:nth-child(1) {
+header nav .conteudo .usuario .informacoes-usuario span:nth-child(1) 
+{
     font-weight: bolder;
 }
 
 /* Estilos do aside */
-aside {
+aside 
+{
     height: 90vh;
     position: fixed;
     padding: 20px 10px;
     align-content: start;
 }
 
-.d-flex-row {
+.d-flex-row 
+{
     display: flex;
     flex-direction: row;
 }
 
-.aside-icone {
+.aside-icone 
+{
     filter: invert(75%);
 }
 
-.icone, .aside-icone {
+.icone, 
+.aside-icone 
+{
     user-select: none;
 }
 
-aside {
+aside 
+{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: fixed;
 }
 
-aside ul {
+aside ul 
+{
     list-style: none;
 }
 
-aside ul:nth-child(1){
+aside ul:nth-child(1)
+{
     margin-top: 20px;
 }
 
-aside ul:nth-child(2){
+aside ul:nth-child(2)
+{
     margin-bottom: 20px;
 }
 
-aside ul li {
+aside ul li 
+{
     margin-bottom: 15px;
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
-.ativo {
+.ativo 
+{
     /* Icone ativo em aside */
     background-color: rgba(15, 5, 38, 0.20);
     width: 30px;
@@ -206,18 +246,17 @@ aside ul li {
 }
 
 /* Estilos do corpo do documento */
-.container {
+.container 
+{
     color: var(--cor-primaria);
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: 2% 5%;
 }
-.conteudo {
-    
-}
 
-.titulo {
+.titulo 
+{
     width: 100%;
     margin-top: 50px;
     margin-bottom: 30px;
@@ -225,19 +264,21 @@ aside ul li {
     flex-direction: column;
 }
 
-.titulo span{
+.titulo span
+{
     filter: opacity(75%);
 }
 
-
-.tabs {
+.tabs 
+{
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
 }
 
-.tabs ul {
+.tabs ul 
+{
     margin-top: 20px;
     margin-bottom: 20px;
     list-style: none;
@@ -246,36 +287,43 @@ aside ul li {
     width: fit-content;
 }
 
-.tabs ul li {
+.tabs ul li 
+{
     margin-right: 30px;
     padding-bottom: 10px;
 }
 
-.tabs ul li span {
+.tabs ul li span 
+{
     background-color: var(--background-cinza);
     font-size: 12px;
     border-radius: 5px;
     padding: 0px 2px;
 }
 
-.tab-ativa {
+.tab-ativa 
+{
     /* Tab ativa em conteudo */
     color: var(--cor-secundaria);
     border-bottom: var(--cor-secundaria) 2px solid;
     transition: all 100ms ease-in-out;
 }
 
-.tab-button {
+.tab-button 
+{
     cursor: pointer;
 }
 
 /* Estilos de Tabela */
-.tabela, .step-links {
+.tabela, 
+.step-links 
+{
     width: 90%;
     border-radius: 5px;
 }
 
-.tabela, th, td{
+.tabela, th, td
+{
     font-size: 13px;
     border-collapse: collapse; /*define a separação entre as bordas */
     padding: 10px;
@@ -283,12 +331,14 @@ aside ul li {
     margin-bottom: 20px;
 }
 
-th {
+th 
+{
     background-color: var(--cor-secundaria);
     color: var(--cor-texto-secundaria);
 }
 
-.conteudo-tabela {
+.conteudo-tabela 
+{
     margin-top: 10px;
     font-size: 12px;
     display: flex;
@@ -296,24 +346,29 @@ th {
     justify-content: space-around;
 }
 
-tbody tr {
+tbody tr 
+{
     border-bottom: var(--cor-texto-secundaria) 1px solid;
     transition: background-color 200ms ease-in;
 }
 
-tbody tr:hover {
+tbody tr:hover 
+{
     background-color: var(--cor-texto-secundaria);
 }
 
 /* Outras classes e estilos do documento */
-.botoes {
+.botoes 
+{
     display: flex;
     flex-direction: row;
     justify-content: end;
     align-items: center;
 }
 
-.botoes a, .step-links a{
+.botoes a, 
+.step-links a
+{
     text-decoration: none;
     font-weight: bold;
     color: var(--cor-texto-secundaria);
@@ -329,22 +384,28 @@ tbody tr:hover {
     margin-right: 5px;
 }
 
-.step-links span {
+.step-links span 
+{
     border: 1px solid #e3e3e3;
     border-radius: 5px;
     padding: 5px 10px;
     margin-right: 5px;
 }
 
-.botoes a:hover, .step-links a:hover {
+.botoes a:hover, 
+.step-links a:hover 
+{
     background-color: #6317e7;
 }
 
 /* Paginação */
-.pagination {
+.pagination 
+{
     width: 100%;
 }
-.step-links {
+
+.step-links 
+{
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -354,16 +415,20 @@ tbody tr:hover {
     padding: 5px 0px;
     border: 1px solid #e3e3e3;
 }
-.current {
+
+.current 
+{
     padding: 5px 10px;
 }
-.links-pagination {
+
+.links-pagination 
+{
     display: flex;
     flex-direction: row;
 }
 
-
-.pesquisar {
+.pesquisar 
+{
     font-size: 15px;
     font-family: var(--font-family-default);
     margin-right: 10px;
@@ -375,29 +440,34 @@ tbody tr:hover {
     transition: all 200ms ease-in-out;
 }
 
-.pesquisar::placeholder {
+.pesquisar::placeholder 
+{
     color: var(--cor-secundaria);
 }
 
-.pesquisar:focus{
+.pesquisar:focus
+{
     box-shadow: 0 0 0 0;
     border: 0 none;
     outline: 0;
     background-color: hsla(262, 80%, 53%, 0.3);
 }
 
-.icone-pesquisa {
+.icone-pesquisa 
+{
     margin-right: 10px;
     transition: all 200ms ease-in-out;
     border-radius: 50%;
     padding: 5px;
 }
 
-.icone-pesquisa:hover {
+.icone-pesquisa:hover 
+{
     background-color: rgba(99, 23, 231, 0.3);
 }
 
-.form {
+.form 
+{
     width: fit-content;
     height: fit-content;
     margin-top: 150px;
@@ -408,16 +478,19 @@ tbody tr:hover {
     align-items: center;
 }
 
-.form h3 {
+.form h3 
+{
     color: #0d6efd;
 }
 
-.form form input[type="submit"] {
+.form form input[type="submit"] 
+{
     width: 100%; 
     font-weight: bold;
 }
 
-.botao {
+.botao 
+{
     text-decoration: none;
     padding: 4px 4px;
     border-radius: 4px;
@@ -429,27 +502,32 @@ tbody tr:hover {
     transition: all 200ms ease-in-out;
 }
 
-.botao:hover {
+.botao:hover 
+{
     filter: brightness(1.2);
 }
 
-.botao img {
+.botao img 
+{
     width: 20px;
 }
 
-.botao-info {
+.botao-info 
+{
     color: var(--cor-texto-secundaria);
     background-color: var(--cor-secundaria);
     border: var(--cor-primaria) 1px solid;
 }
 
-.botao-deletar {
+.botao-deletar 
+{
     color: var(--cor-texto-secundaria);
     background-color: #ff2e2e;
     border: var(--cor-primaria) 1px solid;
 }
 
-.dados {
+.dados 
+{
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -458,20 +536,24 @@ tbody tr:hover {
 
 /* Styles of 'admin/dashboard_admin_detalhes_usuarios.html' */
 .dados .dados-pessoais h4,
-.dados .dados-curso h4 {
+.dados .dados-curso h4 
+{
     font-size: 20px;
     margin-bottom: 10px;
 }
 
-.label {
+.label 
+{
     margin-bottom: 5px;
 }
 
-.label span {
+.label span 
+{
     font-weight: bold;
 }
 
-.botoes-de-usuario {
+.botoes-de-usuario 
+{
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -479,49 +561,67 @@ tbody tr:hover {
     margin-top: 20px;
     gap: 10px;
 }
+
 /* styles of 'admin/dashboard_admin_usuarios.html' */
-.tab-content {
+.tab-content 
+{
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
 }
-.tab-content table {
+
+.tab-content table 
+{
     min-width: 100%;
 }
-.separador {
+
+.separador 
+{
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
 }
-#formulario-aluno, #formulario-professor, #formulario-funcionario {
+
+#formulario-aluno, 
+#formulario-professor, 
+#formulario-funcionario 
+{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px
 }
-input {
+
+input 
+{
     height: 30px;
     padding-left: 10px;
 }
-label {
+
+label 
+{
     margin-bottom: 5px;
 }
-h3 {
+
+h3 
+{
     margin-bottom: 30px;
 }
-.botao-submit {
+
+.botao-submit 
+{
     height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: end;
-
 }
-.botao-submit button {
+
+.botao-submit button 
+{
     font-size: 20px;
     padding: 10px 30px;
 }
-
 
 /* styles de livro do app adm */
 
