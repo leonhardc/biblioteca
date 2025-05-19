@@ -106,7 +106,7 @@ def informacoes_formulario_livro(livro:Livro):
         'lancamento': livro.lancamento,
         'editora': livro.editora,
         'copias': livro.copias,
-        'autores': livro.autores.all(),
+        'autores': [autor.id for autor in livro.autores.all()],
         'categoria': livro.categoria.id
     }
     return data

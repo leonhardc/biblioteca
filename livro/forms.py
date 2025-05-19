@@ -27,10 +27,11 @@ class FormularioLivro(forms.Form):
 class FormularioAutor(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100, widget=forms.TextInput())
     cpf = forms.CharField(label='CPF', max_length=100, widget=forms.TextInput())
-    nacionalidade = forms.CharField(label='Nome', max_length=100, choices=NACIONALIDADES, widget=forms.Select())
+    nacionalidade = forms.ChoiceField(label='Nome', choices=NACIONALIDADES, widget=forms.Select())
 
 class FormularioCategoria(forms.ModelForm):
-    pass
+    categoria = forms.CharField(label='Categoria', max_length=100, widget=forms.TextInput())
+    descricao = forms.CharField(label='Descrição', max_length=2000, widget=forms.Textarea())
 
 class FormularioReserva(forms.ModelForm):
     pass

@@ -1,0 +1,18 @@
+{% extends 'admin/dashboard-admin.html' %}
+{% load static %}
+{% block content %}
+<!-- Formulário de Categoria - Criar Categoria -->
+<h3>Criar Livro</h3>
+<form action="{% url 'administrador:criar_categoria' %}" method="POST" id="formulario-categoria">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="separador">
+        {{ field.label_tag }} {{ field }}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+    <div class="botao-submit">
+        <button style="display: block;" class="botao botao-info" type="submit">Salvar</button>
+    </div>
+</form>
+{% endblock content %}

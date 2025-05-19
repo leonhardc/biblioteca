@@ -128,9 +128,9 @@ def atualizar_infomacoes_aluno(request, uid):
     if request.method == "POST":
         formulario = FormularioAluno(request.POST)
         if formulario.is_valid():
-            aluno = Aluno.objects.get(id = uid)
+            aluno = Aluno.objects.filter(id = uid).exists()
             if aluno:
-                usuario = User.objects.get(id = aluno.usuario.id)
+                usuario = User.objects.get(id = uid)
                 # Salvando os dados do formulário no banco de dados
                 usuario.first_name = formulario.cleaned_data['nome']
                 usuario.last_name = formulario.cleaned_data['sobrenome']
@@ -470,6 +470,7 @@ def atualizar_informacoes_livro(request, lid):
                     livro.autores.set(formulario.cleaned_data['autores'])
                     livro.categoria = formulario.cleaned_data['categoria']
                     livro.save()
+                    # livro = Livro.objects.filter(id=lid).update(**formulario.cleaned_data)
                     messages.add_message(request, messages.SUCCESS, 'Livro atualizado com sucesso.')
                     return redirect('/administrador/livros/')
                 except Exception as e:
@@ -494,6 +495,7 @@ def deletar_livro(request, lid):
             return redirect('/administrador/livros/')
 
 ## Views de Autores
+
 def criar_autor(request):
     template_name = 'admin/livro/dashboard_admin_criar_autor.html'
     if request.method == 'GET':
@@ -540,14 +542,63 @@ def atualizar_informacoes_autor(request, aid):
         formulario = FormularioAutor(initial=data)
         return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
-        # TODO: Escrever código para atualizar os dados de autor
-        pass
+        formulario = FormularioAutor(request.POST)
+        if formulario.is_valid():
+            autor = Autor.objects.filter(id=aid).exists()
+            if autor:
+                autor = Autor.objects.get(id=aid)
+                autor.nome = formulario.cleaned_data['nome']
+                autor.cpf = formulario.cleaned_data['cpf']
+                autor.nacionalidade = formulario.cleaned_data['nacionalidade']
+                autor.save()
+                messages.add_message(request, messages.SUCCESS, 'Autor atualizado com sucesso.')
+                return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Autor não encontrado.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário inválido.')
+            return redirect('/administrador/livros/')
 
 def deletar_autor(request, aid):
-    pass
+    if request.method == 'GET':
+        autor = Autor.objects.get(id=aid)
+        if autor:
+            autor.delete()
+            messages.add_message(request, messages.INFO, 'Autor deletado com sucesso.')
+            return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Autor não encontrado.')
+            return redirect('/administrador/livros/')
+
 ## Views de Categorias
+
 def criar_categoria(request):
-    pass
+    template_name = 'admin/livro/dashboard_admin_criar_categoria.html'
+    if request.method == 'GET':
+        formulario = FormularioCategoria()
+        return render(request, template_name, context={'form':formulario})
+    if request.method == 'POST':
+        formulario = FormularioCategoria(request.POST)
+        if formulario.is_valid():
+            categoria = Categoria.objects.filter(categoria=categoria).exists()
+            if not categoria:
+                try:
+                    Categoria.objects.create(
+                        categoria = formulario.cleaned_data['categoria'],
+                        descricao = formulario.cleaned_data['descricao']
+                    )
+                    messages.add_message(request, messages.SUCCESS, 'Categoria criada com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao criar categoria.\n{e}')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Categoria já existe.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulario Invalido.')
+            return redirect('/administrador/livros/')
 
 def informacoes_categoria(request, cid):
     template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
@@ -560,11 +611,43 @@ def informacoes_categoria(request, cid):
             return redirect('/administrador/livros/')
 
 def atualizar_informacoes_categoria(request, cid):
-    pass
+    template_name = 'admin/livro/dashboard_admin_atualizar_categoria.html'
+    if request.method=='GET':
+        categoria = Categoria.objects.get(id=cid)
+        data = informacoes_formulario_categoria(categoria)
+        formulario = FormularioCategoria(initial=data)
+        return render(request, template_name, context={'form': formulario})
+    if request.method=='POST':
+        formulario = FormularioCategoria(request.POST)
+        if formulario.is_valid():
+            categoria = Categoria.objects.filter(id=cid).exists()
+            if categoria:
+                categoria = Categoria.objects.get(id=cid)
+                categoria.categoria = formulario.cleaned_data['categoria']
+                categoria.descricao = formulario.cleaned_data['descricao']
+                categoria.save()
+                messages.add_message(request, messages.SUCCESS, 'Categoria atualizada com sucesso.')
+                return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Categoria não encontrada.')
+                return redirect('/administrador/livros/')
+        else: 
+            messages.add_message(request, messages.ERROR, 'Formulário inválido.')
+            return redirect('/administrador/livros/')
 
 def deletar_categoria(request, cid):
-    pass
+    if request.method == 'GET':
+        categoria = Categoria.objects.get(id=cid)
+        if categoria:
+            categoria.delete()
+            messages.add_message(request, messages.INFO, 'Categoria deletada com sucesso.')
+            return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Categoria não encontrada.')
+            return redirect('/administrador/livros/')
+
 ## Views de Reservas
+
 def criar_reserva(request):
     pass
 
@@ -583,7 +666,9 @@ def atualizar_informacoes_reserva(request, rid):
 
 def deletar_reserva(request, rid):
     pass
+
 ## Views de Emprestimos
+
 def criar_emprestimo(request):
     pass
 
