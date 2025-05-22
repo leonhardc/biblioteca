@@ -29,12 +29,12 @@ class FormularioAutor(forms.Form):
     cpf = forms.CharField(label='CPF', max_length=100, widget=forms.TextInput())
     nacionalidade = forms.ChoiceField(label='Nome', choices=NACIONALIDADES, widget=forms.Select())
 
-class FormularioCategoria(forms.ModelForm):
+class FormularioCategoria(forms.Form):
     categoria = forms.CharField(label='Categoria', max_length=100, widget=forms.TextInput())
     descricao = forms.CharField(label='Descrição', max_length=2000, widget=forms.Textarea())
 
-class FormularioReserva(forms.ModelForm):
+class FormularioReserva(forms.Form):
     pass
 
-class FormularioEmprestimo(forms.ModelForm):
+class FormularioEmprestimo(forms.Form):
     pass
