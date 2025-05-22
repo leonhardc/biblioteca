@@ -7,6 +7,7 @@ from django.contrib import messages
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
 from usuario.forms import FormularioAluno, FormularioProfessor, FormularioFuncionario
 from livro.forms import FormularioLivro, FormularioAutor, FormularioCategoria, FormularioEmprestimo, FormularioReserva
+from curso.forms import FormularioCurso
 from curso.models import Curso
 from utils.utils import *
 
@@ -535,12 +536,12 @@ def informacoes_autor(request, aid):
             return redirect('/administrador/livros/')
 
 def atualizar_informacoes_autor(request, aid):
-    template_name = '/admin/livro/dashboard_admin_atualizar_autor.html'
+    template_name = 'admin/livro/dashboard_admin_atualizar_autor.html'
     if request.method == 'GET':
         autor = Autor.objects.get(id=aid)
         data = informacoes_formulario_autor(autor)
         formulario = FormularioAutor(initial=data)
-        return render(request, template_name, context={'form':formulario})
+        return render(request, template_name, context={'form':formulario, 'autor':autor})
     if request.method == 'POST':
         formulario = FormularioAutor(request.POST)
         if formulario.is_valid():
@@ -616,7 +617,7 @@ def atualizar_informacoes_categoria(request, cid):
         categoria = Categoria.objects.get(id=cid)
         data = informacoes_formulario_categoria(categoria)
         formulario = FormularioCategoria(initial=data)
-        return render(request, template_name, context={'form': formulario})
+        return render(request, template_name, context={'form': formulario, 'categoria': categoria})
     if request.method=='POST':
         formulario = FormularioCategoria(request.POST)
         if formulario.is_valid():
@@ -700,13 +701,90 @@ def dashboard_admin_cursos(request):
         return render(request, template_name,context={'cursos':cursos, 'contador':contador})
 
 def criar_curso(request):
-    pass
+    template_name = 'admin/curso/dashboard_admin_criar_curso.html'
+    if request.method == 'GET':
+        formulario = FormularioCurso()
+        return render(request, template_name, context={'form':formulario})
+    if request.method == 'POST':
+        formulario=FormularioCurso(request.POST)
+        if formulario.is_valid():
+            curso = Curso.objects.filter(
+                    Q(cod_curso=formulario.cleaned_data['cod_curso']) | Q(curso=formulario.cleaned_data['curso'])
+                ).exists()
+            if not curso:
+                try:
+                    curso = Curso.objects.create(
+                        cod_curso=formulario.cleaned_data['cod_curso'],
+                        curso=formulario.cleaned_data['curso'],
+                        descricao=formulario.cleaned_data['descricao'],
+                        turno=formulario.cleaned_data['turno'],
+                        duracao=formulario.cleaned_data['duracao'],
+                    )
+                    messages.add_message(request, messages.SUCCESS, f'O curso {curso.curso} foi criado com sucesso.')
+                    return redirect('/administrador/cursos/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Ocorreu um erro ao criar o curso. Erro: {e}')
+                    return redirect('/administrador/cursos/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Um curso com esse nome ou código já existe na base de dados.')
+                return render(request, template_name, context={'form':formulario})
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário inválido.')
+            return redirect('/administrador/cursos/')
 
 def informacoes_curso(request, cid):
-    pass
+    template_name = 'admin/curso/dashboard_admin_detalhes_curso.html'
+    if request.method == 'GET':
+        curso = Curso.objects.get(id=cid)
+        if curso:
+            return render(request, template_name, context={'curso':curso})
+        else:
+            messages.add_message(request, messages.ERROR, 'Curso não encontrado.')
+            return redirect('/administrador/cursos/')
 
 def atualizar_informacoes_curso(request, cid):
-    pass
+    template_name = 'admin/curso/dashboard_admin_atualizar_curso.html'
+    if request.method=='GET':
+        curso = Curso.objects.get(id=cid)
+        if curso:
+            data = informacoes_formulario_curso(curso)
+            formulario = FormularioCurso(initial=data)
+            return render(request, template_name, context={'form':formulario, 'curso':curso})
+        else:
+            messages.add_message(request, messages.ERROR, 'Curso não encontrado')
+            return redirect('/administrador/cursos/')
+    if request.method=='POST':
+        formulario = FormularioCurso(request.POST)
+        if formulario.is_valid():
+            curso = Curso.objects.filter(id=cid).exists()
+            if curso:
+                try:
+                    curso = Curso.objects.get(id=cid)
+                    curso.cod_curso = formulario.cleaned_data['cod_curso']
+                    curso.curso = formulario.cleaned_data['curso']
+                    curso.descricao = formulario.cleaned_data['descricao']
+                    curso.duracao = formulario.cleaned_data['turno']
+                    curso.duracao = formulario.cleaned_data['duracao']
+                    curso.save()
+                    messages.add_message(request, messages.SUCCESS, 'Curso atualizado com sucesso.')
+                    return redirect('/administrador/cursos/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao salvar as informações.{e}')
+                    return redirect('/administrador/cursos/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Curso não encontrado.')
+                return redirect('/administrador/cursos/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário Inválido.')
+            return redirect('/administrador/cursos/')
 
 def deletar_curso(request, cid):
-    pass
+    if request.method=='GET':
+        curso = Curso.objects.get(id=cid)
+        if curso:
+            curso.delete()
+            messages.add_message(request, messages.SUCCESS, 'Curso deletado com sucesso.')
+            return redirect('/administrador/cursos/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Curso não encontrado.')
+            return redirect('/administrador/cursos/')
