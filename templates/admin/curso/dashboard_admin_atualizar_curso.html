@@ -1,0 +1,20 @@
+{% extends 'admin/dashboard-admin.html' %}
+{% load static %}
+{% block content %}
+<!-- Formulário de Cursos - Atualizar Curso -->
+<h3>Atualizar Curso</h3>
+<form action="{% url 'administrador:atualizar_curso' curso.id %}" method="POST" id="formulario-curso">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="separador">
+        {{ field.label_tag }} {{ field }}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+    <div></div>
+    <div></div>
+    <div class="botao-submit">
+        <button style="display: block;" class="botao botao-info" type="submit">Salvar</button>
+    </div>
+</form>
+{% endblock content %}

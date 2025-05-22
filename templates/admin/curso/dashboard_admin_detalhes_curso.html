@@ -1,0 +1,45 @@
+{%extends 'admin/dashboard-admin.html'%}
+{% load static%}
+{% block content %}
+{% if curso %}
+<div class="container">
+    <!-- Detalhes do Aluno -->
+    <div class="dados">
+        <div class="dados-pessoais">
+            <h4>Dados do Curso</h4>
+            <div class="label">
+                <span>Código do curso:</span>
+                {{ curso.cod_curso }}
+            </div>
+            <div class="label">
+                <span>Curso:</span>
+                {{curso.curso}}
+            </div>
+            <div class="label">
+                <span>Descrição:</span>
+                {{ curso.descricao }}
+            </div>
+            <div class="label">
+                <span>Turno:</span>
+                {{ curso.turno }}
+            </div>
+            <div class="label">
+                <span>Duração:</span>
+                {{curso.duracao}}
+            </div>
+        </div>
+    </div>
+    <div class="botoes-de-usuario">
+        <a class="botao botao-info" href="{% url 'administrador:atualizar_curso' curso.id %}">
+            Atualizar Informações
+            <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+        </a>
+        
+        <a class="botao botao-deletar" href="{% url 'administrador:deletar_curso' curso.id %}">
+            Deletar Curso
+            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

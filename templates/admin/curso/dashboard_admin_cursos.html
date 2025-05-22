@@ -13,7 +13,7 @@
             <form class="form-pesquisa" style="display: none;">
                 <input class="pesquisar" type="text" name="pesquisar" id="pesquisar-aluno" placeholder="Pesquisar">
             </form>
-            <a id="botao-add-livro" href="{% url 'curso:criar-curso' %}">
+            <a id="botao-add-livro" href="{% url 'administrador:criar_curso' %}">
                 <img class="icone" src="{% static 'usuario/img/add_E3E3E3.png' %}" alt="">
                 Add Novo
             </a>
@@ -36,8 +36,16 @@
                 {% for curso in cursos %}
                 <tr>
                     <td>{{curso.id}}</td>
-                    <td><strong>{{curso.cod_curso}}</strong></td>
-                    <td><strong>{{curso.curso}}</strong></td>
+                    <td><strong>
+                        <a href="{% url 'administrador:informacoes_curso' curso.id %}">
+                            {{curso.cod_curso}}
+                        </a>
+                    </strong></td>
+                    <td><strong>
+                        <a href="{% url 'administrador:informacoes_curso' curso.id %}">
+                            {{curso.curso}}
+                        </a>
+                    </strong></td>
                     <td>{{curso.turno}}</td>
                     <td>{{curso.duracao}}</td>
                     <td>{{curso.descricao}}</td>
