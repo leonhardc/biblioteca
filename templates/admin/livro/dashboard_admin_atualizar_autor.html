@@ -3,7 +3,7 @@
 {% block content %}
 <!-- Formulário de Livros - Atualizar Autor -->
 <h3>Atualizar Autor</h3>
-<form action="{% url 'administrador:atualizar_livro' livro.id %}" method="POST" id="formulario-livro">
+<form action="{% url 'administrador:atualizar_autor' autor.id %}" method="POST" id="formulario-autor">
     {% csrf_token %}
     {% for field in form %}
     <div class="separador">
