@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from usuario.forms import FormularioAluno
 from usuario.models import Aluno, Professor, Funcionario
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
+from curso.models import Curso
 import random
 import re
 
@@ -140,6 +141,16 @@ def informacoes_formulario_emprestimo(emprestimo:Emprestimo):
         'livro': emprestimo.livro.isbn,
         'data_emprestimo': emprestimo.data_emprestimo,
         'data_devolucao': emprestimo.data_devolucao
+    }
+    return data
+
+def informacoes_formulario_curso(curso:Curso):
+    data = {
+        'cod_curso':curso.cod_curso,
+        'curso':curso.curso,
+        'descricao':curso.descricao,
+        'turno':curso.turno,
+        'duracao':curso.duracao,
     }
     return data
 
