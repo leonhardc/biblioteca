@@ -52,7 +52,7 @@ def separar_endereco(endereco:str):
             'cidade':'', 
             'estado':'', 
         } 
-    
+
 def informacoes_formulario_aluno(aluno:Aluno, endereco):
     data = {
         'nome' : aluno.usuario.first_name,
@@ -68,6 +68,7 @@ def informacoes_formulario_aluno(aluno:Aluno, endereco):
         'cep' : endereco['cep'],
         'complemento' : endereco['complemento'],
         'matricula' : aluno.matricula,
+        'cpf' : aluno.cpf,
         'curso' : aluno.curso.cod_curso,
         'ingresso' : aluno.ingresso,
         'conclusao_prevista' : aluno.conclusao_prevista

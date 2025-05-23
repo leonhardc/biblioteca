@@ -71,7 +71,10 @@ def criar_aluno(request):
     if request.method == 'POST':
         formulario = FormularioAluno(request.POST)
         if formulario.is_valid():
-            usuario = User.objects.filter(username=formulario.cleaned_data['usuario']).exists()
+            usuario = User.objects.filter(
+                Q(username=formulario.cleaned_data['usuario']) |
+                Q(email=formulario.cleaned_data['usuario'])
+            ).exists()
             if not usuario:
                 aluno = Aluno.objects.filter(cpf=formulario.cleaned_data['cpf']).exists()
                 if not aluno:
@@ -103,7 +106,7 @@ def criar_aluno(request):
                     messages.add_message(request, messages.ERROR, 'O Aluno já existe na base de dados.')
                     return render(request, template_name, context={'form':formulario})
             else: 
-                messages.add_message(request, messages.ERROR, 'A base de dados já contem um usuário com esse nome.')
+                messages.add_message(request, messages.ERROR, 'A base de dados já contem esse usuário ou um usuário com esse email.')
                 return render(request, template_name, context={'form':formulario})
         else:
             # Retorna o formulário com mensagem de erro
@@ -113,25 +116,36 @@ def criar_aluno(request):
 def informacoes_aluno(request, uid):
     if request.method == 'GET':
         template_name = 'admin/usuario/dashboard_admin_detalhes_usuarios.html'
-        aluno = Aluno.objects.get(id=uid)
-        contexto = {'aluno': aluno}
-        return render(request, template_name, context=contexto)
+        aluno = Aluno.objects.filter(id=uid).exists()
+        if aluno:
+            aluno = Aluno.objects.get(id=uid)
+            contexto = {'aluno': aluno}
+            return render(request, template_name, context=contexto)
+        else:
+            messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
+            return redirect('/administrado/usuarios/')
 
 def atualizar_infomacoes_aluno(request, uid):
     """ Em desenvolvimento """
     template_name = "admin/usuario/dashboard_admin_atualizar_aluno.html"
     if request.method == "GET":
-        aluno = Aluno.objects.get(id=uid)
-        endereco = separar_endereco(aluno.endereco)
-        data = informacoes_formulario_aluno(aluno, endereco)
-        formulario = FormularioAluno(initial=data)
-        return render(request, template_name, context={"form": formulario, 'aluno': aluno})
+        aluno = Aluno.objects.filter(id=uid).exists()
+        if aluno:
+            aluno = Aluno.objects.get(id=uid)
+            endereco = separar_endereco(aluno.endereco)
+            data = informacoes_formulario_aluno(aluno, endereco)
+            formulario = FormularioAluno(initial=data)
+            return render(request, template_name, context={"form": formulario, 'aluno': aluno})
+        else:
+            messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
+            return redirect('/administrado/usuarios/')
     if request.method == "POST":
         formulario = FormularioAluno(request.POST)
         if formulario.is_valid():
             aluno = Aluno.objects.filter(id = uid).exists()
             if aluno:
-                usuario = User.objects.get(id = uid)
+                aluno = Aluno.objects.get(id = uid)
+                usuario = User.objects.get(id = aluno.usuario.id)
                 # Salvando os dados do formulário no banco de dados
                 usuario.first_name = formulario.cleaned_data['nome']
                 usuario.last_name = formulario.cleaned_data['sobrenome']
@@ -154,8 +168,9 @@ def atualizar_infomacoes_aluno(request, uid):
             return render(request, template_name, context={"form": formulario, 'aluno': aluno})
 
 def deletar_aluno(request, uid):
-    aluno = Aluno.objects.get(id=uid)
+    aluno = Aluno.objects.filter(id=uid).exists()
     if aluno:
+        aluno = Aluno.objects.get(id=uid)
         aluno.delete()
         messages.add_message(request, messages.SUCCESS, f'Aluno deletado com sucesso.')
         return redirect('/administrador/usuarios/')
@@ -173,7 +188,10 @@ def criar_professor(request):
     if request.method == 'POST':
         formulario = FormularioProfessor(request.POST)
         if formulario.is_valid():
-            usuario = User.objects.filter(username=formulario.cleaned_data['usuario']).exists()
+            usuario = User.objects.filter(
+                Q(username=formulario.cleaned_data['usuario']) |
+                Q(email=formulario.cleaned_data['email']) 
+            ).exists()
             if not usuario:
                 professor = Professor.objects.filter(cpf=formulario.cleaned_data['cpf']).exists()
                 if not professor:
@@ -203,33 +221,42 @@ def criar_professor(request):
                     messages.add_message(request, messages.ERROR, 'Professor já existe na base de dados.')
                     return render(request, template_name, context={'form':formulario})
             else:
-                messages.add_message(request, messages.ERROR, 'A base de dados já contem um usuário com esse nome.')
+                messages.add_message(request, messages.ERROR, 'A base de dados já contem esse usuário ou um usuário com esse email.')
                 return render(request, template_name, context={'form':formulario})
         else:
             messages.add_message(request, messages.ERROR, 'Problemas ao salvar os dados do formulario no banco de dados.')
             return render(request, template_name, context={'form':formulario})
 
 def informacoes_professor(request, uid):
+    template_name = 'admin/usuario/dashboard_admin_detalhes_usuarios.html'
     if request.method=='GET':
-        template_name = 'admin/usuario/dashboard_admin_detalhes_usuarios.html'
-        professor = Professor.objects.get(id=uid)
-        contexto = {}
-        contexto['professor'] = professor
-        return render(request, template_name, context=contexto)
+        professor = Professor.objects.filter(id=uid).exists()
+        if professor:
+            professor = Professor.objects.get(id=uid)
+            return render(request, template_name, context={'professor':professor})
+        else:
+            messages.add_message(request, messages.ERROR, 'Professor não encontrado.')
+            return redirect('/administrador/usuarios/')
 
 def atualizar_informacoes_professor(request, uid):
     """ Em desenvolvimento """
     template_name = "admin/usuario/dashboard_admin_atualizar_professor.html"
     if request.method == 'GET':
-        professor = Professor.objects.get(id=uid)
-        data = informacoes_formulario_professor(professor)
-        formulario = FormularioProfessor(initial=data)
-        return render(request, template_name, context={"form": formulario, 'professor':professor})
+        professor = Professor.objects.filter(id=uid).exists()
+        if professor:
+            professor = Professor.objects.get(id=uid)
+            data = informacoes_formulario_professor(professor)
+            formulario = FormularioProfessor(initial=data)
+            return render(request, template_name, context={"form": formulario, 'professor':professor})
+        else:
+            messages.add_message(request, messages.ERROR, 'Professor não encontrado.')
+            return redirect('/administrador/usuarios/')
     if request.method == 'POST':
         formulario = FormularioProfessor(request.POST)
         if formulario.is_valid():
-            professor = Professor.objects.get(id=uid)
+            professor = Professor.objects.filter(id=uid).exists()
             if professor:
+                professor = Professor.objects.get(id=uid)
                 usuario = User.objects.get(id = professor.usuario.id)
                 # Salvando os dados do formulário no banco de dados
                 usuario.first_name = formulario.cleaned_data['nome']
@@ -253,8 +280,9 @@ def atualizar_informacoes_professor(request, uid):
             return render(request, template_name, context={"form": formulario, 'professor': professor})
 
 def deletar_professor(request, uid):
-    professor = Professor.objects.get(id=uid)
+    professor = Professor.objects.filter(id=uid).exists()
     if professor:
+        professor = Professor.objects.get(id=uid)
         professor.delete()
         messages.add_message(request, messages.SUCCESS, f'Aluno deletado com sucesso.')
         return redirect('/administrador/usuarios/')
@@ -272,7 +300,10 @@ def criar_funcionario(request):
     if request.method == 'POST':
         formulario = FormularioFuncionario(request.POST)
         if formulario.is_valid():
-            usuario = User.objects.filter(username=formulario.cleaned_data['usuario']).exists()
+            usuario = User.objects.filter(
+                Q(username=formulario.cleaned_data['usuario'])|
+                Q(email=formulario.cleaned_data['email'])
+            ).exists()
             if not usuario:
                 funcionario = Funcionario.objects.filter(cpf=formulario.cleaned_data['cpf']).exists()
                 if not funcionario:
@@ -298,7 +329,7 @@ def criar_funcionario(request):
                     messages.add_message(request, messages.ERROR, 'Funcionário já existe na base de dados.')
                     return render(request, template_name, context={'form':formulario})
             else:
-                messages.add_message(request, messages.ERROR, 'A base de dados já contem um usuário com esse nome.')
+                messages.add_message(request, messages.ERROR, 'A base de dados já contem esse usuário ou um usuário com esse email.')
                 return render(request, template_name, context={'form':formulario})
         else:
             messages.add_message(request, messages.ERROR, 'Problemas ao salvar os dados do formulario no banco de dados.')
@@ -315,15 +346,21 @@ def informacoes_funcionario(request, uid):
 def atualizar_informacoes_funcionario(request, uid):
     template_name = 'admin/usuario/dashboard_admin_atualizar_funcionario.html'
     if request.method == "GET":
-        funcionario = Funcionario.objects.get(id=uid)
-        data = informacoes_formulario_funcionario(funcionario)
-        formulario = FormularioFuncionario(initial=data)
-        return render(request, template_name, context={"form": formulario, 'funcionario':funcionario})
+        funcionario = Funcionario.objects.filter(id=uid).exists()
+        if funcionario:
+            funcionario = Funcionario.objects.get(id=uid)
+            data = informacoes_formulario_funcionario(funcionario)
+            formulario = FormularioFuncionario(initial=data)
+            return render(request, template_name, context={"form": formulario, 'funcionario':funcionario})
+        else:
+            messages.add_message(request, messages.ERROR, 'Funcionário não encontrado.')
+            return redirect('/administrador/usuarios/')
     if request.method == "POST":
         formulario = FormularioFuncionario(request.POST)
         if formulario.is_valid():
-            funcionario = Funcionario.objects.get(id=uid)
+            funcionario = Funcionario.objects.filter(id=uid).exists()
             if funcionario:
+                funcionario = Funcionario.objects.get(id=uid)
                 usuario = User.objects.get(id = funcionario.usuario.id)
                 # Salvando os dados do formulário no banco de dados
                 usuario.first_name = formulario.cleaned_data['nome']
@@ -344,8 +381,9 @@ def atualizar_informacoes_funcionario(request, uid):
             return render(request, template_name, context={"form": formulario, 'funcionario': funcionario})
 
 def deletar_funcionario(request, uid):
-    funcionario = Funcionario.objects.get(id=uid)
+    funcionario = Funcionario.objects.filter(id=uid).exists()
     if funcionario:
+        funcionario = Funcionario.objects.get(id=uid)
         funcionario.delete()
         messages.add_message(request, messages.SUCCESS, f'Aluno deletado com sucesso.')
         return redirect('/administrador/usuarios/')
@@ -411,7 +449,7 @@ def criar_livro(request):
             livro = Livro.objects.filter(isbn=formulario.cleaned_data['isbn']).exists()
             if not livro:
                 try:
-                    livro = Livro(
+                    livro = Livro.objects.create(
                         isbn=formulario.cleaned_data['isbn'],
                         titulo=formulario.cleaned_data['titulo'],
                         subtitulo=formulario.cleaned_data['subtitulo'],
@@ -420,7 +458,6 @@ def criar_livro(request):
                         copias=formulario.cleaned_data['copias'],
                         categoria=formulario.cleaned_data['categoria'],
                     )
-                    livro.save()
                     livro.autores.set(formulario.cleaned_data['autores'])
                     messages.add_message(request, messages.SUCCESS, 'Livro adicionado com sucesso.')
                     return redirect('/administrador/livros/')
@@ -437,8 +474,9 @@ def criar_livro(request):
 def informacoes_livro(request, lid):
     template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
     if request.method == 'GET':
-        livro = Livro.objects.get(id=lid)
+        livro = Livro.objects.filter(id=lid).exists()
         if livro:
+            livro = Livro.objects.get(id=lid)
             return render(request, template_name, context={'livro':livro})
         else:
             messages.add_message(request, messages.ERROR, 'Não foi possivel encontra o livro solicitado.')
@@ -485,9 +523,10 @@ def atualizar_informacoes_livro(request, lid):
             return redirect('/administrador/livros/')
 
 def deletar_livro(request, lid):
-    if request.method=='GET':
-        livro = Livro.objects.get(id=lid)
+    if request.method == 'GET':
+        livro = Livro.objects.filter(id=lid).exists()
         if livro:
+            livro = Livro.objects.get(id=lid)
             livro.delete()
             messages.add_message(request, messages.INFO, 'Livro deletado com sucesso.')
             return redirect('/administrador/livros/')
@@ -505,7 +544,10 @@ def criar_autor(request):
     if request.method == 'POST':
         formulario = FormularioAutor(request.POST)
         if formulario.is_valid():
-            autor = Autor.objects.filter(cpf=formulario.cleaned_data['cpf']).exists()
+            autor = Autor.objects.filter(
+                Q(nome=formulario.cleaned_data['nome']) |
+                Q(cpf=formulario.cleaned_data['cpf'])
+            ).exists()
             if not autor:
                 try:
                     autor = Autor.objects.create(
@@ -528,8 +570,9 @@ def criar_autor(request):
 def informacoes_autor(request, aid):
     template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
     if request.method=='GET':
-        autor = Autor.objects.get(id=aid)
+        autor = Autor.objects.filter(id=aid).exists()
         if autor:
+            autor = Autor.objects.get(id=aid)
             return render(request, template_name, context={'autor':autor})
         else:
             messages.add_message(request, messages.ERROR, 'Autor não encontrado.')
@@ -538,10 +581,15 @@ def informacoes_autor(request, aid):
 def atualizar_informacoes_autor(request, aid):
     template_name = 'admin/livro/dashboard_admin_atualizar_autor.html'
     if request.method == 'GET':
-        autor = Autor.objects.get(id=aid)
-        data = informacoes_formulario_autor(autor)
-        formulario = FormularioAutor(initial=data)
-        return render(request, template_name, context={'form':formulario, 'autor':autor})
+        autor = Autor.objects.filter(id=aid).exists()
+        if autor:
+            autor = Autor.objects.get(id=aid)
+            data = informacoes_formulario_autor(autor)
+            formulario = FormularioAutor(initial=data)
+            return render(request, template_name, context={'form':formulario, 'autor':autor})
+        else:
+            messages.add_message(request, messages.ERROR, 'O autor não foi encontrado na base de dados.')
+            return redirect('/administrador/livros/')
     if request.method == 'POST':
         formulario = FormularioAutor(request.POST)
         if formulario.is_valid():
@@ -563,8 +611,9 @@ def atualizar_informacoes_autor(request, aid):
 
 def deletar_autor(request, aid):
     if request.method == 'GET':
-        autor = Autor.objects.get(id=aid)
+        autor = Autor.objects.filter(id=aid).exists()
         if autor:
+            autor = Autor.objects.get(id=aid)
             autor.delete()
             messages.add_message(request, messages.INFO, 'Autor deletado com sucesso.')
             return redirect('/administrador/livros/')
@@ -604,8 +653,9 @@ def criar_categoria(request):
 def informacoes_categoria(request, cid):
     template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
     if request.method=='GET':
-        categoria = Categoria.objects.get(id=cid)
+        categoria = Categoria.objects.filter(id=cid).exists()
         if categoria:
+            categoria = Categoria.objects.get(id=cid)
             return render(request, template_name, context={'categoria':categoria})
         else:
             messages.add_message(request, messages.ERROR, 'Categoria não encontrada')
@@ -614,10 +664,15 @@ def informacoes_categoria(request, cid):
 def atualizar_informacoes_categoria(request, cid):
     template_name = 'admin/livro/dashboard_admin_atualizar_categoria.html'
     if request.method=='GET':
-        categoria = Categoria.objects.get(id=cid)
-        data = informacoes_formulario_categoria(categoria)
-        formulario = FormularioCategoria(initial=data)
-        return render(request, template_name, context={'form': formulario, 'categoria': categoria})
+        categoria = Categoria.objects.filter(id=cid).exists()
+        if categoria:
+            categoria = Categoria.objects.get(id=cid)
+            data = informacoes_formulario_categoria(categoria)
+            formulario = FormularioCategoria(initial=data)
+            return render(request, template_name, context={'form': formulario, 'categoria': categoria})
+        else:
+            messages.add_message(request, messages.ERROR, 'A categoria não existe na base de dados.')
+            return redirect('/administrador/livros/')
     if request.method=='POST':
         formulario = FormularioCategoria(request.POST)
         if formulario.is_valid():
@@ -638,8 +693,9 @@ def atualizar_informacoes_categoria(request, cid):
 
 def deletar_categoria(request, cid):
     if request.method == 'GET':
-        categoria = Categoria.objects.get(id=cid)
+        categoria = Categoria.objects.filter(id=cid).exists()
         if categoria:
+            categoria = Categoria.objects.get(id=cid)
             categoria.delete()
             messages.add_message(request, messages.INFO, 'Categoria deletada com sucesso.')
             return redirect('/administrador/livros/')
@@ -648,7 +704,7 @@ def deletar_categoria(request, cid):
             return redirect('/administrador/livros/')
 
 ## Views de Reservas
-
+# TODO: Implementar as views de Reservas
 def criar_reserva(request):
     pass
 
@@ -669,7 +725,7 @@ def deletar_reserva(request, rid):
     pass
 
 ## Views de Emprestimos
-
+# TODO: Implementar as views de Emprestimos
 def criar_emprestimo(request):
     pass
 
@@ -709,7 +765,8 @@ def criar_curso(request):
         formulario=FormularioCurso(request.POST)
         if formulario.is_valid():
             curso = Curso.objects.filter(
-                    Q(cod_curso=formulario.cleaned_data['cod_curso']) | Q(curso=formulario.cleaned_data['curso'])
+                    Q(cod_curso=formulario.cleaned_data['cod_curso']) | 
+                    Q(curso=formulario.cleaned_data['curso'])
                 ).exists()
             if not curso:
                 try:
@@ -735,8 +792,9 @@ def criar_curso(request):
 def informacoes_curso(request, cid):
     template_name = 'admin/curso/dashboard_admin_detalhes_curso.html'
     if request.method == 'GET':
-        curso = Curso.objects.get(id=cid)
+        curso = Curso.objects.filter(id=cid).exists()
         if curso:
+            curso = Curso.objects.get(id=cid) 
             return render(request, template_name, context={'curso':curso})
         else:
             messages.add_message(request, messages.ERROR, 'Curso não encontrado.')
@@ -745,8 +803,9 @@ def informacoes_curso(request, cid):
 def atualizar_informacoes_curso(request, cid):
     template_name = 'admin/curso/dashboard_admin_atualizar_curso.html'
     if request.method=='GET':
-        curso = Curso.objects.get(id=cid)
+        curso = Curso.objects.filter(id=cid).exists()
         if curso:
+            curso = Curso.objects.get(id=cid)
             data = informacoes_formulario_curso(curso)
             formulario = FormularioCurso(initial=data)
             return render(request, template_name, context={'form':formulario, 'curso':curso})
@@ -780,8 +839,9 @@ def atualizar_informacoes_curso(request, cid):
 
 def deletar_curso(request, cid):
     if request.method=='GET':
-        curso = Curso.objects.get(id=cid)
+        curso = Curso.objects.filter(id=cid).exists()
         if curso:
+            curso = Curso.objects.get(id=cid)
             curso.delete()
             messages.add_message(request, messages.SUCCESS, 'Curso deletado com sucesso.')
             return redirect('/administrador/cursos/')
