@@ -2,10 +2,9 @@ from django import forms
 from django.forms import ModelForm
 from livro.models import *
 from django.core.exceptions import ValidationError
+from livro.constants import AUTORES, CATEGORIAS
 import re
 
-CATEGORIAS = tuple([(categoria.id, categoria.categoria) for categoria in Categoria.objects.all()])
-AUTORES =  tuple([(autor.id, autor.nome) for autor in Autor.objects.all()])
 
 class FormularioLivro(forms.Form):
     isbn = forms.CharField(label='ISBN', max_length=6, widget=forms.TextInput(attrs={'placeholder':'Digite o numero de ISBN'}))

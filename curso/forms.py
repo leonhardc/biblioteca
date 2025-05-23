@@ -2,13 +2,10 @@ from django import forms
 from django.forms import ModelForm
 from livro.models import *
 from django.core.exceptions import ValidationError
+from curso.constants import TURNOS
 import re
 
-TURNOS = (
-        ('M', 'Matutino'),
-        ('V', 'Vespertino'),
-        ('I', 'Integral'),
-    )
+
 
 class FormularioCurso(forms.Form):
     cod_curso = forms.CharField(label='Código do Curso', max_length=4, widget=forms.TextInput(attrs={}))

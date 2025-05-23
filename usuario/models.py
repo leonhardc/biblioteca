@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from curso.models import Curso
 import datetime
-
+from usuario.constants import JORNADA
 
 class Aluno(models.Model):
     usuario = models.ForeignKey(User, verbose_name='Usuário', on_delete=models.DO_NOTHING)
@@ -22,11 +22,6 @@ class Aluno(models.Model):
 
 
 class Professor(models.Model):
-    JORNADA = (
-        ('20', '20hr'),
-        ('40', '40hr'),
-        ('DE', 'Dedicação Exclusiva'),
-    )
     usuario = models.ForeignKey(User, verbose_name='Usuário', on_delete=models.DO_NOTHING)
     matricula = models.CharField(unique=True,max_length=4, blank=False, null=False, verbose_name='Matricula')
     curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, blank=False, null=False, verbose_name='Curso')
@@ -40,7 +35,6 @@ class Professor(models.Model):
     class Meta:
         verbose_name = 'Professor'
         verbose_name_plural = 'Professores'
-
 
 
 class Funcionario(models.Model):
