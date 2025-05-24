@@ -1,9 +1,3 @@
-from livro.models import Categoria, Autor
-
-CATEGORIAS = tuple([(categoria.id, categoria.categoria) for categoria in Categoria.objects.all()])
-
-AUTORES =  tuple([(autor.id, autor.nome) for autor in Autor.objects.all()])
-
 NACIONALIDADES = (
     ('1', 'Portuguesa'),
     ('2', 'Filipina'),
