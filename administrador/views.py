@@ -284,7 +284,7 @@ def deletar_professor(request, uid):
     if professor:
         professor = Professor.objects.get(id=uid)
         professor.delete()
-        messages.add_message(request, messages.SUCCESS, f'Aluno deletado com sucesso.')
+        messages.add_message(request, messages.SUCCESS, f'Professor deletado com sucesso.')
         return redirect('/administrador/usuarios/')
     else:
         messages.add_message(request, messages.ERROR, f'Erro ao deletar Professor.')
