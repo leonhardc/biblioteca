@@ -1,5 +1,6 @@
 {% extends 'admin/dashboard-admin.html' %}
 {% load static %}
+{% load my_filters %}
 {% block content %}
 <div class="titulo">
     <h2>Usuários</h2>
@@ -30,7 +31,7 @@
         <table class="tabela">
             <thead>
                 <tr>
-                    <th>id</th>
+                    <!-- <th>id</th> -->
                     <th>Matricula</th>
                     <th>Usuario</th>
                     <th>Nome</th>
@@ -45,7 +46,7 @@
             <tbody>
                 {% for aluno in usuarios.alunos %}
                 <tr>
-                    <td>{{aluno.id}}</td>
+                    <!-- <td>{{aluno.id}}</td> -->
                     <td>
                         <strong>
                             <a href="{% url 'administrador:informacoes_aluno' aluno.id %}">
@@ -53,12 +54,18 @@
                             </a>
                         </strong>
                     </td>
-                    <td>{{aluno.usuario}}</td>
+                    <td>
+                        <strong>
+                            <a href="{% url 'administrador:informacoes_aluno' aluno.id %}">
+                                {{aluno.usuario}}
+                            </a>
+                        </strong>
+                    </td>
                     <td>{{aluno.usuario.first_name}} {{aluno.usuario.last_name}}</td>
                     <td>{{aluno.usuario.email}}</td>
                     <td>{{aluno.curso}}</td>
-                    <td>{{aluno.ingresso|date:"d M Y"}}</td>
-                    <td>{{aluno.conclusao_prevista|date:"d M Y"}}</td>
+                    <td>{{aluno.ingresso|date:"M Y"}}</td>
+                    <td>{{aluno.conclusao_prevista|date:"M Y"}}</td>
                     <td>
                         <a class="botao botao-info" href="{% url 'administrador:informacoes_aluno' aluno.id %}">
                             <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
@@ -104,7 +111,7 @@
         <table class="tabela">
             <thead>
                 <tr>
-                    <th>id</th>
+                    <!-- <th>id</th> -->
                     <th>Matricula</th>
                     <th>Usuario</th>
                     <th>Nome</th>
@@ -120,7 +127,7 @@
             <tbody>
                 {% for professor in usuarios.professores %}
                 <tr>
-                    <td>{{professor.id}}</td>
+                    <!-- <td>{{professor.id}}</td> -->
                     <td>
                         <strong>
                             <a href="{%url 'administrador:informacoes_professor' professor.id%}">
@@ -128,13 +135,19 @@
                             </a>
                         </strong>
                     </td>
-                    <td>{{professor.usuario}}</td>
+                    <td>
+                        <strong>
+                            <a href="{%url 'administrador:informacoes_professor' professor.id%}">
+                                {{professor.usuario}}
+                            </a>
+                        </strong>
+                    </td>
                     <td>{{professor.usuario.first_name}} {{professor.usuario.last_name}}</td>
                     <td>{{professor.usuario.email}}</td>
                     <td>{{professor.curso}}</td>
-                    <td>{{professor.cpf}}</td>
-                    <td>{{professor.regime}}</td>
-                    <td>{{professor.contratacao}}</td>
+                    <td>{{professor.cpf|filter_formatar_cpf}}</td>
+                    <td>{{professor.regime|filter_formatar_jornada}}</td>
+                    <td>{{professor.contratacao|date:"M Y"}}</td>
                     <td>
                         <a class="botao botao-info" href="{% url 'administrador:informacoes_professor' professor.id %}">
                             <img src="{% static 'usuario/img/info_E3E3E3.png' %}">
@@ -180,7 +193,7 @@
         <table class="tabela">
             <thead>
                 <tr>
-                    <th>id</th>
+                    <!-- <th>id</th> -->
                     <th>Matricula</th>
                     <th>Usuario</th>
                     <th>Nome</th>
@@ -192,7 +205,7 @@
             <tbody>
                 {% for funcionario in usuarios.funcionarios %}
                 <tr>
-                    <td>{{funcionario.id}}</td>
+                    <!-- <td>{{funcionario.id}}</td> -->
                     <td>
                         <strong>
                             <a href="{% url 'administrador:informacoes_funcionario' funcionario.id %}">
@@ -200,7 +213,13 @@
                             </a>
                         </strong>
                     </td>
-                    <td>{{funcionario.usuario}}</td>
+                    <td>
+                        <strong>
+                            <a href="{% url 'administrador:informacoes_funcionario' funcionario.id %}">
+                                {{funcionario.usuario}}
+                            </a>
+                        </strong>
+                    </td>
                     <td>{{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}</td>
                     <td>{{funcionario.usuario.email}}</td>
                     <td>

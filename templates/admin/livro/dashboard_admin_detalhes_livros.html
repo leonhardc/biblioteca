@@ -1,9 +1,9 @@
 {%extends 'admin/dashboard-admin.html'%}
-{% load static%}
+{% load static %}
+{% load my_filters %}
 {% block content %}
 {% if livro %}
 <div class="container">
-    <!-- Detalhes do Aluno -->
     <div class="dados">
         <div class="dados-pessoais">
             <h4>Dados do Livro</h4>
@@ -13,7 +13,7 @@
             </div>
             <div class="label">
                 <span>Ano de Lançamento:</span>
-                {{livro.lancamento}}
+                {{livro.lancamento|filter_extrair_ano}}
             </div>
             <div class="label">
                 <span>Editora:</span>
@@ -62,7 +62,7 @@
             </div>
             <div class="label">
                 <span>Nacionalidade:</span>
-                {{autor.nacionalidade}}
+                {{autor.nacionalidade|filter_formatar_nacionalidade}}
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 {%extends 'admin/dashboard-admin.html'%}
-{% load static%}
+{% load static %}
+{% load my_filters %}
 {% block content %}
 {% if aluno %}
 <div class="container">
@@ -13,7 +14,7 @@
             </div>
             <div class="label">
                 <span>CPF:</span>
-                {{ aluno.cpf}}
+                {{ aluno.cpf|filter_formatar_cpf }}
             </div>
             <div class="label">
                 <span>Endereço:</span>
@@ -36,11 +37,11 @@
             </div>
             <div class="label">
                 <span>Ingresso:</span>
-                {{ aluno.ingresso}}
+                {{ aluno.ingresso|filter_extrair_mes_ano }}
             </div>
             <div class="label">
                 <span>Conclusão:</span>
-                {{ aluno.conclusao_prevista}}
+                {{ aluno.conclusao_prevista|filter_extrair_mes_ano }}
             </div>
         </div>
     </div>
@@ -72,7 +73,7 @@
             </div>
             <div class="label">
                 <span>CPF:</span>
-                {{ professor.cpf }}
+                {{ professor.cpf|filter_formatar_cpf }}
             </div>
         </div>
         <div class="dados-curso">
@@ -87,11 +88,11 @@
             </div>
             <div class="label">
                 <span>Regime:</span>
-                {{ professor.regime }}
+                {{ professor.regime|filter_formatar_jornada }}
             </div>
             <div class="label">
                 <span>Data de Contratação:</span>
-                {{ professor.contratacao }}
+                {{ professor.contratacao|date:"M Y" }}
             </div>
         </div>
     </div>
@@ -118,6 +119,10 @@
                 <div class="label">
                     <span>Nome:</span>
                     {{funcionario.usuario.first_name}} {{funcionario.usuario.last_name}}
+                </div>
+                <div class="label">
+                    <span>email:</span>
+                    {{funcionario.usuario.email}}
                 </div>
                 <div class="label">
                     <span>Matricula:</span>

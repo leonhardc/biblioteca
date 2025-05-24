@@ -1,5 +1,6 @@
 {% extends 'admin/dashboard-admin.html' %}
 {% load static %}
+{% load my_filters %}
 {% block content %}
 <h2>Livros</h2>
 <span>Veja detalhes sobre livros, autores, categorias, reservas e emprestimos de livros.</span>
@@ -50,7 +51,7 @@
                         </a>
                     </strong></td>
                     <td>{{livro.titulo}}</td>
-                    <td>{{livro.lancamento}}</td>
+                    <td>{{livro.lancamento|filter_extrair_ano}}</td>
                     <td>{{livro.editora}}</td>
                     <td>{{livro.copias}}</td>
                     <td>{% for autor in livro.autores.all %} {{autor}}. {%endfor%}</td>
@@ -110,7 +111,7 @@
                         </a>
                     </strong></td>
                     <td>{{autor.cpf}}</td>
-                    <td>{{autor.nacionalidade}}</td>
+                    <td>{{autor.nacionalidade|filter_formatar_nacionalidade}}</td>
                 </tr>
                 {% endfor %}
             </tbody>

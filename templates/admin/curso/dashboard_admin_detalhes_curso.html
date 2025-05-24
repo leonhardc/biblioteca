@@ -1,5 +1,6 @@
 {%extends 'admin/dashboard-admin.html'%}
-{% load static%}
+{% load static %}
+{% load my_filters %}
 {% block content %}
 {% if curso %}
 <div class="container">
@@ -21,11 +22,11 @@
             </div>
             <div class="label">
                 <span>Turno:</span>
-                {{ curso.turno }}
+                {{ curso.turno|filter_formatar_turno }}
             </div>
             <div class="label">
                 <span>Duração:</span>
-                {{curso.duracao}}
+                {{curso.duracao}} anos
             </div>
         </div>
     </div>
