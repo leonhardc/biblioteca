@@ -1,0 +1,25 @@
+{
+  "name": "biblioteca",
+  "version": "1.0.0",
+  "description": "Este projeto é desenvolvido diretamente por mim e não tem fins comerciais, contudo tenho como objetivo principal  mostrar uma série de habilidades que tenho como desenvolvedor web, profissão essa que ainda não pratico mas que viso com muita determinação e orgulho.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leonhardc/biblioteca.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leonhardc/biblioteca/issues"
+  },
+  "homepage": "https://github.com/leonhardc/biblioteca#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "globals": "^16.2.0"
+  }
+}

@@ -1,0 +1,35 @@
+[tool.black]
+line-length = 88
+target-version = ['py3123']
+exclude = '''
+/(
+    \.venv|
+    venv|
+    env|
+    migrations|
+    __pycache__
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_django = ["django"]
+sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+skip_gitignore = true
+include_trailing_comma = true
+multi_line_output = 3
+skip = ["venv", ".venv", "env", "migrations"]
+
+[tool.flake8]
+max-line-length = 88
+exclude = .git,__pycache__,env,venv,.venv,migrations
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+ignore_missing_imports = true
+strict_optional = true
+disallow_untyped_defs = true
+
+[tool.django-stubs]
+django_settings_module = "biblioteca.settings"
