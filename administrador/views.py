@@ -34,7 +34,7 @@ def dashboard_admin_usuarios(request: HttpRequest):
             'professores': len(professores),
             'funcionarios': len(funcionarios)
         }
-        paginador_alunos = Paginator(alunos, 20) # 20 alunos por página
+        paginador_alunos = Paginator(alunos, 20) # type: ignore # 20 alunos por página
         paginador_professores = Paginator(professores, 20) # 20 professores por página
         paginador_funcionarios = Paginator(funcionarios, 20) # 20 funcionarios por página
         numero_da_pagina = request.GET.get('page')
@@ -737,8 +737,35 @@ def criar_reserva(request: HttpRequest):
         formulario = FormularioReserva()
         return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
-        # Salvar informações de formulário
-        pass
+        formulario = FormularioReserva(request.POST)
+        if formulario.is_valid():
+            reserva_existe = Reserva.objects.filter(usuario=formulario.cleaned_data['usuario'], livro=formulario.cleaned_data['livro']).exists()
+            if not reserva_existe:
+                try:
+                    usuario = User.objects.get(id=formulario.cleaned_data['usuario'])
+                    livro = Livro.objects.get(id=formulario.cleaned_data['livro'])
+                    # if not usuario:
+                    #     messages.add_message(request, messages.ERROR, 'Usuário não encontrado.')
+                    #     return redirect('/administrador/livros/')
+                    # if not livro:
+                    #     messages.add_message(request, messages.SUCCESS, 'Livro não encontrado.')
+                    #     return redirect('/administrador/livros/')
+                    Reserva.objects.create(
+                        usuario = usuario,
+                        livro = livro,
+                        data_reserva = formulario.cleaned_data['data_reserva']
+                    )
+                    messages.add_message(request, messages.SUCCESS, 'Reserva cadastrado com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao cadastrar reserva.{e}')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Essa reserva já existe.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário Inválido.')
+            return redirect('/administrador/livros/')
 
 
 def informacoes_reserva(request: HttpRequest, rid: int):
@@ -764,7 +791,7 @@ def deletar_reserva(request: HttpRequest, rid: int):
 
 
 def criar_emprestimo(request: HttpRequest):
-    template_name = ''
+    template_name = 'administrador/livro/dashboard_admin_criar_emprestimo.html'
     if request.method=='GET':
         formulario = FormularioEmprestimo()
         return render(request, template_name, context={'formulario':formulario})

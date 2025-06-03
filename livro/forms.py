@@ -1,13 +1,15 @@
 from django import forms
-from django.forms import ModelForm
-from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
+from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo # type: ignore
 from livro.constants import NACIONALIDADES
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-import re
+# import re 
 
 # Constantes de Formulários.
-CATEGORIAS = tuple([(categoria.id, categoria.categoria) for categoria in Categoria.objects.all()])
-AUTORES =  tuple([(autor.id, autor.nome) for autor in Autor.objects.all()])
+CATEGORIAS = tuple([(categoria.id, categoria.categoria) for categoria in Categoria.objects.all()])  # type: ignore
+AUTORES =  tuple([(autor.id, autor.nome) for autor in Autor.objects.all()])                         # type: ignore
+USUARIOS = tuple([(usuario.id, usuario.username) for usuario in User.objects.all()])                 # type: ignore
+LIVROS = tuple([(livro.id, livro.titulo) for livro in Livro.objects.all()])                         # type: ignore
 
 class FormularioLivro(forms.Form):
     isbn = forms.CharField(label='ISBN', max_length=6, widget=forms.TextInput(attrs={'placeholder':'Digite o numero de ISBN'}))
@@ -16,8 +18,8 @@ class FormularioLivro(forms.Form):
     lancamento = forms.DateField(label='Ano de Lançamento', widget=forms.DateInput())
     editora = forms.CharField(label='Editora', widget=forms.TextInput(attrs={'placeholder':'Digite a Editora do livro'}))    
     copias = forms.IntegerField(label='Quantidade de cópias', max_value=999, min_value=0)
-    autores = forms.MultipleChoiceField(label='Autores', choices=AUTORES, widget=forms.SelectMultiple())
-    categoria = forms.ChoiceField(label='Categoria', choices=CATEGORIAS, widget=forms.Select(attrs={}))
+    autores = forms.MultipleChoiceField(label='Autores', choices=AUTORES, widget=forms.SelectMultiple())    # type: ignore
+    categoria = forms.ChoiceField(label='Categoria', choices=CATEGORIAS, widget=forms.Select(attrs={}))     # type: ignore
 
     def clean_categoria(self):
         categoria_id = self.cleaned_data['categoria']
@@ -36,7 +38,12 @@ class FormularioCategoria(forms.Form):
     descricao = forms.CharField(label='Descrição', max_length=2000, widget=forms.Textarea())
 
 class FormularioReserva(forms.Form):
-    pass
+    usuario = forms.ChoiceField(label='Usuário', choices=USUARIOS,widget=forms.Select())                                # type: ignore
+    livro = forms.ChoiceField(label='Livro', choices=LIVROS, widget=forms.Select())                                     # type: ignore
+    data_reserva = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))              # type: ignore
 
 class FormularioEmprestimo(forms.Form):
-    pass
+    usuario = forms.ChoiceField(label='Usuário', choices=USUARIOS,widget=forms.Select())                                # type: ignore
+    livro = forms.ChoiceField(label='Livro', choices=LIVROS, widget=forms.Select())                                     # type: ignore
+    data_emprestimo = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))           # type: ignore
+    data_devolucao = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))            # type: ignore
