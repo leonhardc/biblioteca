@@ -744,12 +744,6 @@ def criar_reserva(request: HttpRequest):
                 try:
                     usuario = User.objects.get(id=formulario.cleaned_data['usuario'])
                     livro = Livro.objects.get(id=formulario.cleaned_data['livro'])
-                    # if not usuario:
-                    #     messages.add_message(request, messages.ERROR, 'Usuário não encontrado.')
-                    #     return redirect('/administrador/livros/')
-                    # if not livro:
-                    #     messages.add_message(request, messages.SUCCESS, 'Livro não encontrado.')
-                    #     return redirect('/administrador/livros/')
                     Reserva.objects.create(
                         usuario = usuario,
                         livro = livro,
@@ -770,9 +764,10 @@ def criar_reserva(request: HttpRequest):
 
 def informacoes_reserva(request: HttpRequest, rid: int):
     template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
-    if request.method=='GET':
-        reserva=Reserva.objects.get(id=rid)
-        if reserva:
+    if request.method =='GET':
+        reserva_existe = Reserva.objects.filter(id=rid).exists()
+        if reserva_existe:
+            reserva = Reserva.objects.get(id=rid)
             return render(request, template_name, context={'reserva':reserva})
         else:
             messages.add_message(request, messages.ERROR, 'Reserva não encontrada.')
@@ -780,11 +775,51 @@ def informacoes_reserva(request: HttpRequest, rid: int):
 
 
 def atualizar_informacoes_reserva(request: HttpRequest, rid: int):
-    pass
+    template_name = "admin/livro/dashaboard_admin_atualizar_reserva.html"
+    if request.method == 'GET':
+        reserva = Reserva.objects.get(id=rid)
+        if not reserva:
+            messages.add_message(request, messages.ERROR, "Reserva não encontrada.")
+            return redirect("/administrador/livros/")
+        data = informacoes_formulario_reserva(reserva)
+        formulario = FormularioReserva(initial=data)
+        return render(request, template_name, context={'form':formulario})
+    if request.method == 'POST':
+        formulario = FormularioReserva(request.POST)
+        if formulario.is_valid():
+            reserva_existe = Reserva.objects.filter(id=rid).exists()
+            if reserva_existe:
+                try:
+                    reserva = Reserva.objects.get(id=rid)
+                    reserva.usuario = formulario.cleaned_data['usuario']
+                    reserva.livro = formulario.cleaned_data['livro']
+                    reserva.data_reserva = formulario.cleaned_data['data_reserva']
+                    reserva.save()
+                    messages.add_message(request, messages.SUCCESS, "Informações salvas com sucesso.")
+                    return redirect("/administrador/livros/")
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f"Um erro aconteceu ao tentar atualizar as informações de reserva.{e}")
+                    return redirect("/administrador/livros/")
+            else:
+                messages.add_message(request, messages.ERROR, "A reserva informada não existe.")
+                return redirect("/administrador/livros/")
+        else:
+            messages.add_message(request, messages.ERROR, "Formulário inválido.")
+            return redirect("/administrador/livros/")
 
 
 def deletar_reserva(request: HttpRequest, rid: int):
-    pass
+    reserva_existe = Reserva.objects.filter(id=rid).exists()
+    if reserva_existe:
+        try:
+            reserva = Reserva.objects.get(id=rid)
+            reserva.delete()
+        except Exception as e:
+            messages.add_message(request, messages.ERROR, f"Um erro aconteceu ao tentar deletar a reserva.{e}")
+            return redirect("/administrador/livros/")
+    else:
+        messages.add_message(request, messages.ERROR, "A reserva informada não existe.")
+        return redirect("/administrador/livros/")
 
 ## Views de Emprestimos
 # TODO: Implementar as views de Emprestimos
