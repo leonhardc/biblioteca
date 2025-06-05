@@ -827,11 +827,31 @@ def deletar_reserva(request: HttpRequest, rid: int):
 
 def criar_emprestimo(request: HttpRequest):
     template_name = 'administrador/livro/dashboard_admin_criar_emprestimo.html'
-    if request.method=='GET':
+    if request.method == 'GET':
         formulario = FormularioEmprestimo()
         return render(request, template_name, context={'formulario':formulario})
-    if request.method=='POST':
-        pass
+    if request.method == 'POST':
+        formulario = FormularioEmprestimo(request.POST)
+        if formulario.is_valid():
+            emprestimo_existe = Emprestimo.objects.filter(usuario=formulario.cleaned_data['usuario'], livro=formulario.cleaned_data['livro']).exists()
+            if not emprestimo_existe:
+                try:
+                    Emprestimo.objects.create(
+                        usuario = formulario.cleaned_data['usuario'],
+                        livro = formulario.cleaned_data['livro'],
+                        data_emprestimo = formulario.cleaned_data['data_emprestimo']
+                    )
+                    messages.add_message(request, messages.ERROR, 'Emprestimo registrado com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Um erro aconteceo ao tentar registrar o emprestimo.{e}')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Esse registro já existe no banco de dados.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário inválido.')
+            return redirect('/administrador/livros/')
 
 
 def informacoes_emprestimo(request: HttpRequest, eid: int):
@@ -846,11 +866,53 @@ def informacoes_emprestimo(request: HttpRequest, eid: int):
 
 
 def atualizar_informacoes_emprestimo(request: HttpRequest, eid: int):
-    pass
+    template_name = 'admin/livro/dashboard_admin_atualizar_emprestimo.html'
+    if request.method == 'GET':
+        # Resgatar informações da base de dados e mandar para o template
+        emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
+        if emprestimo_existe:
+            emprestimo = Emprestimo.objects.get(id=eid)
+            data = informacoes_formulario_emprestimo(emprestimo)
+            formulario = FormularioEmprestimo(initial=data)
+            return render(request, template_name, context={'form':formulario})
+        else:
+            messages.add_message(request, messages.ERROR, 'Emprestimo solicitado não existe na base de dados.')
+            return redirect('/administrador/livros/')
+    if request.method == 'POST':
+        # Salvar as informações do formulário na base de dados
+        formulario = FormularioEmprestimo(request.POST)
+        if formulario.is_valid():
+            emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
+            if emprestimo_existe:
+                try:
+                    emprestimo = Emprestimo.objects.get(id=eid)
+                    emprestimo.usuario = formulario.cleaned_data['usuario']
+                    emprestimo.livro = formulario.cleaned_data['livro']
+                    emprestimo.data_emprestimo = formulario.cleaned_data['data_emprestimo']
+                    emprestimo.data_devolucao = formulario.cleaned_data['data_devolucao']
+                    messages.add_message(request, messages.SUCCESS, 'Emprestimo Atualizado com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Um erro aconteceu ao salvar as informações de emprestimo. {e}.')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'o Registro não existe  na base de dados.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário inválido.')
+            redirect('/administrador/livros/')
 
 
 def deletar_emprestimo(request: HttpRequest, eid: int):
-    pass
+    emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
+    if emprestimo_existe:
+        emprestimo = Emprestimo.objects.get(id=eid)
+        emprestimo.delete()
+        messages.add_message(request, messages.SUCCESS, 'Emprestimo apagado com sucesso.')
+        return redirect('/administrador/livros/')
+    else:
+        messages.add_message(request, messages.ERROR, 'Emprestimo não existe na base de dados.')
+        return redirect('/administrador/livros/')
 
 # Cursos: dashboard e crud
 
