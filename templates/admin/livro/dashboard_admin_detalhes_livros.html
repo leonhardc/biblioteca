@@ -26,7 +26,7 @@
             <div class="label">
                 <span>Autores:</span>
                 {% for autor in livro.autores.all %}
-                    {{ autor }}.
+                {{ autor }}.
                 {% endfor %}
             </div>
             <div class="label">
@@ -40,7 +40,7 @@
             Atualizar Informações
             <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
         </a>
-        
+
         <a class="botao botao-deletar" href="{% url 'administrador:deletar_livro' livro.id %}">
             Deletar Livro
             <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
@@ -106,5 +106,84 @@
         </a>
     </div>
 </div>
+
+{% elif reserva %}
+<div class="container">
+    <div class="conteudo-usuario">
+        <div class="dados">
+            <div class="dados-pessoais">
+                <h4>Dados da Reserva</h4>
+                <div class="label">
+                    <span>Id:</span>
+                    {{reserva.id}}
+                </div>
+                <div class="label">
+                    <span>Usuário:</span>
+                    {{reserva.usuario}}
+                </div>
+                <div class="label">
+                    <span>Livro:</span>
+                    {{reserva.livro}}
+                </div>
+                <div class="label">
+                    <span>Data de Reserva:</span>
+                    {{reserva.data_reserva}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="botoes-de-usuario">
+        <a class="botao botao-info" href="{% url 'administrador:atualizar_reserva' reserva.id %}">
+            Atualizar Informações
+            <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+        </a>
+        <a class="botao botao-deletar" href="{% url 'administrador:deletar_reserva' reserva.id %}">
+            Deletar Funcionario
+            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+        </a>
+    </div>
+</div>
+
+{% elif emprestimo %}
+<div class="container">
+    <div class="conteudo-usuario">
+        <div class="dados">
+            <div class="dados-pessoais">
+                <h4>Dados de Emprestimo</h4>
+                <div class="label">
+                    <span>ID:</span>
+                    {{emprestimo.id}}
+                </div>
+                <div class="label">
+                    <span>Usuario:</span>
+                    {{emprestimo.usuario}}
+                </div>
+                <div class="label">
+                    <span>Livro:</span>
+                    {{emprestimo.livro}}
+                </div>
+                <div class="label">
+                    <span>Data de Emprestimo:</span>
+                    {{emprestimo.data_emprestimo}}
+                </div>
+                <div class="label">
+                    <span>Data de Devolução:</span>
+                    {{emprestimo.data_devolucao}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="botoes-de-usuario">
+        <a class="botao botao-info" href="{% url 'administrador:atualizar_emprestimo' emprestimo.id %}">
+            Atualizar Informações
+            <img class="icone" src="{% static 'usuario/img/update_E3E3E3.png' %}">
+        </a>
+        <a class="botao botao-deletar" href="{% url 'administrador:deletar_emprestimo' emprestimo.id %}">
+            Deletar Funcionario
+            <img src="{% static 'usuario/img/delete_E3E3E3.png' %}">
+        </a>
+    </div>
+</div>
+
 {% endif %}
 {% endblock content %}

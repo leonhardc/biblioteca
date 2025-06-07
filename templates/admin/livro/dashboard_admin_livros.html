@@ -46,14 +46,14 @@
                 <tr>
                     <td>{{livro.id}}</td>
                     <td><strong>
-                        <a href="{% url 'administrador:informacoes_livro' livro.id %}">
-                            {{livro.isbn}}
-                        </a>
-                    </strong></td>
-                    <td>{{livro.titulo}}</td>
-                    <td>{{livro.lancamento|filter_extrair_ano}}</td>
+                            <a href="{% url 'administrador:informacoes_livro' livro.id %}">
+                                {{livro.isbn}}
+                            </a>
+                        </strong></td>
+                    <td><strong>{{livro.titulo}}</strong> {{livro.subtitulo}}</td>
+                    <td><strong>{{livro.lancamento|filter_extrair_ano}}</strong></td>
                     <td>{{livro.editora}}</td>
-                    <td>{{livro.copias}}</td>
+                    <td><strong>{{livro.copias}}</strong></td>
                     <td>{% for autor in livro.autores.all %} {{autor}}. {%endfor%}</td>
                     <td>{{livro.categoria}}</td>
                 </tr>
@@ -68,7 +68,7 @@
                 </span>
 
                 <div class="links-pagination">
-                    
+
                     {% if livros.livros.has_previous %}
                     <a href="?type=livro&page=1">Primeira</a>
                     <a href="?type=livro&page={{ livros.livros.previous_page_number }}">Anterior</a>
@@ -106,10 +106,10 @@
                 <tr>
                     <td>{{autor.id}}</td>
                     <td><strong>
-                        <a href="{% url 'administrador:informacoes_autor' autor.id %}">
-                            {{autor.nome}}
-                        </a>
-                    </strong></td>
+                            <a href="{% url 'administrador:informacoes_autor' autor.id %}">
+                                {{autor.nome}}
+                            </a>
+                        </strong></td>
                     <td>{{autor.cpf}}</td>
                     <td>{{autor.nacionalidade|filter_formatar_nacionalidade}}</td>
                 </tr>
@@ -159,10 +159,10 @@
                 <tr>
                     <td>{{categoria.id}}</td>
                     <td><strong>
-                        <a href="{% url 'administrador:informacoes_categoria' categoria.id %}">
-                            {{categoria.categoria}}
-                        </a>
-                    </strong></td>
+                            <a href="{% url 'administrador:informacoes_categoria' categoria.id %}">
+                                {{categoria.categoria}}
+                            </a>
+                        </strong></td>
                     <td>{{categoria.categoria}}</td>
                 </tr>
                 {% endfor %}
@@ -176,18 +176,18 @@
                 </span>
                 <div class="links-pagination">
                     {% if livros.categorias.has_previous %}
-                        <a href="?type=categoria&page=1">Primeira</a>
-                        <a href="?type=categoria&page={{ livros.categorias.previous_page_number }}">Anterior</a>
+                    <a href="?type=categoria&page=1">Primeira</a>
+                    <a href="?type=categoria&page={{ livros.categorias.previous_page_number }}">Anterior</a>
                     {% else %}
-                        <span>Primeira</span>
-                        <span>Anterior</span>
+                    <span>Primeira</span>
+                    <span>Anterior</span>
                     {% endif %}
                     {% if livros.categorias.has_next %}
-                        <a href="?type=categoria&page={{ livros.categorias.next_page_number }}">Proxima</a>
-                        <a href="?type=categoria&page={{ livros.categorias.paginator.num_pages }}">Ultima</a>
+                    <a href="?type=categoria&page={{ livros.categorias.next_page_number }}">Proxima</a>
+                    <a href="?type=categoria&page={{ livros.categorias.paginator.num_pages }}">Ultima</a>
                     {% else %}
-                        <span>Próxima</span>
-                        <span>Ultima</span>
+                    <span>Próxima</span>
+                    <span>Ultima</span>
                     {% endif %}
                 </div>
             </span>
@@ -200,13 +200,23 @@
         <table class="tabela">
             <thead>
                 <tr>
-                    <th></th>
+                    <th>Id da Reserva</th>
+                    <th>Usuário</th>
+                    <th>Livro</th>
+                    <th>Data da Reserva</th>
                 </tr>
             </thead>
             <tbody>
                 {% for reserva in livros.reservas %}
                 <tr>
-                    <td></td>
+                    <td>{{reserva.id}}</td>
+                    <td><strong>
+                            <a href="{% url 'administrador:informacoes_reserva' reserva.id %}">
+                                {{reserva.usuario}}
+                            </a>
+                        </strong></td>
+                    <td><strong>{{reserva.livro.titulo}}</strong> {{reserva.livro.subtitulo}}</td>
+                    <td>{{reserva.data_reserva}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -219,18 +229,18 @@
                 </span>
                 <div class="links-pagination">
                     {% if livros.reservas.has_previous %}
-                        <a href="?type=reserva&page=1">Primeira</a>
-                        <a href="?type=reserva&page={{ livros.reservas.previous_page_number }}">Anterior</a>
+                    <a href="?type=reserva&page=1">Primeira</a>
+                    <a href="?type=reserva&page={{ livros.reservas.previous_page_number }}">Anterior</a>
                     {% else %}
-                        <span>Primeira</span>
-                        <span>Anterior</span>
+                    <span>Primeira</span>
+                    <span>Anterior</span>
                     {% endif %}
                     {% if livros.reservas.has_next %}
-                        <a href="?type=reserva&page={{ livros.reservas.next_page_number }}">Proxima</a>
-                        <a href="?type=reserva&page={{ livros.reservas.paginator.num_pages }}">Ultima</a>
+                    <a href="?type=reserva&page={{ livros.reservas.next_page_number }}">Proxima</a>
+                    <a href="?type=reserva&page={{ livros.reservas.paginator.num_pages }}">Ultima</a>
                     {% else %}
-                        <span>Próxima</span>
-                        <span>Ultima</span>
+                    <span>Próxima</span>
+                    <span>Ultima</span>
                     {% endif %}
                 </div>
             </span>
@@ -243,13 +253,25 @@
         <table class="tabela">
             <thead>
                 <tr>
-                    <th></th>
+                    <th>Id</th>
+                    <th>Usuário</th>
+                    <th>Livro</th>
+                    <th>Data do Emprestimo</th>
+                    <th>Data de Devolução</th>
                 </tr>
             </thead>
             <tbody>
                 {% for emprestimo in livros.emprestimos %}
                 <tr>
-                    <td></td>
+                    <td>{{emprestimo.id}}</td>
+                    <td>
+                        <a href="{% url 'administrador:informacoes_emprestimo' emprestimo.id%}">
+                            {{emprestimo.usuario.username}}
+                        </a>
+                    </td>
+                    <td><strong>{{emprestimo.livro.titulo}}</strong> {{emprestimo.livro.subtitulo}}</td>
+                    <td>{{emprestimo.data_emprestimo}}</td>
+                    <td>{{emprestimo.data_devolucao}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
