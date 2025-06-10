@@ -11,9 +11,11 @@ from livro.forms import FormularioLivro, FormularioAutor, FormularioCategoria, F
 from curso.forms import FormularioCurso
 from curso.models import Curso
 from utils.utils import *
+from utils.formularios.utils_formularios import *
 
 # Views de administrador
 
+# TODO: Atualizar todas as funções update para receber o método 'UPDATE' na submissão do formulário
 
 def dashboard_admin(request: HttpRequest):
     if request.method == 'GET':
@@ -826,25 +828,32 @@ def deletar_reserva(request: HttpRequest, rid: int):
 
 
 def criar_emprestimo(request: HttpRequest):
-    template_name = 'administrador/livro/dashboard_admin_criar_emprestimo.html'
+    template_name = "admin/livro/dashboard_admin_criar_emprestimo.html"
     if request.method == 'GET':
         formulario = FormularioEmprestimo()
-        return render(request, template_name, context={'formulario':formulario})
+        return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
         formulario = FormularioEmprestimo(request.POST)
         if formulario.is_valid():
             emprestimo_existe = Emprestimo.objects.filter(usuario=formulario.cleaned_data['usuario'], livro=formulario.cleaned_data['livro']).exists()
             if not emprestimo_existe:
-                try:
-                    Emprestimo.objects.create(
-                        usuario = formulario.cleaned_data['usuario'],
-                        livro = formulario.cleaned_data['livro'],
-                        data_emprestimo = formulario.cleaned_data['data_emprestimo']
-                    )
-                    messages.add_message(request, messages.ERROR, 'Emprestimo registrado com sucesso.')
-                    return redirect('/administrador/livros/')
-                except Exception as e:
-                    messages.add_message(request, messages.ERROR, f'Um erro aconteceo ao tentar registrar o emprestimo.{e}')
+                # 1. É necessário verificar o tipo de usuário a qual o emprestimo está sendo associado
+                # 2. A partir do tipo de usuário, verificar se aquele já tem um numero máximo de emprestimos
+                #    para seu tipo de usuário.Como segue abaixo:
+                #       i. Alunos podem fazer até 4 emprestimos ao mesmo tempo por até 15 dias cada;
+                #       ii. Professores podem fazer até 5 emprestimos ao mesmo tempo por até 30 dias cada;
+                #       iii. Funcionários podem fazer até 4 emprestimos ao mesmo tempo por até 21 dias cada;
+                # 3. A quantidade de emprestimos de um mlivro deve obedecer ao numéro máximo de cópias
+                #    cadastradas no banco de dados.
+                if isinstance(returna_instancia_usuario(usuario=formulario.cleaned_data['usuario']), Aluno):                    
+                    return salvar_emprestimo(request, formulario, 'aluno') # Para Aluno
+                elif isinstance(returna_instancia_usuario(usuario=formulario.cleaned_data['usuario']), Professor):
+                    return salvar_emprestimo(request, formulario, 'professor') # Para Professor
+                elif isinstance(returna_instancia_usuario(usuario=formulario.cleaned_data['usuario']), Funcionario):
+                    return salvar_emprestimo(request, formulario, 'funcionario') # Para Funcionario
+                else:
+                    # Levanta uma mensagem de erro, porque o usuário não é nenhum desses três elementos
+                    messages.add_message(request, messages.ERROR, 'O usuário não pode alugar um livro')
                     return redirect('/administrador/livros/')
             else:
                 messages.add_message(request, messages.ERROR, 'Esse registro já existe no banco de dados.')
@@ -855,7 +864,7 @@ def criar_emprestimo(request: HttpRequest):
 
 
 def informacoes_emprestimo(request: HttpRequest, eid: int):
-    template_name = 'admin/livro/dashboard_admin_detalhes_livros.html'
+    template_name = "admin/livro/dashboard_admin_detalhes_livros.html"
     if request.method=='GET':
         emprestimo=Emprestimo.objects.get(id=eid)
         if emprestimo:
@@ -866,7 +875,7 @@ def informacoes_emprestimo(request: HttpRequest, eid: int):
 
 
 def atualizar_informacoes_emprestimo(request: HttpRequest, eid: int):
-    template_name = 'admin/livro/dashboard_admin_atualizar_emprestimo.html'
+    template_name = "admin/livro/dashboard_admin_atualizar_emprestimo.html"
     if request.method == 'GET':
         # Resgatar informações da base de dados e mandar para o template
         emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
@@ -904,6 +913,7 @@ def atualizar_informacoes_emprestimo(request: HttpRequest, eid: int):
 
 
 def deletar_emprestimo(request: HttpRequest, eid: int):
+    # TODO: Atualiza o numero de cópias do livro quando o emprestimo for deletado.
     emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
     if emprestimo_existe:
         emprestimo = Emprestimo.objects.get(id=eid)
@@ -917,7 +927,7 @@ def deletar_emprestimo(request: HttpRequest, eid: int):
 # Cursos: dashboard e crud
 
 
-def dashboard_admin_cursos(request: HttpRequest):
+def dashboard_admin_cursos(request: HttpRequest): # type: ignore
     template_name = 'admin/curso/dashboard_admin_cursos.html'
     if request.method == 'GET':
         cursos = Curso.objects.all()

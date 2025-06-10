@@ -1,10 +1,51 @@
 from datetime import datetime, timedelta
-from usuario.forms import FormularioAluno
+
+from django.http import HttpRequest
+from django.shortcuts import redirect
+from usuario.constants import NUM_MAX_EMPRESTIMOS, NUM_MAX_DIAS_EMPRESTIMOS
 from usuario.models import Aluno, Professor, Funcionario
-from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
-from curso.models import Curso
+from django.contrib.auth.models import User
+from usuario.forms import FormularioAluno, FormularioFuncionario, FormularioProfessor
+from livro.forms import FormularioEmprestimo
+from livro.models import Emprestimo, Livro
+from django.contrib import messages
 import random
-import re
+
+
+def formatar_endereco(formulario:FormularioAluno|FormularioProfessor|FormularioFuncionario):
+    tipo_logadouro = formulario.cleaned_data['tipo_logradouro'] # type: ignore
+    logadouro = formulario.cleaned_data['logradouro']           # type: ignore
+    numero = formulario.cleaned_data['numero']                  # type: ignore
+    bairro = formulario.cleaned_data['bairro']                  # type: ignore
+    cep = formulario.cleaned_data['cep']                        # type: ignore
+    cidade = formulario.cleaned_data['cidade']                  # type: ignore
+    estado = formulario.cleaned_data['estado']                  # type: ignore
+    complemento = formulario.cleaned_data['complemento']        # type: ignore
+    return f'{tipo_logadouro} {logadouro}, {numero}, {complemento} - {bairro}. CEP: {cep}. {cidade}/{estado}'
+
+def gerar_matricula_aluno():
+    while(True):
+        matricula = f'{random.randint(100000, 999999)}'
+        aluno = Aluno.objects.filter(matricula=matricula).exists()
+        if not aluno:
+            break
+    return matricula
+
+def gerar_matricula_professor():
+    while(True):
+        matricula = f'{random.randint(1000, 9999)}'
+        professor = Professor.objects.filter(matricula=matricula).exists()
+        if not professor:
+            break
+    return matricula
+
+def gerar_matricula_funcionario():
+    while(True):
+        matricula = f'{random.randint(1000, 9999)}'
+        funcionario = Funcionario.objects.filter(matricula=matricula).exists()
+        if not funcionario:
+            break
+    return matricula
 
 def gerar_data():
     data_inicio = datetime(1900, 1, 1)  
@@ -51,141 +92,47 @@ def separar_endereco(endereco:str):
             'cep':'', 
             'cidade':'', 
             'estado':'', 
-        } 
+        }
 
-def informacoes_formulario_aluno(aluno:Aluno, endereco):
-    data = {
-        'nome' : aluno.usuario.first_name,
-        'sobrenome' : aluno.usuario.last_name,
-        'email' : aluno.usuario.email,
-        'usuario' : aluno.usuario.username,
-        'tipo_logradouro' : endereco['tipo_logradouro'],
-        'logradouro' : endereco['logradouro'],
-        'numero' : endereco['numero'],
-        'bairro' : endereco['bairro'],
-        'cidade' : endereco['cidade'],
-        'estado' : endereco['estado'],
-        'cep' : endereco['cep'],
-        'complemento' : endereco['complemento'],
-        'matricula' : aluno.matricula,
-        'cpf' : aluno.cpf,
-        'curso' : aluno.curso.cod_curso,
-        'ingresso' : aluno.ingresso,
-        'conclusao_prevista' : aluno.conclusao_prevista
-    }
-    return data
 
-def informacoes_formulario_professor(professor:Professor):
-    data = {
-        'nome': professor.usuario.first_name,
-        'sobrenome': professor.usuario.last_name,
-        'email': professor.usuario.email,
-        'usuario': professor.usuario.username,
-        'matricula': professor.matricula,
-        'curso': professor.curso.cod_curso,
-        'cpf': professor.cpf,
-        'regime': professor.regime,
-        'contratacao': professor.contratacao
-    }
-    return data
+def returna_instancia_usuario(usuario:User):
+    if Aluno.objects.filter(usuario=usuario).exists():
+        return Aluno.objects.get(usuario=usuario)
+    elif Professor.objects.filter(usuario=usuario).exists():
+        return Professor.objects.get(usuario=usuario)
+    elif Funcionario.objects.filter(usuario=usuario).exists():
+        return Funcionario.objects.get(usuario=usuario)
+    else:
+        return None
 
-def informacoes_formulario_funcionario(funcionario:Funcionario):
-    data = {
-        'nome': funcionario.usuario.first_name,
-        'sobrenome': funcionario.usuario.last_name,
-        'email': funcionario.usuario.email,
-        'usuario': funcionario.usuario.username,
-        'matricula': funcionario.matricula,
-        'cpf': funcionario.cpf
-    }
-    return data
 
-def informacoes_formulario_livro(livro:Livro):
-    data = {
-        'isbn': livro.isbn,
-        'titulo': livro.titulo,
-        'subtitulo': livro.subtitulo,
-        'lancamento': livro.lancamento,
-        'editora': livro.editora,
-        'copias': livro.copias,
-        'autores': [autor.id for autor in livro.autores.all()],
-        'categoria': livro.categoria.id
-    }
-    return data
-
-def informacoes_formulario_autor(autor:Autor):
-    data = {
-        'nome': autor.nome,
-        'cpf': autor.cpf,
-        'nacionalidade': autor.nacionalidade
-    }
-    return data
-
-def informacoes_formulario_categoria(categoria:Categoria):
-    data = {
-        'categoria': categoria.categoria,
-        'descricao': categoria.descricao
-    }
-    return data
-
-def informacoes_formulario_reserva(reserva:Reserva):
-    data = {
-        'usuario': reserva.usuario.username,
-        'livro': reserva.livro.isbn,
-        'data_reserva': reserva.data_reserva
-    }
-    return data
-
-def informacoes_formulario_emprestimo(emprestimo:Emprestimo):
-    data = {
-        'usuario': emprestimo.usuario.username,
-        'livro': emprestimo.livro.isbn,
-        'data_emprestimo': emprestimo.data_emprestimo,
-        'data_devolucao': emprestimo.data_devolucao
-    }
-    return data
-
-def informacoes_formulario_curso(curso:Curso):
-    data = {
-        'cod_curso':curso.cod_curso,
-        'curso':curso.curso,
-        'descricao':curso.descricao,
-        'turno':curso.turno,
-        'duracao':curso.duracao,
-    }
-    return data
-
-def formatar_endereco(formulario):
-    tipo_logadouro = formulario.cleaned_data['tipo_logradouro']
-    logadouro = formulario.cleaned_data['logradouro']
-    numero = formulario.cleaned_data['numero']
-    bairro = formulario.cleaned_data['bairro']
-    cep = formulario.cleaned_data['cep']
-    cidade = formulario.cleaned_data['cidade']
-    estado = formulario.cleaned_data['estado']
-    complemento = formulario.cleaned_data['complemento']
-    return f'{tipo_logadouro} {logadouro}, {numero}, {complemento} - {bairro}. CEP: {cep}. {cidade}/{estado}'
-
-def gerar_matricula_aluno():
-    while(True):
-        matricula = f'{random.randint(100000, 999999)}'
-        aluno = Aluno.objects.filter(matricula=matricula).exists()
-        if not aluno:
-            break
-    return matricula
-
-def gerar_matricula_professor():
-    while(True):
-        matricula = f'{random.randint(1000, 9999)}'
-        professor = Professor.objects.filter(matricula=matricula).exists()
-        if not professor:
-            break
-    return matricula
-
-def gerar_matricula_funcionario():
-    while(True):
-        matricula = f'{random.randint(1000, 9999)}'
-        funcionario = Funcionario.objects.filter(matricula=matricula).exists()
-        if not funcionario:
-            break
-    return matricula
+def salvar_emprestimo(request:HttpRequest, formulario:FormularioEmprestimo, tipo_usuario:str):
+    try:
+        url_redirect = '/administrador/livros'
+        usuario_obj = User.objects.get(id=formulario.cleaned_data['usuario'])
+        num_emprestimos_por_usuario = Emprestimo.objects.filter(usuario=usuario_obj).count()
+        if  num_emprestimos_por_usuario >= NUM_MAX_EMPRESTIMOS[tipo_usuario]:
+            messages.add_message(
+                request, 
+                messages.INFO, 
+                f"O usuário {usuario_obj.username} não pode alugar mais de {NUM_MAX_EMPRESTIMOS[tipo_usuario]} livros." # type: ignore
+            ) 
+            return redirect(url_redirect)
+        livro_obj = Livro.objects.get(id=formulario.cleaned_data['livro'])
+        if livro_obj.copias <= 0: # type: ignore
+            messages.add_message(request, messages.ERROR, 'Esse livro não pode mais ser alugado.')
+            return redirect(url_redirect)
+        Emprestimo.objects.create(
+            usuario = usuario_obj,
+            livro = livro_obj,
+            data_emprestimo = formulario.cleaned_data['data_emprestimo'],
+            data_devolucao = formulario.cleaned_data["data_emprestimo"] + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS[tipo_usuario])
+        )
+        # Atualizar numero de cópias
+        livro_obj.copias -= 1 # type: ignore
+        livro_obj.save()
+        messages.add_message(request, messages.SUCCESS, 'Emprestimo registrado com sucesso.')
+        return redirect(url_redirect)
+    except Exception as e:
+        messages.add_message(request, messages.ERROR, f'Um erro aconteceu ao tentar registrar o emprestimo.{e}')
+        return redirect(url_redirect) # type: ignore
