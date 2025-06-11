@@ -30,7 +30,7 @@ ESTADOS_BRASIL = (
     ('TO', 'Tocantins'),
 )
 
-OPCOES_CURSOS = tuple([(e.cod_curso, f'{e.cod_curso} - {e.curso}') for e in Curso.objects.all()])
+OPCOES_CURSOS = tuple([(e.cod_curso, f'{e.cod_curso} - {e.curso}') for e in Curso.objects.all()]) # type: ignore
 
 JORNADA = (
         ('20', '20hr'),
@@ -58,3 +58,15 @@ LOGRADOUROS = (
     ('Esplanada', 'Esplanada'),
     ('Estação', 'Estação')
 )
+
+NUM_MAX_EMPRESTIMOS = {
+    'aluno': 4,
+    'professore': 5,
+    'funcionario': 4,    
+}
+
+NUM_MAX_DIAS_EMPRESTIMOS = {
+    'aluno': 15,
+    'professore': 30,
+    'funcionario': 21
+}
