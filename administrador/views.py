@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
 from usuario.forms import FormularioAluno, FormularioProfessor, FormularioFuncionario
-from livro.forms import FormularioLivro, FormularioAutor, FormularioCategoria, FormularioEmprestimo, FormularioReserva
+from livro.forms import FormularioLivro, FormularioAutor, FormularioCategoria, FormularioReserva, FormularioCriarEmprestimo, FormularioAtualizarEmprestimo
 from curso.forms import FormularioCurso
 from curso.models import Curso
 from utils.utils import *
@@ -824,18 +824,20 @@ def deletar_reserva(request: HttpRequest, rid: int):
         return redirect("/administrador/livros/")
 
 ## Views de Emprestimos
-# TODO: Implementar as views de Emprestimos
 
 
 def criar_emprestimo(request: HttpRequest):
     template_name = "admin/livro/dashboard_admin_criar_emprestimo.html"
+    url_redirect = "/administrador/livros/"
     if request.method == 'GET':
-        formulario = FormularioEmprestimo()
+        formulario = FormularioCriarEmprestimo()
         return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
-        formulario = FormularioEmprestimo(request.POST)
+        formulario = FormularioCriarEmprestimo(request.POST)
         if formulario.is_valid():
-            emprestimo_existe = Emprestimo.objects.filter(usuario=formulario.cleaned_data['usuario'], livro=formulario.cleaned_data['livro']).exists()
+            usuario_formulario = formulario.cleaned_data['usuario']
+            livro_formulario = formulario.cleaned_data['livro']
+            emprestimo_existe = Emprestimo.objects.filter(usuario=usuario_formulario, livro=livro_formulario).exists()
             if not emprestimo_existe:
                 # 1. É necessário verificar o tipo de usuário a qual o emprestimo está sendo associado
                 # 2. A partir do tipo de usuário, verificar se aquele já tem um numero máximo de emprestimos
@@ -843,24 +845,25 @@ def criar_emprestimo(request: HttpRequest):
                 #       i. Alunos podem fazer até 4 emprestimos ao mesmo tempo por até 15 dias cada;
                 #       ii. Professores podem fazer até 5 emprestimos ao mesmo tempo por até 30 dias cada;
                 #       iii. Funcionários podem fazer até 4 emprestimos ao mesmo tempo por até 21 dias cada;
-                # 3. A quantidade de emprestimos de um mlivro deve obedecer ao numéro máximo de cópias
+                # 3. A quantidade de emprestimos de um livro deve obedecer ao numéro máximo de cópias
                 #    cadastradas no banco de dados.
-                if isinstance(returna_instancia_usuario(usuario=formulario.cleaned_data['usuario']), Aluno):                    
+                tipo_usuario = returna_instancia_usuario(usuario=formulario.cleaned_data['usuario'])
+                if isinstance(tipo_usuario, Aluno):                    
                     return salvar_emprestimo(request, formulario, 'aluno') # Para Aluno
-                elif isinstance(returna_instancia_usuario(usuario=formulario.cleaned_data['usuario']), Professor):
+                elif isinstance(tipo_usuario, Professor):
                     return salvar_emprestimo(request, formulario, 'professor') # Para Professor
-                elif isinstance(returna_instancia_usuario(usuario=formulario.cleaned_data['usuario']), Funcionario):
+                elif isinstance(tipo_usuario, Funcionario):
                     return salvar_emprestimo(request, formulario, 'funcionario') # Para Funcionario
                 else:
                     # Levanta uma mensagem de erro, porque o usuário não é nenhum desses três elementos
                     messages.add_message(request, messages.ERROR, 'O usuário não pode alugar um livro')
-                    return redirect('/administrador/livros/')
+                    return redirect(url_redirect)
             else:
                 messages.add_message(request, messages.ERROR, 'Esse registro já existe no banco de dados.')
-                return redirect('/administrador/livros/')
+                return redirect(url_redirect)
         else:
             messages.add_message(request, messages.ERROR, 'Formulário inválido.')
-            return redirect('/administrador/livros/')
+            return redirect(url_redirect)
 
 
 def informacoes_emprestimo(request: HttpRequest, eid: int):
@@ -875,6 +878,8 @@ def informacoes_emprestimo(request: HttpRequest, eid: int):
 
 
 def atualizar_informacoes_emprestimo(request: HttpRequest, eid: int):
+    # TODO: Resolver bug de atualizar informações de emprestimos:
+    # 1. Formulário não carrega as informações do banco;
     template_name = "admin/livro/dashboard_admin_atualizar_emprestimo.html"
     if request.method == 'GET':
         # Resgatar informações da base de dados e mandar para o template
@@ -882,23 +887,24 @@ def atualizar_informacoes_emprestimo(request: HttpRequest, eid: int):
         if emprestimo_existe:
             emprestimo = Emprestimo.objects.get(id=eid)
             data = informacoes_formulario_emprestimo(emprestimo)
-            formulario = FormularioEmprestimo(initial=data)
-            return render(request, template_name, context={'form':formulario})
+            formulario = FormularioAtualizarEmprestimo(initial=data)
+            return render(request, template_name, context={'form':formulario, 'emprestimo':emprestimo})
         else:
             messages.add_message(request, messages.ERROR, 'Emprestimo solicitado não existe na base de dados.')
             return redirect('/administrador/livros/')
     if request.method == 'POST':
         # Salvar as informações do formulário na base de dados
-        formulario = FormularioEmprestimo(request.POST)
+        formulario = FormularioAtualizarEmprestimo(request.POST)
         if formulario.is_valid():
             emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
             if emprestimo_existe:
                 try:
                     emprestimo = Emprestimo.objects.get(id=eid)
-                    emprestimo.usuario = formulario.cleaned_data['usuario']
-                    emprestimo.livro = formulario.cleaned_data['livro']
+                    emprestimo.usuario = User.objects.get(id=formulario.cleaned_data['usuario'])
+                    emprestimo.livro = Livro.objects.get(id=formulario.cleaned_data['livro'])
                     emprestimo.data_emprestimo = formulario.cleaned_data['data_emprestimo']
                     emprestimo.data_devolucao = formulario.cleaned_data['data_devolucao']
+                    emprestimo.save()
                     messages.add_message(request, messages.SUCCESS, 'Emprestimo Atualizado com sucesso.')
                     return redirect('/administrador/livros/')
                 except Exception as e:
@@ -913,16 +919,19 @@ def atualizar_informacoes_emprestimo(request: HttpRequest, eid: int):
 
 
 def deletar_emprestimo(request: HttpRequest, eid: int):
-    # TODO: Atualiza o numero de cópias do livro quando o emprestimo for deletado.
     emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
+    url_redirect = "/administrador/livros/"
     if emprestimo_existe:
         emprestimo = Emprestimo.objects.get(id=eid)
+        livro = emprestimo.livro    # type: ignore
+        livro.copias += 1           # type: ignore
+        livro.save()                # type: ignore
         emprestimo.delete()
         messages.add_message(request, messages.SUCCESS, 'Emprestimo apagado com sucesso.')
-        return redirect('/administrador/livros/')
+        return redirect(url_redirect)
     else:
         messages.add_message(request, messages.ERROR, 'Emprestimo não existe na base de dados.')
-        return redirect('/administrador/livros/')
+        return redirect(url_redirect)
 
 # Cursos: dashboard e crud
 

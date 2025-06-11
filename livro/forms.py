@@ -42,8 +42,14 @@ class FormularioReserva(forms.Form):
     livro = forms.ChoiceField(label='Livro', choices=LIVROS, widget=forms.Select())                                     # type: ignore
     data_reserva = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))              # type: ignore
 
-class FormularioEmprestimo(forms.Form):
+class FormularioCriarEmprestimo(forms.Form):
     usuario = forms.ChoiceField(label='Usuário', choices=USUARIOS,widget=forms.Select())                                # type: ignore
     livro = forms.ChoiceField(label='Livro', choices=LIVROS, widget=forms.Select())                                     # type: ignore
     data_emprestimo = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))           # type: ignore
-    data_devolucao = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))            # type: ignore
+    # data_devolucao = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))            # type: ignore
+
+class FormularioAtualizarEmprestimo(forms.Form):
+    usuario = forms.ChoiceField(label='Usuário', choices=USUARIOS,widget=forms.Select(attrs={'disabled':True}))                                # type: ignore
+    livro = forms.ChoiceField(label='Livro', choices=LIVROS, widget=forms.Select())                                     # type: ignore
+    data_emprestimo = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))           # type: ignore
+    data_devolucao = forms.DateField(label='Data da Devolução', widget=forms.DateInput(attrs={'type':'date'}))            # type: ignore
