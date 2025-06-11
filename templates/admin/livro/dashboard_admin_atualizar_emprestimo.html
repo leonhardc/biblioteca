@@ -3,7 +3,7 @@
 {% block content %}
 <!-- Formulário de emprestimo - Atualizar emprestimo -->
 <h3>Atualizar Emprestimo</h3>
-<form action="{% url 'administrador:atualizar_emprestimo' %}" method="POST" id="formulario-emprestimo">
+<form action="{% url 'administrador:atualizar_emprestimo' emprestimo.id %}" method="POST" id="formulario-emprestimo">
     {% csrf_token %}
     {% for field in form %}
     <div class="separador">
