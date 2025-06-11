@@ -18,17 +18,20 @@ MESES = (
     (12, 'Dezembro'),
 )
 
-def formatar_turno(turno):
+
+def formatar_turno(turno:str):
     if turno:
         return dict(TURNOS)[turno]
     return turno
 
-def formatar_nacionalidade(nacionalidade):
+
+def formatar_nacionalidade(nacionalidade:str):
     if nacionalidade:
         return dict(NACIONALIDADES)[nacionalidade]
     return nacionalidade
 
-def extrair_ano(data_str):
+
+def extrair_ano(data_str:str):
     try:
         if isinstance(data_str, (datetime, date)):
             return data_str.year
@@ -37,7 +40,8 @@ def extrair_ano(data_str):
     except ValueError:
         return data_str
 
-def extrair_mes_ano(data_str):
+
+def extrair_mes_ano(data_str:str):
     try:
         if isinstance(data_str, (datetime, date)):
             return f'{dict(MESES)[data_str.month]} de {data_str.year}'
@@ -47,12 +51,12 @@ def extrair_mes_ano(data_str):
     except ValueError:
         return data_str
 
-def formatar_cpf(cpf_str):
-    if isinstance(cpf_str, str):
-        return f'{cpf_str[0:3]}.{cpf_str[3:6]}.{cpf_str[6:9]}-{cpf_str[9:]}'
-    return cpf_str
 
-def formatar_jornada(jornada):
+def formatar_cpf(cpf_str:str):
+    return f'{cpf_str[0:3]}.{cpf_str[3:6]}.{cpf_str[6:9]}-{cpf_str[9:]}'
+
+
+def formatar_jornada(jornada:str):
     if jornada:
         return dict(JORNADA)[jornada]
     return jornada

@@ -6,7 +6,7 @@ from usuario.constants import NUM_MAX_EMPRESTIMOS, NUM_MAX_DIAS_EMPRESTIMOS
 from usuario.models import Aluno, Professor, Funcionario
 from django.contrib.auth.models import User
 from usuario.forms import FormularioAluno, FormularioFuncionario, FormularioProfessor
-from livro.forms import FormularioEmprestimo
+from livro.forms import FormularioCriarEmprestimo
 from livro.models import Emprestimo, Livro
 from django.contrib import messages
 import random
@@ -106,7 +106,7 @@ def returna_instancia_usuario(usuario:User):
         return None
 
 
-def salvar_emprestimo(request:HttpRequest, formulario:FormularioEmprestimo, tipo_usuario:str):
+def salvar_emprestimo(request:HttpRequest, formulario:FormularioCriarEmprestimo, tipo_usuario:str):
     try:
         url_redirect = '/administrador/livros'
         usuario_obj = User.objects.get(id=formulario.cleaned_data['usuario'])
