@@ -39,9 +39,9 @@ urlpatterns = [                                                                 
     path('deletar-categoria/<int:cid>/', views.deletar_categoria, name='deletar_categoria'),                            # type: ignore
     ## Urls de Reserva
     path('criar-reserva/', views.criar_reserva, name='criar_reserva'),                                                  # type: ignore
-    path('informacoes-reserva/<int:cid>/', views.informacoes_reserva, name='informacoes_reserva'),                      # type: ignore
-    path('atualizar-reserva/<int:cid>/', views.atualizar_informacoes_reserva, name='atualizar_reserva'),                # type: ignore
-    path('deletar-reserva/<int:cid>/', views.deletar_reserva, name='deletar_reserva'),                                  # type: ignore
+    path('informacoes-reserva/<int:rid>/', views.informacoes_reserva, name='informacoes_reserva'),                      # type: ignore
+    path('atualizar-reserva/<int:rid>/', views.atualizar_informacoes_reserva, name='atualizar_reserva'),                # type: ignore
+    path('deletar-reserva/<int:rid>/', views.deletar_reserva, name='deletar_reserva'),                                  # type: ignore
     ## Urls de Emprestimo
     path('criar-emprestimo/', views.criar_emprestimo, name='criar_emprestimo'),                                         # type: ignore
     path('informacoes-emprestimo/<int:eid>/', views.informacoes_emprestimo, name='informacoes_emprestimo'),             # type: ignore
