@@ -1,0 +1,134 @@
+{% extends "admin/dashboard-admin.html" %}
+{% load static %}
+{% load my_filters %}
+{% block content %}
+<!-- TODO: Fazer o template inicial do site de administrador -->
+<style>
+    .cartoes-informacoes {
+        /* Container de cartões */
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        column-gap: 15px;
+        /* overflow-x: scroll; */
+        width: 100%;
+        background-color: #cecece;
+        padding: 50px 10px 20px 10px;
+        /* cima * baixo * */
+        border-radius: 20px;
+    }
+
+    .container_row {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        width: 90vw;
+        height: 100%;
+    }
+
+    .cartao {
+        display: flex;
+        flex-direction: column;
+        width: 125px;
+        height: 125px;
+        border-radius: 20px;
+        padding: 10px 15px;
+
+    }
+
+    .cartao,
+    .titulo-cartao,
+    .conteudo-cartao {
+        color: #cecece;
+    }
+
+    .cartao span {
+        margin-left: 10px;
+        font-weight: bolder;
+    }
+
+    .bg-blue {
+        background-color: #0f0526;
+    }
+
+    .titulo-cartao {
+        align-items: center;
+        justify-content: start;
+        flex-direction: row;
+        gap: 5px;
+    }
+
+    .conteudo-cartao {
+        margin-top: 20px;
+        flex-direction: column;
+    }
+
+    .titulo-cartao,
+    .conteudo-cartao {
+        font-size: 14px;
+        display: flex;
+
+    }
+
+    .titulo-cartao img {
+        border: solid 2px #cecece;
+        border-radius: 10000px;
+    }
+</style>
+<div class="container">
+    <h3>Informações Gerais</h3>
+    <div class="cartoes-informacoes">
+        <div class="cartao bg-blue">
+            <div class="titulo-cartao">
+                <img src="{% static '/usuario/img/person.png'%}" class="icone" alt="">
+                <span>{{contadores.todos_usuarios}} usuários</span>
+            </div>
+            <div class="conteudo-cartao">
+                <span>{{contadores.alunos}} alunos</span>
+                <span>{{contadores.professores}} professores</span>
+                <span>{{contadores.funcionarios}} funcionarios</span>
+            </div>
+        </div>
+        <div class="cartao bg-blue">
+            <div class="titulo-cartao">
+                <img src="{% static '/usuario/img/logo-1.png'%}" class="icone" alt="">
+                <span>{{contadores.livros}} livros</span>
+            </div>
+            <div class="conteudo-cartao">
+                <span>{{contadores.autores}} autores</span>
+                <span>{{contadores.categorias}} categorias</span>
+            </div>
+        </div>
+        <div class="cartao bg-blue">
+            <div class="titulo-cartao">
+                <img src="{% static '/usuario/img/bookmark.png'%}" class="icone" alt="">
+                <span>{{contadores.reservas}} reservas</span>
+            </div>
+            <div class="conteudo-cartao">
+                <!-- <span>{{contadores.autores}} autores</span>
+                <span>{{contadores.categorias}} categorias</span> -->
+            </div>
+        </div>
+        <div class="cartao bg-blue">
+            <div class="titulo-cartao">
+                <img src="{% static '/usuario/img/bookmark.png'%}" class="icone" alt="">
+                <span>{{contadores.emprestimos}} emprestimos</span>
+            </div>
+            <div class="conteudo-cartao">
+                <!-- <span>{{contadores.autores}} autores</span>
+                <span>{{contadores.categorias}} categorias</span> -->
+            </div>
+        </div>
+        <div class="cartao bg-blue">
+            <div class="titulo-cartao">
+                <img src="{% static '/usuario/img/stacks.png'%}" class="icone" alt="">
+                <span>{{contadores.cursos}} cursos</span>
+            </div>
+            <div class="conteudo-cartao">
+                <!-- <span>{{contadores.autores}} autores</span>
+                <span>{{contadores.categorias}} categorias</span> -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
