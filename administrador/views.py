@@ -18,9 +18,45 @@ from utils.formularios.utils_formularios import *
 # TODO: Atualizar todas as funções update para receber o método 'UPDATE' na submissão do formulário
 
 def dashboard_admin(request: HttpRequest):
+    template_name = 'admin/dashboard_admin_home.html'
     if request.method == 'GET':
-        template_name = 'admin/dashboard-admin.html'
-        return render(request, template_name)
+        dict_usuarios = { # type: ignore
+            'alunos': Aluno.objects.all(),
+            'professores': Professor.objects.all(),
+            'funcionarios': Funcionario.objects.all()
+        }
+        dict_livros = { # type: ignore
+            'livros': Livro.objects.all(),
+            'autores': Autor.objects.all(),
+            'categorias': Categoria.objects.all(),
+            'reservas': Reserva.objects.all(),
+            'emprestimos': Emprestimo.objects.all(),
+        }
+        dict_cursos = { # type: ignore
+            'cursos': Curso.objects.all(),
+        }
+        contadores = { # type: ignore
+            'alunos': len(dict_usuarios['alunos']), # type: ignore
+            'professores': len(dict_usuarios['professores']), # type: ignore
+            'funcionarios': len(dict_usuarios['funcionarios']), # type: ignore
+            'livros': len(dict_livros['livros']), # type: ignore
+            'autores': len(dict_livros['autores']), # type: ignore
+            'categorias': len(dict_livros['categorias']), # type: ignore
+            'reservas': len(dict_livros['reservas']), # type: ignore
+            'emprestimos': len(dict_livros['emprestimos']), # type: ignore
+            'cursos': len(dict_cursos['cursos']), # type: ignore
+            'todos_usuarios': len(dict_usuarios['alunos']) + len(dict_usuarios['professores']) + len(dict_usuarios['funcionarios']) # type: ignore
+        }
+        return render(
+            request, 
+            template_name,
+            context={
+                # 'usuarios': dict_usuarios,
+                # 'livros': dict_livros,
+                # 'cursos': dict_cursos,
+                'contadores': contadores,
+            }
+        )
 
 # Usuários: dashboard e crud
 
@@ -730,7 +766,6 @@ def deletar_categoria(request: HttpRequest, cid: int):
             return redirect('/administrador/livros/')
 
 ## Views de Reservas
-# TODO: Implementar as views de Reservas
 
 
 def criar_reserva(request: HttpRequest):
@@ -777,7 +812,7 @@ def informacoes_reserva(request: HttpRequest, rid: int):
 
 
 def atualizar_informacoes_reserva(request: HttpRequest, rid: int):
-    template_name = "admin/livro/dashaboard_admin_atualizar_reserva.html"
+    template_name = "admin/livro/dashboard_admin_atualizar_reserva.html"
     if request.method == 'GET':
         reserva = Reserva.objects.get(id=rid)
         if not reserva:
@@ -785,7 +820,7 @@ def atualizar_informacoes_reserva(request: HttpRequest, rid: int):
             return redirect("/administrador/livros/")
         data = informacoes_formulario_reserva(reserva)
         formulario = FormularioReserva(initial=data)
-        return render(request, template_name, context={'form':formulario})
+        return render(request, template_name, context={'form':formulario, 'reserva':reserva})
     if request.method == 'POST':
         formulario = FormularioReserva(request.POST)
         if formulario.is_valid():

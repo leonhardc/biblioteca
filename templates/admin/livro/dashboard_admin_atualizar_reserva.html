@@ -1,0 +1,18 @@
+{% extends 'admin/dashboard-admin.html' %}
+{% load static %}
+{% block content %}
+<!-- Formulário de emprestimo - Atualizar reserva -->
+<h3>Atualizar Emprestimo</h3>
+<form action="{% url 'administrador:atualizar_reserva' reserva.id %}" method="POST" id="formulario-reserva">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="separador">
+        {{ field.label_tag }} {{ field }}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+    <div class="botao-submit">
+        <button style="display: block;" class="botao botao-info" type="submit">Salvar</button>
+    </div>
+</form>
+{% endblock content %}
