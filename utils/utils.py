@@ -7,9 +7,10 @@ from usuario.models import Aluno, Professor, Funcionario
 from django.contrib.auth.models import User
 from usuario.forms import FormularioAluno, FormularioFuncionario, FormularioProfessor
 from livro.forms import FormularioCriarEmprestimo
-from livro.models import Emprestimo, Livro
+from livro.models import Emprestimo, Livro, Reserva
 from django.contrib import messages
 import random
+from django.db.models.query import QuerySet
 
 
 def formatar_endereco(formulario:FormularioAluno|FormularioProfessor|FormularioFuncionario):
@@ -95,7 +96,7 @@ def separar_endereco(endereco:str):
         }
 
 
-def returna_instancia_usuario(usuario:User):
+def retorna_instancia_usuario(usuario:User):
     if Aluno.objects.filter(usuario=usuario).exists():
         return Aluno.objects.get(usuario=usuario)
     elif Professor.objects.filter(usuario=usuario).exists():
@@ -136,3 +137,38 @@ def salvar_emprestimo(request:HttpRequest, formulario:FormularioCriarEmprestimo,
     except Exception as e:
         messages.add_message(request, messages.ERROR, f'Um erro aconteceu ao tentar registrar o emprestimo.{e}')
         return redirect(url_redirect) # type: ignore
+
+
+def pegar_informacoes_aluno(aluno:Aluno) -> dict[str, Aluno|Reserva|Emprestimo]:
+    # TODO: Implementar essa função
+    reservas = Reserva.objects.filter(usuario=aluno.usuario) # type: ignore
+    emprestimos = Emprestimo.objects.filter(usuario=aluno.usuario) # type: ignore
+    return {
+        'aluno': aluno,
+        'reservas': reservas,
+        'emprestimos': emprestimos
+    } # type: ignore
+
+
+def pegar_informacoes_professor(professor:Professor) -> dict[str, Professor|Reserva|Emprestimo]: # type: ignore
+    # TODO: Implementar essa função
+    reservas = Reserva.objects.filter(usuario=professor.usuario) # type: ignore
+    emprestimos = Emprestimo.objects.filter(usuario=professor.usuario) # type: ignore
+    return {
+        'professor': professor,
+        'reservas': reservas,
+        'emprestimos': emprestimos
+    } # type: ignore
+    pass
+
+
+def pegar_informacoes_funcionario(funcionario:Funcionario) ->  dict[str, Funcionario|Reserva|Emprestimo]: # type: ignore
+    # TODO: Implementar essa função
+    reservas = Reserva.objects.filter(usuario=funcionario.usuario) # type: ignore
+    emprestimos = Emprestimo.objects.filter(usuario=funcionario.usuario) # type: ignore
+    return {
+        'funcionario': funcionario,
+        'reservas': reservas,
+        'emprestimos': emprestimos
+    } # type: ignore
+    pass
