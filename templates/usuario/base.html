@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt_BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Usuário</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carme&family=Oswald:wght@200..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=notifications" />
+    <style>
+        html {
+            font-family: "Carme", serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --cor-principal: #0F0526;
+            --cor-secundaria: #6D27E7;
+            --cor-de-fundo: #cecece;
+        }
+
+        html {
+            color: var(--cor-principal)
+        }
+
+        main {
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--cor-de-fundo);
+            position: relative;
+        }
+
+        aside {
+            position: fixed;
+            width: 15%;
+            height: 100%;
+            max-height: 100vh;
+            color: var(--cor-de-fundo);
+            background-color: var(--cor-principal);
+            border-radius: 0px 25px 25px 0px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+        }
+
+        .menu {
+            list-style: none;
+            gap: 2px;
+        }
+
+        .menu li {
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            border: 2px solid var(--cor-principal);
+            transition: background-color 200ms ease-in-out,
+                color 200ms ease-in-out, border 200ms ease-in-out;
+        }
+
+        .menu li a {
+            color: var(--cor-de-fundo);
+            text-decoration: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sair a {
+            transition: border 200ms ease-in-out;
+        }
+
+        .menu li:hover,
+        .sair a:hover {
+            /* color: var(--cor-principal);
+            background-color: var(--cor-de-fundo); */
+            border: 2px solid var(--cor-de-fundo)
+        }
+
+
+        .menu li a:hover {
+            cursor: pointer;
+        }
+
+        .icone {
+            width: 20px;
+        }
+
+        .sair a {
+            border-radius: 20px;
+            padding: 5px 10px;
+            border: 2px solid var(--cor-principal);
+            text-decoration: none;
+            color: var(--cor-de-fundo);
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            margin-bottom: 40px;
+        }
+
+        .selecionado {
+            background-color: var(--cor-de-fundo);
+            color: var(--cor-principal);
+        }
+
+        .menu .selecionado a {
+            color: var(--cor-principal);
+        }
+
+        .container-user-page {
+            position: absolute;
+            width: 80%;
+            right: 1px;
+        }
+
+        .container-user-page .titulo h1 {
+            margin-top: 15px;
+        }
+
+        .container-info-user {
+            position: relative;
+            margin-top: 50px;
+            width: 90%;
+            border: 2px solid #0f052650;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        .container-info-user .links {
+            position: absolute;
+            display: flex;
+            gap: 15px;
+            right: 10px;
+            top: -30px;
+        }
+
+        .container-info-user .links a {
+            color: var(--cor-principal);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .container-info-user .links a:active {
+            color: var(--cor-secundaria);
+        }
+
+        .container-info-user .links a::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: var(--cor-principal);
+            transition: width 200ms ease-in-out;
+        }
+
+        .container-info-user .links a:hover::before {
+            width: 100%;
+        }
+
+        .container-info-personal,
+        .container-info-course {
+            max-width: 50%;
+        }
+
+        .data {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+            gap: 5px;
+        }
+
+        .titulo {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .card-user {
+            display: flex;
+            gap: 5px;
+            position: absolute;
+            right: 80px;
+            top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <aside>
+            <div class="logo">
+                <!-- TODO: Alterar o link dos icones -->
+                <img class="icone" src="./../../static/usuario/img/account_circle.png" alt="">
+                <span>Página do Aluno</span>
+            </div>
+            <ul class="menu">
+                <li><a href="#">Livros</a></li>
+                <li><a href="#">Meus Emprestimos</a></li>
+                <li><a href="#">Minhas Reservas</a></li>
+                <li class="selecionado"><a href="#">Minhas Informações</a></li>
+            </ul>
+            <div class="sair">
+                <a href="">
+                    <!-- TODO: Alterar o link dos icones -->
+                    <img class="icone" src="./../../static/usuario/img/logout.png" alt="">
+                    <span>Sair</span>
+                </a>
+            </div>
+        </aside>
+        <div class="container-user-page">
+            <div class="titulo">
+                <h1>Seja bem vindo</h1>
+                <div class="card-user">
+                    <!-- TODO: Alterar o link dos icones -->
+                    <img class="icone" src="./../../static/usuario/img/account_circle_0F0526.png" alt="">
+                    <span>aluno_username</span>
+                </div>
+            </div>
+
+            <div class="container-info-user">
+                <div class="links">
+                    <a href="#">Corrigir Informações</a>
+                    <a href="#">Mudar Senha</a>
+                </div>
+                <div class="container-info-personal">
+                    <h3>Dados Pessoais</h3>
+                    <div class="data">
+                        <span class="label">Nome: Fulano de tal</span>
+                        <span class="label">Email: fulanodetal@email.com</span>
+                        <span class="label">Endereço: endereco, fulano, de tal. CEP: 00000-000. Cidade/Estado.
+                            Complemento</span>
+                    </div>
+                </div>
+                <div class="container-info-course">
+                    <h3>Dados do Curso</h3>
+                    <div class="data">
+                        <span class="label">Curso: curso</span>
+                        <span class="label">Matricula: 999999</span>
+                        <span class="label">Ingresso: 99/99/9999</span>
+                        <span class="label">Conclusão: 99/99/9999</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <!-- Não contem rodapé -->
+    </footer>
+</body>
+
+</html>
