@@ -4,18 +4,180 @@ from faker import Faker
 import random
 from django.contrib.auth.models import User
 from usuario.models import Aluno, Professor, Funcionario
+from usuario.constants import JORNADA
 from curso.models import Curso
 from livro.models import Livro, Autor, Categoria, NACIONALIDADES
 import datetime
 from utils.utils import gerar_data
 from dateutil.relativedelta import relativedelta
-from django.db.models import F
+# from django.db.models import F
 
 # Configurar o Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'seu_projeto.settings')
 django.setup()
 
 fake = Faker('pt_BR') # Faz mapeamento de dados para nomes brasileiros.
+
+
+# TODO: Todas as funções já criadas até agora para povoar o banco de dados devem
+# ser substituidas por versões mais simples e fáceis de entender. Por exemplo:
+# 1. criar_usuario: deve criar um usuário no banco de dados e retornar esse 
+# usuário para a função que o chamou.
+# 2. criar_aluno: deve ser uma função que cria a entidade aluno no banco de dados
+# 3. As funções criar_professor e criar_funcionario devem seguir a mesma lógica 
+# aplicada nos itens 1 e 2.
+# As funções de outras entidades do banco de dados devem seguir os mesmos aspectos
+# relacionados a simplicidade.
+
+# FUNÇÕES DO APP 'USUARIO'
+# INICIO: Funções para gerar dados aleatorios
+def gera_cpf_unico() -> str:
+    cpf = ''
+    while True:
+        cpf = ''.join([str(random.randint(0,9)) for _ in range(11)])
+        if not Aluno.objects.filter(cpf=cpf).exists():
+            break
+    return cpf
+
+def gera_matricula_aluno() -> str:
+    # Gera matricula de tamanho 6
+    matricula = ''
+    while True:
+        matricula = f'{random.randint(100000, 999999)}'
+        if not Aluno.objects.filter(matricula=matricula).exists():
+            break
+    return matricula
+
+def gera_matricula_professor() -> str:
+    # Gera matricula de tamanho 4 para professor
+    matricula = ''
+    while True:
+        matricula = f'{random.randint(1000, 9999)}'
+        if not Professor.objects.filter(matricula=matricula).exists():
+            break
+    return matricula
+
+def gerar_matricula_funcionario() -> str:
+    # Gera matricula de tamanho 4 para funcionario
+    matricula = ''
+    while True:
+        matricula = f'{random.randint(1000, 9999)}'
+        if not Funcionario.objects.filter(matricula=matricula).exists():
+            break
+    return matricula
+
+# INICIO: Funções para gerações de dados para as entidades do banco de dados
+def get_data_usuario() -> dict[str, str]:
+    data: dict[str, str] = { 
+        "first_name": fake.first_name(),
+        "last_name": fake.last_name(),
+        "password": "1234", # Senha padrão
+    }
+    data['username'] = f'{str(data['first_name']).lower()}{str(data["last_name"]).lower()}{random.randint(0, 999)}'
+    data['email'] = f'{str(data["first_name"]).lower()}{str(data['last_name']).lower()}@example.com'
+    return data
+
+def get_data_aluno() -> dict[str, str|datetime.datetime|datetime.date|Curso]:
+    ids_cursos = list(Curso.objects.values_list('id', flat=True))
+    curso = Curso.objects.get(id=random.choice(ids_cursos))
+    data:dict[str, str|datetime.datetime|datetime.date|Curso] = {}
+    data['matricula'] = gera_matricula_aluno()
+    data['curso'] = curso
+    data['cpf'] = gera_cpf_unico()
+    data['endereco'] = fake.address().replace('\n', ', ')
+    data['ingresso'] = datetime.date.today()
+    data['conclusao'] = data['ingresso'] + relativedelta(years=+curso.duracao) # type: ignore
+    data['ativo'] = True
+    return data
+
+def get_data_professor() -> dict[str, str|datetime.datetime|datetime.date|Curso|bool]: 
+    data:dict[str, str|datetime.datetime|datetime.date|Curso] = {}
+    ids_cursos = list(Curso.objects.values_list('id', flat=True))
+    curso = Curso.objects.get(id=random.choice(ids_cursos))
+    data['matricula'] = gera_matricula_professor()
+    data['curso'] = curso
+    data['cpf'] = gera_cpf_unico()
+    data['regime'] = random.choice(['20', '40', 'DE']) # TODO:Mudar essa linha para receber os elementos de JORNADA
+    data['contratacao'] = datetime.date.today()
+    data['ativo'] = True # FIX:Corrigir o warning dessa linha
+    return data
+
+def get_data_funcionario() -> dict[str, str|datetime.datetime|datetime.date|Curso|bool]:
+    data:dict[str, str|datetime.datetime|datetime.date|Curso|bool] = {}
+    data['matricula'] = gerar_matricula_funcionario()
+    data['cpf'] = gera_cpf_unico()
+    data['ativo'] = True
+    return data
+
+# INICIO: Criação das entidades do banco de dados
+def criar_usuario() -> User|None:
+    data = get_data_usuario()
+    if User.objects.filter(username=data['username']).exists():
+        raise Exception("O usuário já existe na base de dados.")
+    user = User.objects.create_user(**data)
+    if not user:
+        raise Exception("Erro ao salvar o usuário na base de dados.")
+    return user
+
+def criar_aluno() -> Aluno|None:
+    try:
+        usuario = criar_usuario()
+        if usuario:
+            data = get_data_aluno()
+            aluno = Aluno.objects.create(usuario=usuario,**data)
+            return aluno
+    except Exception as e:
+        print(e)
+        return None
+
+def criar_professor() -> Professor|None:
+    try:
+        usuario = criar_usuario()
+        if usuario:
+            data = get_data_professor()
+            professor = Professor.objects.create(usuario=usuario,**data)
+            return professor
+    except Exception as e:
+        print(e)
+        return None
+
+def criar_funcionario():
+    try:
+        usuario = criar_usuario()
+        if usuario:
+            data = get_data_funcionario()
+            professor = Professor.objects.create(usuario=usuario, **data) 
+            return professor
+    except Exception as e:
+        print(e)
+        return None
+
+# FUNÇÕES DO APP LIVROS
+def get_data_autor() -> dict[str, str]:
+    data:dict[str, str] = {}
+    data['nome'] = fake.name()
+    data['nacionalidade'] = random.choice(NACIONALIDADES)[0]
+    data['cpf'] = ''.join([str(random.randint(0,9)) for _ in range(11)])
+    return data
+
+def get_data_livro() -> dict[str, str]:
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def criar_cursos():
     lista_de_cursos = [
@@ -42,7 +204,6 @@ def criar_cursos():
                 print(f'Curso {curso} adicionado com sucesso.')
             except Exception as e:
                 print(f'Erro ao adicionar {curso}.')
-
 
 def criar_usuarios(alunos, professores, funcionarios):
     print('-'*20,'\nCriando Alunos ...')
