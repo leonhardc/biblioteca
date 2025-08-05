@@ -153,6 +153,15 @@ def criar_funcionario():
         return None
 
 # FUNÇÕES DO APP LIVROS
+def gerar_isbn_unico() -> str:
+    # Gera isbn unico na base de dados
+    isbn = ''
+    while True:
+        isbn = f'{random.randint(100000, 999999)}'
+        if not Livro.objects.filter(isbn=isbn).exists():
+            break
+    return isbn
+
 def get_data_autor() -> dict[str, str]:
     data:dict[str, str] = {}
     data['nome'] = fake.name()
@@ -160,12 +169,56 @@ def get_data_autor() -> dict[str, str]:
     data['cpf'] = ''.join([str(random.randint(0,9)) for _ in range(11)])
     return data
 
-def get_data_livro() -> dict[str, str]:
-    pass
+def get_data_livro() -> dict[str, str|int|Categoria|list[Autor]|Categoria|datetime.date]:
+    data:dict[str, str|int|Categoria|list[Autor]|Categoria|datetime.date] = {}
+    ids_autores = random.choices(list(Autor.objects.values_list('id', flat=True)), k=random.randint(1,3))
+    ids_categorias = list(Categoria.objects.values_list('id', flat=True))
+    data['isbn'] = gerar_isbn_unico()
+    data['titulo'] = fake.sentence(nb_words=4)
+    data['subtitulo'] = fake.sentence(nb_words=10)
+    data['lancamento'] = gerar_data()
+    data['editora'] = f'Editora {fake.sentence(nb_words=2)}'
+    data['copias'] = random.randint(10, 30)
+    data['autores'] = [Autor.objects.get(id=id) for id in ids_autores]
+    data['categoria'] = Categoria.objects.get(id=int(random.choice(ids_categorias)))
+    return data
 
+def criar_autor() -> Autor:
+    # Cria um autor na base de dados
+    data = get_data_autor()
+    autor = Autor.objects.create(**data)
+    return autor
 
+def criar_categoria(categoria:str, desc_categoria:str) -> Categoria:
+    # Cria uma categoria no banco de dados usando categoria como nome da categoria
+    # de livros e desc_categoria como a descrição
+    nova_categoria = Categoria.objects.create(categoria=categoria, descricao=desc_categoria)
+    return nova_categoria
 
+def criar_livro() -> Livro:
+    # Cria um livro na base de dados
+    data = get_data_livro()
+    livro = Livro.objects.create(**data)
+    return livro
 
+# 'reservas' e 'emprestimos' não serão criados por padrão
+
+# FUNÇÕES DO APP CURSO
+def criar_curso(cod_curso:str, curso:str, descricao:str, turno:str, duracao:int) -> Curso:
+    novo_curso = Curso.objects.create(
+        cod_curso=cod_curso,
+        curso=curso,
+        descricao=descricao,
+        turno=turno,
+        duracao=duracao
+    )
+    return novo_curso
+
+# Funções para criar vários componentes no banco de dados
+def criar_n_alunos(n=1):
+    for i in range(0,n):
+        novo_aluno = criar_aluno()
+        print(f'Aluno {novo_aluno.usuario.first_name} criado com sucesso.')
 
 
 
