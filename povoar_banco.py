@@ -141,13 +141,13 @@ def criar_professor() -> Professor|None:
         print(e)
         return None
 
-def criar_funcionario():
+def criar_funcionario() -> Funcionario|None:
     try:
         usuario = criar_usuario()
         if usuario:
             data = get_data_funcionario()
-            professor = Professor.objects.create(usuario=usuario, **data) 
-            return professor
+            funcionario = Funcionario.objects.create(usuario=usuario, **data) 
+            return funcionario
     except Exception as e:
         print(e)
         return None
@@ -215,18 +215,39 @@ def criar_curso(cod_curso:str, curso:str, descricao:str, turno:str, duracao:int)
     return novo_curso
 
 # Funções para criar vários componentes no banco de dados
-def criar_n_alunos(n=1):
-    for i in range(0,n):
+def criar_n_alunos(n_alunos:int=1):
+    for _ in range(0,n_alunos):
         novo_aluno = criar_aluno()
-        print(f'Aluno {novo_aluno.usuario.first_name} criado com sucesso.')
+        print(f'Aluno {novo_aluno.matricula}:{novo_aluno.usuario} criado com sucesso.') # type: ignore
 
+def criar_n_professores(n_professores:int=1):
+    for _ in range(0, n_professores):
+        novo_professor = criar_professor()
+        print(f'Professor {novo_professor.matricula}:{novo_professor.usuario} criado com sucesso.') # type: ignore
 
+def criar_n_funcionarios(n_funcionarios:int=1):
+    for _ in range(0, n_funcionarios):
+        novo_funcionario = criar_funcionario()
+        print(f'Funcionario {novo_funcionario.matricula}:{novo_funcionario.usuario} criado com sucesso.') # type: ignore
 
+def criar_n_livros(n_livros:int=1):
+    for _ in range(0, n_livros):
+        novo_livro = criar_livro()
+        print(f"Livro {novo_livro.isbn}: {novo_livro.titulo} criado com sucesso.") # type: ignore
 
+def criar_n_autores(n_autores:int=1):
+    for _ in range(0, n_autores):
+        novo_autor = criar_autor()
+        print(f"Autor {novo_autor.id}: {novo_autor.nome} criado com sucesso.") # type: ignore
 
+def criar_categorias(categorias:list[str]):
+    for categoria in categorias:
+        desc_categoria = fake.sentence(nb_words=10)
+        nova_categoria = criar_categoria(categoria, desc_categoria)
+        print(f"Categoria {nova_categoria.id}: {nova_categoria.categoria} criada com sucesso.") # type: ignore
 
-
-
+def criar_n_cursos(dict_cursos:list[dict[str,str|int]]):
+    pass 
 
 
 
@@ -394,30 +415,30 @@ def criar_autores(n_autores):
             print(e)        
 
 
-def criar_categorias():
-    categorias = [
-        'Calculo',
-        'Fisica',
-        'Quimica',
-        'Programação',
-        'Inteligencia Artificial',
-        'Sistemas Operacionais',
-        'Algebra Linear',
-        'Anatomia',
-        'Economia',
-        'Sistemas Lineares',
-    ]
-    for categoria in categorias:
-        try:
-            nova_categoria = Categoria(
-                categoria = categoria,
-                descricao = fake.paragraph(nb_sentences=5)
-            )
-            nova_categoria.save()
-            print('NOva categoria adicionada com sucesso')
-        except Exception as e:
-            print('Erro ao adicionar nova categoria.')
-            print('Erro:',e)
+# def criar_categorias():
+#     categorias = [
+#         'Calculo',
+#         'Fisica',
+#         'Quimica',
+#         'Programação',
+#         'Inteligencia Artificial',
+#         'Sistemas Operacionais',
+#         'Algebra Linear',
+#         'Anatomia',
+#         'Economia',
+#         'Sistemas Lineares',
+#     ]
+#     for categoria in categorias:
+#         try:
+#             nova_categoria = Categoria(
+#                 categoria = categoria,
+#                 descricao = fake.paragraph(nb_sentences=5)
+#             )
+#             nova_categoria.save()
+#             print('NOva categoria adicionada com sucesso')
+#         except Exception as e:
+#             print('Erro ao adicionar nova categoria.')
+#             print('Erro:',e)
         
 
 
