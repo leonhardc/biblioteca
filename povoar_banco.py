@@ -247,13 +247,6 @@ def criar_categorias(categorias:list[str]):
         print(f"Categoria {nova_categoria.id}: {nova_categoria.categoria} criada com sucesso.") # type: ignore
 
 def criar_n_cursos(dict_cursos:list[dict[str,str|int]]):
-    pass 
-
-
-
-
-
-def criar_cursos():
     lista_de_cursos = [
         'Engenharia de Computação',
         'Engenharia Eletrica',
@@ -263,6 +256,23 @@ def criar_cursos():
         'Medicina',
         'Enfermagem',        
     ]
+    for curso in lista_de_cursos:
+        curso_dict:dict[str, str|int] = {
+            "cod_curso": f'{random.randint(1000, 9999)}',
+            "curso": curso,
+            "descricao": fake.sentence(nb_words=20),
+            "turno": random.choice(['M', 'V', 'I']),
+            'duracao': random.choice([3, 4, 5])
+        }
+        novo_curso = criar_curso(**curso_dict) # type: ignore
+        print(f'{novo_curso.cod_curso} - {novo_curso.curso} criado com sucesso.') # type: ignore
+
+
+
+
+
+def criar_cursos():
+
     for curso in lista_de_cursos:
         cod_curso = random.randint(1000, 9999)
         if not Curso.objects.filter(curso=curso).exists() or not Curso.objects.filter(cod_curso=cod_curso):
