@@ -4,7 +4,6 @@ from faker import Faker
 import random
 from django.contrib.auth.models import User
 from usuario.models import Aluno, Professor, Funcionario
-from usuario.constants import JORNADA
 from curso.models import Curso
 from livro.models import Livro, Autor, Categoria, NACIONALIDADES
 import datetime
@@ -78,7 +77,7 @@ def get_data_aluno() -> dict[str, str|datetime.datetime|datetime.date|Curso]:
     data['endereco'] = fake.address().replace('\n', ', ')
     data['ingresso'] = datetime.date.today()
     data['conclusao'] = data['ingresso'] + relativedelta(years=+curso.duracao) # type: ignore
-    data['ativo'] = True
+    data['ativo'] = True # type: ignore
     return data
 
 def get_data_professor() -> dict[str, str|datetime.datetime|datetime.date|Curso|bool]: 
@@ -90,8 +89,8 @@ def get_data_professor() -> dict[str, str|datetime.datetime|datetime.date|Curso|
     data['cpf'] = gera_cpf_unico()
     data['regime'] = random.choice(['20', '40', 'DE']) # TODO:Mudar essa linha para receber os elementos de JORNADA
     data['contratacao'] = datetime.date.today()
-    data['ativo'] = True # FIX:Corrigir o warning dessa linha
-    return data
+    data['ativo'] = True # type: ignore # FIX:Corrigir o warning dessa linha
+    return data # type: ignore
 
 def get_data_funcionario() -> dict[str, str|datetime.datetime|datetime.date|Curso|bool]:
     data:dict[str, str|datetime.datetime|datetime.date|Curso|bool] = {}
