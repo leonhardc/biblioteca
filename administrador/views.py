@@ -162,8 +162,10 @@ def informacoes_aluno(request: HttpRequest, uid: int):
         aluno = Aluno.objects.filter(id=uid).exists()
         if aluno:
             aluno = Aluno.objects.get(id=uid)
-            contexto = {'aluno': aluno}
-            return render(request, template_name, context=contexto)
+            reservas = Reserva.objects.filter(usuario=aluno.usuario)            # type: ignore
+            emprestimos = Emprestimo.objects.filter(usuario=aluno.usuario)      # type: ignore
+            contexto = {'aluno': aluno, 'reservas': reservas, 'emprestimos':emprestimos} # type: ignore
+            return render(request, template_name, context=contexto)             # type: ignore
         else:
             messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
             return redirect('/administrado/usuarios/')
@@ -280,7 +282,10 @@ def informacoes_professor(request: HttpRequest, uid: int):
         professor = Professor.objects.filter(id=uid).exists()
         if professor:
             professor = Professor.objects.get(id=uid)
-            return render(request, template_name, context={'professor':professor})
+            reservas = Reserva.objects.filter(usuario=professor.usuario)            # type: ignore
+            emprestimos = Emprestimo.objects.filter(usuario=professor.usuario)      # type: ignore
+            contexto = {'professor':professor, 'reservas': reservas, 'emprestimos': emprestimos}  # type: ignore
+            return render(request, template_name, context=contexto)                 # type: ignore
         else:
             messages.add_message(request, messages.ERROR, 'Professor não encontrado.')
             return redirect('/administrador/usuarios/')
@@ -389,7 +394,10 @@ def informacoes_funcionario(request: HttpRequest, uid: int):
     if request.method=='GET':
         template_name = 'admin/usuario/dashboard_admin_detalhes_usuarios.html'
         funcionario = Funcionario.objects.get(id=uid)
-        return render(request, template_name, context={'funcionario':funcionario})
+        reservas = Reserva.objects.filter(usuario=funcionario.usuario)            # type: ignore
+        emprestimos = Emprestimo.objects.filter(usuario=funcionario.usuario)      # type: ignore
+        contexto = {'funcionario': funcionario, 'reservas': reservas, 'emprestimos': emprestimos} # type: ignore
+        return render(request, template_name, context=contexto) # type: ignore
 
 
 def atualizar_informacoes_funcionario(request: HttpRequest, uid: int):
@@ -882,7 +890,7 @@ def criar_emprestimo(request: HttpRequest):
                 #       iii. Funcionários podem fazer até 4 emprestimos ao mesmo tempo por até 21 dias cada;
                 # 3. A quantidade de emprestimos de um livro deve obedecer ao numéro máximo de cópias
                 #    cadastradas no banco de dados.
-                tipo_usuario = returna_instancia_usuario(usuario=formulario.cleaned_data['usuario'])
+                tipo_usuario = retorna_instancia_usuario(usuario=formulario.cleaned_data['usuario'])
                 if isinstance(tipo_usuario, Aluno):                    
                     return salvar_emprestimo(request, formulario, 'aluno') # Para Aluno
                 elif isinstance(tipo_usuario, Professor):
