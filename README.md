@@ -6,7 +6,7 @@
 Biblioteca universitária foi o projeto final na disciplina de banco de dados quando cursei Engenharia de Computação e segue uma descrição de requisitos específica da disciplina. Porém, por mais que este projeto tenha muito daquele que foi desenvolvido na época, o que vos aprosento é um projeto pessoal, pensado e estruturado inteiramente por mim levando em consideração o que aprendi na época e também o que aprendi posteriormente.</p>
 
 <p align='justify' style='text-indent: 40px;'>
-A primeira vez que desenvolvi essa aaplicação ainda estava aprendendo sobre banco de dados e o foco principal era o banco de dados. Na época não pude utilizar estruturas que usei para desenvolver este projeto que estou apresentando (como o ORM do django, por exemplo). Infelizmente, não salvei o projeto que desenvolvi na disciplina por não ter muitas noções de versionamento de código com o git porém este a história é outra.</p>
+A primeira vez que desenvolvi essa aaplicação ainda estava aprendendo sobre banco de dados e o foco principal era o banco de dados. Na época não pude utilizar estruturas que usei para desenvolver este projeto (como o ORM do django, por exemplo). Infelizmente, não salvei o projeto que desenvolvi na disciplina por não ter noções de versionamento de código com o git.</p>
 
 <p align='justify' style='text-indent: 40px;'>
 Neste projeto fiz desde a modelagem do banco de dados até o design das janelas. Desde a configuração dos apps, até a implementação das views de cada app django. Aqui usei tudo o que sei até o momento sobre desenvolvimento, sobre aplicações web, sobre django e sobre banco de dados.</p>
