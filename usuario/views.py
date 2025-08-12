@@ -53,9 +53,9 @@ def entrar(request:HttpRequest):
                 #       funcionario
                 # TODO: Implementar uma função 'pegar_informacoes' que irá retor-
                 #       nar todas as informações de usuário daquele usuário.
-                #       - Informações de Aluno, Professor ou Funcionario
-                #       - Informações de emprestimos
-                #       - Informações de reservas
+                #       - Informações de Aluno, Professor ou Funcionario [x]
+                #       - Informações de emprestimos [x]
+                #       - Informações de reservas [x]
                 # TODO: Implementar função que verifica se esse usuário está em 
                 #       débito
                 template_name_aluno = "usuario/aluno/index.html"
@@ -239,7 +239,7 @@ def detalhes_professor(request:HttpRequest, uid:int):
         professor = Professor.objects.get(id=uid)
         contexto = {}
         contexto['professor'] = professor
-        return render(request, template_name, context=contexto)
+        return render(request, template_name, context=contexto) # type: ignore
 
 
 
