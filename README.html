@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Biblioteca Universit&aacute;ria</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="biblioteca-universitária">Biblioteca Universitária</h1>
+<p>Este projeto é desenvolvido diretamente por mim e não tem fins comerciais, contudo tenho como objetivo principal
+mostrar uma série de habilidades que tenho como desenvolvedor web, profissão essa que ainda não pratico mas que
+viso com muita determinação e orgulho.</p>
+<p>Inicialmente este projeto está sendo desenvolvido em python como linguagem de programação principal e django
+como framework.</p>
+<h2 id="models">Models</h2>
+<h3 id="app-de-usuário">App de Usuário</h3>
+<p>Este é o primeiro app que se tem acesso nesta aplicação. É importante reforçar que neste projeto não tentei reinventar
+a roda, de maneira que, na medida dos meus conhecimentos, tentei aproveitar as funcionalidades que o django já me oferece
+para a construção de uma aplicação. Um exemplo disso é que o controle de acesso de usuário inicial é feito usando o model
+<code>User</code> do módulo <code>django.contrib.auth.models</code> do django, que já implementa um caracteristicas como username, first_name,
+last_name, email, password e um pequeno controle de grupo, que será mostrado com mais detalhes mais adiante.</p>
+<p>A aplicação de biblioteca consta com 3 models principais que implementam 3 tipos de usuários: O model ALUNO, O models PROFESSOR
+e o model FUNCIONÁRIO.</p>
+<h4 id="alunos">ALUNOS</h4>
+<p>Levando em consideração a estrutura e as funções de uma biblioteca o app ALUNO foi construido com os seguintes atributos:</p>
+<pre><code>class Aluno(models.Model):
+    usuario = models.ForeignKey(User,...)
+    matricula = models.CharField(unique=True, ...)
+    curso = models.ForeignKey(Curso, ...)
+    endereco = models.CharField(max_length=255, ...)
+    cpf = models.CharField(unique=True,max_length=11, ...)
+    ingresso = models.DateField(default=datetime.date.today, ...)
+    conclusao_prevista = models.DateField(default=datetime.date.today,...)
+    ...
+</code></pre>
+<p>Relações com outros models como o model User e o model Curso foram implementadas pensando em facilitar pesquisas e diminuir repetição de
+código.</p>
+<h4 id="professores">PROFESSORES</h4>
+<p>Fazendo as mesmas considerações do model Aluno, foi implementado o model de PROFESSOR assim como o que segue:</p>
+<pre><code>    class Professor(models.Model):
+      JORNADA = (
+          ('20', '20hr'),
+          ('40', '40hr'),
+          ('DE', 'Dedicação Exclusiva'),
+      )
+      usuario = models.ForeignKey(User,...)
+      matricula = models.CharField(unique=True,...)
+      curso = models.ForeignKey(Curso,...)
+      cpf = models.CharField(unique=True,...)
+      regime = models.CharField(max_length=3,...)
+      contratacao = models.DateField(default=datetime.date.today,...)
+
+</code></pre>
+<h4 id="funcionários">FUNCIONÁRIOS</h4>
+<pre><code>  class Funcionario(models.Model):
+      usuario = models.ForeignKey(User, ...)
+      matricula = models.CharField(unique=True, ...)
+</code></pre>
+
+            
+            
+        </body>
+        </html>
