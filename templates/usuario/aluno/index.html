@@ -38,7 +38,6 @@
             min-height: fit-content;
             background-color: var(--cor-de-fundo);
             position: relative;
-            /* overflow-x: hidden; */
         }
 
         aside {
@@ -89,8 +88,6 @@
 
         .menu li:hover,
         .sair a:hover {
-            /* color: var(--cor-principal);
-            background-color: var(--cor-de-fundo); */
             border: 2px solid var(--cor-de-fundo)
         }
 
@@ -152,10 +149,7 @@
 
         .conteudo {
             width: 95%;
-            /* height: 50vh; */
-            /* overflow-y: scroll; */
             border-radius: 20px;
-            border: 2px solid var(--border-color-principal);
             position: relative;
             margin-top: 100px;
             display: flex;
@@ -190,13 +184,15 @@
             gap: 5px;
         }
 
-        /*  TODO: Remover bordas pontudas da tabela no container de livros */
         .tabela {
-            height: 500px;
-            overflow-y: auto;
+            height: 700px;
+            overflow-y: scroll;
             scroll-behavior: smooth;
-            padding-top: 5px;
-            padding-bottom: 5px;
+            border-radius: 20px;
+        }
+
+        .tabela::-webkit-scrollbar {
+            display: none;
         }
 
         .tabela,
@@ -206,6 +202,8 @@
 
         .tabela table thead tr {
             background-color: var(--cor-principal);
+            position: sticky;
+            top: 0px;
             color: var(--cor-de-fundo);
         }
 
