@@ -38,7 +38,6 @@
             min-height: fit-content;
             background-color: var(--cor-de-fundo);
             position: relative;
-            /* overflow-x: hidden; */
         }
 
         aside {
@@ -89,8 +88,6 @@
 
         .menu li:hover,
         .sair a:hover {
-            /* color: var(--cor-principal);
-            background-color: var(--cor-de-fundo); */
             border: 2px solid var(--cor-de-fundo)
         }
 
@@ -152,10 +149,9 @@
 
         .conteudo {
             width: 95%;
-            /* height: 50vh; */
-            /* overflow-y: scroll; */
+
             border-radius: 20px;
-            border: 2px solid var(--border-color-principal);
+            /* border: 2px solid var(--border-color-principal); */
             position: relative;
             margin-top: 100px;
             display: flex;
@@ -192,12 +188,14 @@
 
         /*  TODO: Remover bordas pontudas da tabela no container de livros */
         .tabela {
-            height: 500px;
-            overflow-y: auto;
+            height: 700px;
+            overflow-y: scroll;
             scroll-behavior: smooth;
             border-radius: 20px;
-            padding-top: 5px;
-            padding-bottom: 5px;
+        }
+
+        .tabela::-webkit-scrollbar {
+            display: none;
         }
 
         .tabela,
@@ -205,14 +203,10 @@
             width: 100%;
         }
 
-        .tabela table thead {
-            position: fixed;
-            width: 100%;
-        }
-
         .tabela table thead tr {
             background-color: var(--cor-principal);
-            width: 100%;
+            position: sticky;
+            top: 0px;
             color: var(--cor-de-fundo);
         }
 
@@ -240,37 +234,6 @@
         .tabela table tbody tr td {
             text-align: center;
             padding: 10px;
-        }
-
-        /* css do scroll-bar */
-        ::-webkit-scrollbar {
-            /* 1 */
-            /* border-radius: ; */
-        }
-
-        ::-webkit-scrollbar-button {
-            /* 2 */
-
-        }
-
-        ::-webkit-scrollbar-track {
-            /* 3 */
-        }
-
-        ::-webkit-scrollbar-track-piece {
-            /* 4 */
-        }
-
-        ::-webkit-scrollbar-thumb {
-            /* 5 */
-        }
-
-        ::-webkit-scrollbar-corner {
-            /* 6 */
-        }
-
-        ::-webkit-resizer {
-            /* 7 */
         }
     </style>
 </head>
@@ -326,6 +289,216 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{TITULO DO LIVRO}}</td>
+                                <td>{{AUTORES DO LIVRO}}</td>
+                                <td>{{ANO DE LANÇAMENTO}}</td>
+                                <td>{{QUANTIDADE DE COPIAS}}</td>
+                            </tr>
                             <tr>
                                 <td>{{TITULO DO LIVRO}}</td>
                                 <td>{{AUTORES DO LIVRO}}</td>
