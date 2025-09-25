@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from usuario.models import Aluno, Professor, Funcionario
-from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
-from curso.models import Curso
-from django.core.paginator import Paginator
+# from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
+# from curso.models import Curso
+# from django.core.paginator import Paginator
 from utils.utils import *
 
 # TODO: Essa view só pode ser acessada se o usuário estiver logado
