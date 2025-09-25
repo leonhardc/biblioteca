@@ -260,6 +260,4 @@ def detalhes_funcionario(request:HttpRequest, uid:int):
     if request.method=='GET':
         template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
         funcionario = Funcionario.objects.get(id=uid)
-        contexto = {}
-        contexto['funcionario'] = funcionario
-        return render(request, template_name, context=contexto)
+        return render(request, template_name, context={'funcionario':funcionario})
