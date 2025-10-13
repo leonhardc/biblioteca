@@ -6,10 +6,9 @@ from livro.constants import NACIONALIDADES, SEXO
 
 
 class Autor(models.Model):
-    nome = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nome do Autor')                      # type: ignore
+    nome = models.CharField(max_length=50, blank=False, null=False, verbose_name='Nome do Autor')                      # type: ignore
     sobrenome = models.CharField(max_length=100, blank=False, null=False, verbose_name='Sobrenome do Autor')            # type: ignore
     nascimento = models.DateField(blank=False, null=False, verbose_name='Data de Nascimento')                           # type: ignore
-    # cpf = models.CharField(default='00000000000',max_length=11, blank=True, null=False, verbose_name='CPF do Autor')  # type: ignore
     email_de_contato = models.EmailField(max_length=100, blank=True, null=False, verbose_name="Email de Contato")       # type: ignore
     nacionalidade = models.CharField(max_length=3, choices=NACIONALIDADES, verbose_name='Nacionalidade')                # type: ignore
     sexo = models.CharField(max_length=1, choices=SEXO, verbose_name='Sexo')                                            # type: ignore

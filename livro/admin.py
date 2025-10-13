@@ -1,17 +1,17 @@
 from django.contrib import admin
 from .models import Autor, Categoria, Livro, Reserva, Emprestimo
 
-class AutorAdmin(admin.ModelAdmin):
-    list_display = [
-        'nome',
-        'cpf',
-        'nacionalidade',
-    ]
-    search_fields = [
-        'nome',
-        'nacionalidade',
-    ]
-    list_per_page = 20
+# class AutorAdmin(admin.ModelAdmin):
+#     list_display = [
+#         'nome',
+#         'cpf',
+#         'nacionalidade',
+#     ]
+#     search_fields = [
+#         'nome',
+#         'nacionalidade',
+#     ]
+#     list_per_page = 20
 
 
 class CategoriaAdmin(admin.ModelAdmin):
@@ -78,7 +78,7 @@ class EmprestimoAdmin(admin.ModelAdmin):
     ]
     list_per_page = 20
 
-admin.site.register(Autor, AutorAdmin)
+# admin.site.register(Autor, AutorAdmin)
 admin.site.register(Categoria, CategoriaAdmin)
 admin.site.register(Livro, LivroAdmin)
 admin.site.register(Reserva, ReservaAdmin)
