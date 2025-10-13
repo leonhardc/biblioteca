@@ -1,0 +1,56 @@
+@media screen and (max-width: 1440px) {
+    .container {
+        margin-left: 20px;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .container {
+        margin-left: 20px;
+    }
+    table tbody tr td:nth-child(6) {
+        max-width: 20ch;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+@media screen and (max-width: 768px) {
+    .container {
+        margin-left: 25px;
+    }
+    table tbody tr td:nth-child(6) {
+        max-width: 15ch;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .container {
+        /* margin-left: 25px; */
+        display: none;
+    }
+    table tbody tr td:nth-child(6),
+    table thead tr th:nth-child(6) {
+        display: none;
+    }
+    aside {
+        /* TODO: Mudar essa propriedade e ajustar as propriedades de aside */
+        /* display: none; */
+        position: fixed;
+        top: 30px;
+        display: flex;
+        flex-direction: row;
+        height: fit-content;
+    }
+    aside .menu {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        max-height: fit-content;
+    }
+    aside .menu a {
+        margin-right: 10px;
+    }
+}
