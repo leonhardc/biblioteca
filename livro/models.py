@@ -1,14 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from livro.constants import NACIONALIDADES
+from livro.constants import NACIONALIDADES, SEXO
 
 
 
 class Autor(models.Model):
     nome = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nome do Autor')                      # type: ignore
-    cpf = models.CharField(default='00000000000',max_length=11, blank=True, null=False, verbose_name='CPF do Autor')    # type: ignore
+    sobrenome = models.CharField(max_length=100, blank=False, null=False, verbose_name='Sobrenome do Autor')            # type: ignore
+    nascimento = models.DateField(blank=False, null=False, verbose_name='Data de Nascimento')                           # type: ignore
+    # cpf = models.CharField(default='00000000000',max_length=11, blank=True, null=False, verbose_name='CPF do Autor')  # type: ignore
+    email_de_contato = models.EmailField(max_length=100, blank=True, null=False, verbose_name="Email de Contato")       # type: ignore
     nacionalidade = models.CharField(max_length=3, choices=NACIONALIDADES, verbose_name='Nacionalidade')                # type: ignore
+    sexo = models.CharField(max_length=1, choices=SEXO, verbose_name='Sexo')                                            # type: ignore
     
     def __str__(self):
         return f'{self.nome}'                                                                                            # type: ignore
@@ -19,22 +23,22 @@ class Autor(models.Model):
 
 
 class Categoria(models.Model):
-    categoria = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nome da Categoria') # type: ignore
-    descricao = models.TextField()                                                                          # type: ignore
+    categoria = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nome da Categoria')             # type: ignore
+    descricao = models.TextField()                                                                                      # type: ignore
     
     def __str__(self):
-        return f'{self.categoria}'                                                                          # type: ignore
+        return f'{self.categoria}'                                                                                      # type: ignore
 
 
 class Livro(models.Model):
-    isbn = models.CharField(max_length=6, blank=False, null=False, verbose_name='ISBN')                         # type: ignore
-    titulo = models.CharField(max_length=100, blank=False, null=False, verbose_name='Titulo')                   # type: ignore
-    subtitulo = models.CharField(max_length=250, blank=False, null=False, verbose_name='Subtitulo')             # type: ignore
-    lancamento = models.DateField(verbose_name='Ano de Lançamento')                                             # type: ignore
-    editora = models.CharField(max_length=100, blank=False, null=False, verbose_name='Editora')                 # type: ignore
-    copias = models.IntegerField(blank=False, null=False, verbose_name='Quantidade de Cópias')                  # type: ignore
-    autores = models.ManyToManyField(Autor, verbose_name='Autores')                                             # type: ignore
-    categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING, verbose_name='Categoria')             # type: ignore
+    isbn = models.CharField(max_length=6, blank=False, null=False, verbose_name='ISBN')                                 # type: ignore
+    titulo = models.CharField(max_length=100, blank=False, null=False, verbose_name='Titulo')                           # type: ignore
+    subtitulo = models.CharField(max_length=250, blank=False, null=False, verbose_name='Subtitulo')                     # type: ignore
+    lancamento = models.DateField(verbose_name='Ano de Lançamento')                                                     # type: ignore
+    editora = models.CharField(max_length=100, blank=False, null=False, verbose_name='Editora')                         # type: ignore
+    copias = models.IntegerField(blank=False, null=False, verbose_name='Quantidade de Cópias')                          # type: ignore
+    autores = models.ManyToManyField(Autor, verbose_name='Autores')                                                     # type: ignore
+    categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING, verbose_name='Categoria')                     # type: ignore
     
     def get_autores(self):
         return ', '.join([autor.nome for autor in self.autores.all()])  # type: ignore
@@ -44,9 +48,9 @@ class Livro(models.Model):
 
 
 class Reserva(models.Model):
-    usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE, verbose_name='Usuário')    # type: ignore
-    livro = models.ForeignKey(Livro, blank=False, null=False,on_delete=models.CASCADE, verbose_name='Livro')        # type: ignore
-    data_reserva = models.DateField(default=timezone.now, blank=False, null=False, verbose_name='Data da Reserva')  # type: ignore
+    usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE, verbose_name='Usuário')        # type: ignore
+    livro = models.ForeignKey(Livro, blank=False, null=False,on_delete=models.CASCADE, verbose_name='Livro')            # type: ignore
+    data_reserva = models.DateField(default=timezone.now, blank=False, null=False, verbose_name='Data da Reserva')      # type: ignore
     ativo = models.BooleanField(default=True, verbose_name="Reserva Ativa") # type: ignore
 
 

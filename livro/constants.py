@@ -114,3 +114,8 @@ NACIONALIDADES = (
     ('113', 'Vietnamita'),
     ('114', 'Iemenita')
 )
+
+SEXO = (
+    ('M', 'Masculino'),
+    ('F', 'Feminino')
+)
