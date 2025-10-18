@@ -6,11 +6,11 @@ from usuario.constants import NUM_MAX_EMPRESTIMOS, NUM_MAX_DIAS_EMPRESTIMOS
 from usuario.models import Aluno, Professor, Funcionario
 from django.contrib.auth.models import User
 from usuario.forms import FormularioAluno, FormularioFuncionario, FormularioProfessor
-from livro.forms import FormularioCriarEmprestimo
+# from livro.forms import FormularioCriarEmprestimo
 from livro.models import Emprestimo, Livro, Reserva
 from django.contrib import messages
 import random
-from django.db.models.query import QuerySet
+# from django.db.models.query import QuerySet
 
 
 def formatar_endereco(formulario:FormularioAluno|FormularioProfessor|FormularioFuncionario):
@@ -107,36 +107,36 @@ def retorna_instancia_usuario(usuario:User):
         return None
 
 
-def salvar_emprestimo(request:HttpRequest, formulario:FormularioCriarEmprestimo, tipo_usuario:str):
-    try:
-        url_redirect = '/administrador/livros'
-        usuario_obj = User.objects.get(id=formulario.cleaned_data['usuario'])
-        num_emprestimos_por_usuario = Emprestimo.objects.filter(usuario=usuario_obj).count()
-        if  num_emprestimos_por_usuario >= NUM_MAX_EMPRESTIMOS[tipo_usuario]:
-            messages.add_message(
-                request, 
-                messages.INFO, 
-                f"O usuário {usuario_obj.username} não pode alugar mais de {NUM_MAX_EMPRESTIMOS[tipo_usuario]} livros." # type: ignore
-            ) 
-            return redirect(url_redirect)
-        livro_obj = Livro.objects.get(id=formulario.cleaned_data['livro'])
-        if livro_obj.copias <= 0: # type: ignore
-            messages.add_message(request, messages.ERROR, 'Esse livro não pode mais ser alugado.')
-            return redirect(url_redirect)
-        Emprestimo.objects.create(
-            usuario = usuario_obj,
-            livro = livro_obj,
-            data_emprestimo = formulario.cleaned_data['data_emprestimo'],
-            data_devolucao = formulario.cleaned_data["data_emprestimo"] + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS[tipo_usuario])
-        )
-        # Atualizar numero de cópias
-        livro_obj.copias -= 1 # type: ignore
-        livro_obj.save()
-        messages.add_message(request, messages.SUCCESS, 'Emprestimo registrado com sucesso.')
-        return redirect(url_redirect)
-    except Exception as e:
-        messages.add_message(request, messages.ERROR, f'Um erro aconteceu ao tentar registrar o emprestimo.{e}')
-        return redirect(url_redirect) # type: ignore
+# def salvar_emprestimo(request:HttpRequest, formulario:FormularioCriarEmprestimo, tipo_usuario:str):
+#     try:
+#         url_redirect = '/administrador/livros'
+#         usuario_obj = User.objects.get(id=formulario.cleaned_data['usuario'])
+#         num_emprestimos_por_usuario = Emprestimo.objects.filter(usuario=usuario_obj).count()
+#         if  num_emprestimos_por_usuario >= NUM_MAX_EMPRESTIMOS[tipo_usuario]:
+#             messages.add_message(
+#                 request, 
+#                 messages.INFO, 
+#                 f"O usuário {usuario_obj.username} não pode alugar mais de {NUM_MAX_EMPRESTIMOS[tipo_usuario]} livros." # type: ignore
+#             ) 
+#             return redirect(url_redirect)
+#         livro_obj = Livro.objects.get(id=formulario.cleaned_data['livro'])
+#         if livro_obj.copias <= 0: # type: ignore
+#             messages.add_message(request, messages.ERROR, 'Esse livro não pode mais ser alugado.')
+#             return redirect(url_redirect)
+#         Emprestimo.objects.create(
+#             usuario = usuario_obj,
+#             livro = livro_obj,
+#             data_emprestimo = formulario.cleaned_data['data_emprestimo'],
+#             data_devolucao = formulario.cleaned_data["data_emprestimo"] + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS[tipo_usuario])
+#         )
+#         # Atualizar numero de cópias
+#         livro_obj.copias -= 1 # type: ignore
+#         livro_obj.save()
+#         messages.add_message(request, messages.SUCCESS, 'Emprestimo registrado com sucesso.')
+#         return redirect(url_redirect)
+#     except Exception as e:
+#         messages.add_message(request, messages.ERROR, f'Um erro aconteceu ao tentar registrar o emprestimo.{e}')
+#         return redirect(url_redirect) # type: ignore
 
 
 def pegar_informacoes_aluno(aluno:Aluno) -> dict[str, Aluno|Reserva|Emprestimo]:
