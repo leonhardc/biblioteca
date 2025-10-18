@@ -7,8 +7,10 @@ from usuario.models import Aluno, Professor, Funcionario
 from curso.models import Curso
 from livro.models import Livro, Autor, Categoria, NACIONALIDADES
 import datetime
+from datetime import date, timedelta
 from utils.utils import gerar_data
 from dateutil.relativedelta import relativedelta
+import unicodedata
 # from django.db.models import F
 
 # Configurar o Django
@@ -18,6 +20,13 @@ django.setup()
 fake = Faker('pt_BR') # Faz mapeamento de dados para nomes brasileiros.
 
 # TODO: Testar as funções abaixo
+# TODO: Implementar script para remover acentos e usar em usernames no banco de dados
+
+def remover_acentos(texto:str):
+    # Normaliza o texto (separa acento da letra base)
+    nfkd = unicodedata.normalize('NFKD', texto)
+    # Codifica em ASCII ignorando acentos e depois decodifica
+    return nfkd.encode('ASCII', 'ignore').decode('utf-8')
 
 # FUNÇÕES DO APP 'USUARIO'
 # INICIO: Funções para gerar dados aleatorios
@@ -56,6 +65,16 @@ def gerar_matricula_funcionario() -> str:
             break
     return matricula
 
+def gera_data_nascimento(idade=50) -> date: # type: ignore
+    # Retorna uma data de nascimento de uma pessoa com a idade recomendada pelo parametro da funçao
+    # Se não for fornecido parametro, a idade padrão será 50 anos
+    hoje = date.today()
+    data_inicio = date(hoje.year - idade - 1, hoje.month, hoje.day)
+    data_fim = date(hoje.year - idade, hoje.month, hoje.day)
+    delta = data_fim - data_inicio
+    dias_aleatorios = random.randint(0, delta.days)
+    return data_inicio + timedelta(days=dias_aleatorios)
+
 # INICIO: Funções para gerações de dados para as entidades do banco de dados
 def get_data_usuario() -> dict[str, str]:
     data: dict[str, str] = { 
@@ -63,7 +82,7 @@ def get_data_usuario() -> dict[str, str]:
         "last_name": fake.last_name(),
         "password": "1234", # Senha padrão
     }
-    data['username'] = f'{str(data['first_name']).lower()}{str(data["last_name"]).lower()}{random.randint(0, 999)}'
+    data['username'] = f'{str(data['first_name']).lower().replace(' ','.')}_{str(data["last_name"]).lower().replace(' ','.')}{random.randint(0, 999)}'
     data['email'] = f'{str(data["first_name"]).lower()}{str(data['last_name']).lower()}@example.com'
     return data
 
@@ -76,7 +95,7 @@ def get_data_aluno() -> dict[str, str|datetime.datetime|datetime.date|Curso]:
     data['cpf'] = gera_cpf_unico()
     data['endereco'] = fake.address().replace('\n', ', ')
     data['ingresso'] = datetime.date.today()
-    data['conclusao'] = data['ingresso'] + relativedelta(years=+curso.duracao) # type: ignore
+    data['conclusao_prevista'] = data['ingresso'] + relativedelta(years=+curso.duracao) # type: ignore
     data['ativo'] = True # type: ignore
     return data
 
@@ -154,9 +173,18 @@ def gerar_isbn_unico() -> str:
 
 def get_data_autor() -> dict[str, str]:
     data:dict[str, str] = {}
-    data['nome'] = fake.name()
+    data['sexo'] = random.choice(['M', 'F'])
+    if data['sexo'] == 'M':
+        data['nome'] = fake.first_name_male()
+        data["sobrenome"] = fake.last_name_male()
+    else:
+        data['nome'] = fake.first_name_female()
+        data["sobrenome"] = fake.last_name_female()
     data['nacionalidade'] = random.choice(NACIONALIDADES)[0]
-    data['cpf'] = ''.join([str(random.randint(0,9)) for _ in range(11)])
+    data['email_de_contato'] = f'{data['nome'].replace(' ', '.')}_{data['sobrenome'].replace(' ', '.')}@email.com'
+    # FIXME: Consertar erro abaixo:
+    # django.core.exceptions.ValidationError: ['O valor “14/07/1970” tem um formato inválido. Deve estar no formato YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ].']
+    data['nascimento'] = gera_data_nascimento(random.randint(30, 100)) # type: ignore
     return data
 
 def get_data_livro() -> dict[str, str|int|Categoria|list[Autor]|Categoria|datetime.date]:
@@ -236,7 +264,7 @@ def criar_categorias(categorias:list[str]):
         nova_categoria = criar_categoria(categoria, desc_categoria)
         print(f"Categoria {nova_categoria.id}: {nova_categoria.categoria} criada com sucesso.") # type: ignore
 
-def criar_n_cursos(dict_cursos:list[dict[str,str|int]]):
+def criar_n_cursos():
     lista_de_cursos = [
         'Engenharia de Computação',
         'Engenharia Eletrica',
@@ -257,6 +285,27 @@ def criar_n_cursos(dict_cursos:list[dict[str,str|int]]):
         novo_curso = criar_curso(**curso_dict) # type: ignore
         print(f'{novo_curso.cod_curso} - {novo_curso.curso} criado com sucesso.') # type: ignore
 
+
+def script_povoar_banco() -> None:
+    # Implementa logica para povoar o banco de dados de uma maneira fácil
+    # Criar Cursos
+    # Criar alunos, professores e funcionarios
+    # Criar livros, autores, categorias, reservas e emprestimos
+    # Criando cursos ...
+    print("Criando Cursos ...")
+    criar_n_cursos()
+    print("Criando Alunos ...")
+    criar_n_alunos(200)
+    print("Criando Professores ...")
+    criar_n_professores(20)
+    print("Criando Funcionarios ...")
+    criar_n_funcionarios(100)
+    print("Criando Autores ...")
+    criar_n_autores(500)
+    print("Criando Categorias ...")
+    criar_categorias(['Calculo', 'Fisica', 'Desenho Técnico', 'Inteligencia Artificial', 'Algebra', 'Programação'])
+    print("Criando Livros ...")
+    criar_n_livros(1000)
 
 if __name__ == '__main__':
     pass
