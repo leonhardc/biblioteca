@@ -15,7 +15,6 @@ class AutorAdmin(admin.ModelAdmin): # type: ignore
         'nome',
         'nascimento',
         'email_de_contato',
->>>>>>> Stashed changes
         'nacionalidade',
     ]
     list_per_page = 20
