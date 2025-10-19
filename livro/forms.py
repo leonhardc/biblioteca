@@ -5,6 +5,7 @@
 # from django.core.exceptions import ValidationError
 # # import re 
 
+
 # # Constantes de Formulários.
 # # FIXME: O mesmo erro de inicialização de outros pontos da aplicação. Não há tabela que se possa pesquisar
 # CATEGORIAS = tuple([(categoria.id, categoria.categoria) for categoria in Categoria.objects.all()])  # type: ignore
