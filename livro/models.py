@@ -12,7 +12,7 @@ SEXO = (
 
 class Autor(models.Model):
     nome = models.CharField(max_length=100, blank=False, null=False, verbose_name='Nome do Autor')                      # type: ignore
-    sobrenome = models.CharField(max_length=100, blank=False, null=False, verbose_name="Sobrenone do Autor")
+    sobrenome = models.CharField(max_length=100, blank=False, null=False, verbose_name="Sobrenone do Autor") # type: ignore
     email_de_contato = models.EmailField(blank=False, null=False, verbose_name='Email de contato do Autor')
     nascimento = models.DateTimeField(verbose_name='Data de Nascimento do Autor')
     sexo = models.CharField(max_length=1, choices=SEXO, verbose_name="Sexo do Autor")
