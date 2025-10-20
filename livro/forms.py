@@ -16,7 +16,7 @@ def get_livros() -> tuple[tuple[int, str]]:
     return tuple([(livro.id, livro.titulo) for livro in Livro.objects.all()])  # type: ignore
 
 def get_usuarios() -> tuple[tuple[int, str]]:
-    from django.contrib.auth import User # type: ignore
+    from django.contrib.auth.models import User
     return tuple([(usuario.id, usuario.username) for usuario in User.objects.all()])                 # type: ignore
 
 # # Constantes de Formulários.

@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
 from usuario.forms import FormularioAluno, FormularioProfessor, FormularioFuncionario
-# from livro.forms import FormularioLivro, FormularioAutor, FormularioCategoria, FormularioReserva, FormularioCriarEmprestimo, FormularioAtualizarEmprestimo
+from livro.forms import FormularioLivro, FormularioAutor, FormularioCategoria, FormularioReserva, FormularioCriarEmprestimo, FormularioAtualizarEmprestimo
 from curso.forms import FormularioCurso
 from curso.models import Curso
 from utils.utils import *
@@ -501,36 +501,36 @@ def dashboard_admin_livros(request: HttpRequest):
 def criar_livro(request: HttpRequest):
     template_name = 'admin/livro/dashboard_admin_criar_livro.html'
     if request.method == 'GET':
-        # formulario = FormularioLivro()
+        formulario = FormularioLivro()
         return render(request,template_name)
     if request.method == 'POST':
         pass
-        # formulario = FormularioLivro(request.POST)
-        # if formulario.is_valid():
-        #     livro_exite = Livro.objects.filter(isbn=formulario.cleaned_data['isbn']).exists()
-        #     if not livro_exite:
-        #         try:
-        #             livro:Livro = Livro.objects.create(
-        #                 isbn=formulario.cleaned_data['isbn'],
-        #                 titulo=formulario.cleaned_data['titulo'],
-        #                 subtitulo=formulario.cleaned_data['subtitulo'],
-        #                 lancamento=formulario.cleaned_data['lancamento'],
-        #                 editora=formulario.cleaned_data['editora'],
-        #                 copias=formulario.cleaned_data['copias'],
-        #                 categoria=formulario.cleaned_data['categoria'],
-        #             )
-        #             livro.autores.set(formulario.cleaned_data['autores']) # type: ignore
-        #             messages.add_message(request, messages.SUCCESS, 'Livro adicionado com sucesso.')
-        #             return redirect('/administrador/livros/')
-        #         except Exception as e:
-        #             messages.add_message(request, messages.ERROR, f'Erro ao adicionar novo livro.\n{e}.')
-        #             return render(request, template_name, context={'form':formulario})
-        #     else:
-        #         messages.add_message(request, messages.ERROR, 'O livro já existe na base de dados.')
-        #         return render(request, template_name, context={'form':formulario})
-        # else:
-        #     messages.add_message(request, messages.ERROR, 'Não foi possível criar o livro. Formulário inválido.')
-        #     return render(request, template_name)
+        formulario = FormularioLivro(request.POST)
+        if formulario.is_valid():
+            livro_exite = Livro.objects.filter(isbn=formulario.cleaned_data['isbn']).exists()
+            if not livro_exite:
+                try:
+                    livro:Livro = Livro.objects.create(
+                        isbn=formulario.cleaned_data['isbn'],
+                        titulo=formulario.cleaned_data['titulo'],
+                        subtitulo=formulario.cleaned_data['subtitulo'],
+                        lancamento=formulario.cleaned_data['lancamento'],
+                        editora=formulario.cleaned_data['editora'],
+                        copias=formulario.cleaned_data['copias'],
+                        categoria=formulario.cleaned_data['categoria'],
+                    )
+                    livro.autores.set(formulario.cleaned_data['autores']) # type: ignore
+                    messages.add_message(request, messages.SUCCESS, 'Livro adicionado com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao adicionar novo livro.\n{e}.')
+                    return render(request, template_name, context={'form':formulario})
+            else:
+                messages.add_message(request, messages.ERROR, 'O livro já existe na base de dados.')
+                return render(request, template_name, context={'form':formulario})
+        else:
+            messages.add_message(request, messages.ERROR, 'Não foi possível criar o livro. Formulário inválido.')
+            return render(request, template_name)
 
 
 def informacoes_livro(request: HttpRequest, lid: int):
@@ -551,40 +551,40 @@ def atualizar_informacoes_livro(request: HttpRequest, lid: int):
         livro_existe = Livro.objects.filter(id=lid).exists()
         if livro_existe:
             livro = Livro.objects.get(id=lid)
-            # data = informacoes_formulario_livro(livro)
-            # formulario = FormularioLivro(initial=data)
-            return render(request, template_name, context={'livro':livro})
+            data = informacoes_formulario_livro(livro)
+            formulario = FormularioLivro(initial=data)
+            return render(request, template_name, context={'livro':livro, 'form': formulario})
         else:
             messages.add_message(request, messages.ERROR, 'Livro não encontrado.')
             return redirect('/administrador/livros/')
     if request.method=='POST':
         pass
-        # formulario = FormularioLivro(request.POST)
-        # if formulario.is_valid():
-        #     livro_existe:bool = Livro.objects.filter(id=lid).exists()
-        #     if livro_existe:
-        #         try:
-        #             livro:Livro = Livro.objects.get(id=lid)
-        #             livro.titulo = formulario.cleaned_data['titulo']
-        #             livro.subtitulo = formulario.cleaned_data['subtitulo']
-        #             livro.lancamento = formulario.cleaned_data['lancamento']
-        #             livro.editora = formulario.cleaned_data['editora']
-        #             livro.copias = formulario.cleaned_data['copias']
-        #             livro.autores.set(formulario.cleaned_data['autores']) # type: ignore
-        #             livro.categoria = formulario.cleaned_data['categoria']
-        #             livro.save()
-        #             # livro = Livro.objects.filter(id=lid).update(**formulario.cleaned_data)
-        #             messages.add_message(request, messages.SUCCESS, 'Livro atualizado com sucesso.')
-        #             return redirect('/administrador/livros/')
-        #         except Exception as e:
-        #             messages.add_message(request, messages.ERROR, f'Erro ao atualizar os dados. {e}.')
-        #             return redirect('/administrador/livros/')
-        #     else:
-        #         messages.add_message(request, messages.ERROR, 'Erro ao atualizar os dados. Livro não encontrado.')
-        #         return redirect('/administrador/livros/')
-        # else:
-        #     messages.add_message(request, messages.ERROR, 'Erro ao atualizar os dados. Formulário Inválido.')
-        #     return redirect('/administrador/livros/')
+        formulario = FormularioLivro(request.POST)
+        if formulario.is_valid():
+            livro_existe:bool = Livro.objects.filter(id=lid).exists()
+            if livro_existe:
+                try:
+                    livro:Livro = Livro.objects.get(id=lid)
+                    livro.titulo = formulario.cleaned_data['titulo']
+                    livro.subtitulo = formulario.cleaned_data['subtitulo']
+                    livro.lancamento = formulario.cleaned_data['lancamento']
+                    livro.editora = formulario.cleaned_data['editora']
+                    livro.copias = formulario.cleaned_data['copias']
+                    livro.autores.set(formulario.cleaned_data['autores']) # type: ignore
+                    livro.categoria = formulario.cleaned_data['categoria']
+                    livro.save()
+                    # livro = Livro.objects.filter(id=lid).update(**formulario.cleaned_data)
+                    messages.add_message(request, messages.SUCCESS, 'Livro atualizado com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao atualizar os dados. {e}.')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Erro ao atualizar os dados. Livro não encontrado.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Erro ao atualizar os dados. Formulário Inválido.')
+            return redirect('/administrador/livros/')
 
 
 def deletar_livro(request: HttpRequest, lid: int):
@@ -604,35 +604,34 @@ def deletar_livro(request: HttpRequest, lid: int):
 def criar_autor(request: HttpRequest):
     template_name = 'admin/livro/dashboard_admin_criar_autor.html'
     if request.method == 'GET':
-        # formulario = FormularioAutor()
-        # return render(request, template_name, context={'form':formulario})
-        return render(request, template_name)
+        formulario = FormularioAutor()
+        return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
         pass
-        # formulario = FormularioAutor(request.POST)
-        # if formulario.is_valid():
-        #     autor = Autor.objects.filter(
-        #         Q(nome=formulario.cleaned_data['nome']) |
-        #         Q(cpf=formulario.cleaned_data['cpf'])
-        #     ).exists()
-        #     if not autor:
-        #         try:
-        #             autor = Autor.objects.create(
-        #                 nome = formulario.cleaned_data['nome'],
-        #                 cpf = formulario.cleaned_data['cpf'],
-        #                 nacionalidade = formulario.cleaned_data['nacionalidade'],
-        #             )
-        #             messages.add_message(request, messages.SUCCESS, 'Autor salvo com sucesso.')
-        #             return redirect('/administrador/livros/')
-        #         except Exception as e:
-        #             messages.add_message(request, messages.ERROR, f'Erro ao salvar informações na base de dados. {e}.')
-        #             return redirect('/administrador/livros/')
-        #     else:
-        #         messages.add_message(request, messages.ERROR, 'O Autor já existe.')
-        #         return redirect('/administrador/livros/')
-        # else:
-        #     messages.add_message(request, messages.ERROR, 'Erro ao salvar informações do autor. Formulário inválido.')
-        #     return redirect('/administrador/livros/')
+        formulario = FormularioAutor(request.POST)
+        if formulario.is_valid():
+            autor = Autor.objects.filter(
+                Q(nome=formulario.cleaned_data['nome']) |
+                Q(cpf=formulario.cleaned_data['cpf'])
+            ).exists()
+            if not autor:
+                try:
+                    autor = Autor.objects.create(
+                        nome = formulario.cleaned_data['nome'],
+                        cpf = formulario.cleaned_data['cpf'],
+                        nacionalidade = formulario.cleaned_data['nacionalidade'],
+                    )
+                    messages.add_message(request, messages.SUCCESS, 'Autor salvo com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao salvar informações na base de dados. {e}.')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'O Autor já existe.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Erro ao salvar informações do autor. Formulário inválido.')
+            return redirect('/administrador/livros/')
 
 
 def informacoes_autor(request: HttpRequest, aid: int):
@@ -653,32 +652,32 @@ def atualizar_informacoes_autor(request: HttpRequest, aid: int):
         autor = Autor.objects.filter(id=aid).exists()
         if autor:
             autor = Autor.objects.get(id=aid)
-            # data = informacoes_formulario_autor(autor)
-            # formulario = FormularioAutor(initial=data)
-            # return render(request, template_name, context={'form':formulario, 'autor':autor})
-            return render(request, template_name)
+            data = informacoes_formulario_autor(autor)
+            formulario = FormularioAutor(initial=data)
+            return render(request, template_name, context={'form':formulario, 'autor':autor})
         else:
             messages.add_message(request, messages.ERROR, 'O autor não foi encontrado na base de dados.')
             return redirect('/administrador/livros/')
     if request.method == 'POST':
         pass
-        # formulario = FormularioAutor(request.POST)
-        # if formulario.is_valid():
-        #     autor = Autor.objects.filter(id=aid).exists()
-        #     if autor:
-        #         autor = Autor.objects.get(id=aid)
-        #         autor.nome = formulario.cleaned_data['nome']
-        #         autor.cpf = formulario.cleaned_data['cpf']
-        #         autor.nacionalidade = formulario.cleaned_data['nacionalidade']
-        #         autor.save()
-        #         messages.add_message(request, messages.SUCCESS, 'Autor atualizado com sucesso.')
-        #         return redirect('/administrador/livros/')
-        #     else:
-        #         messages.add_message(request, messages.ERROR, 'Autor não encontrado.')
-        #         return redirect('/administrador/livros/')
-        # else:
-        #     messages.add_message(request, messages.ERROR, 'Formulário inválido.')
-        #     return redirect('/administrador/livros/')
+        formulario = FormularioAutor(request.POST)
+        if formulario.is_valid():
+            autor = Autor.objects.filter(id=aid).exists()
+            if autor:
+                autor = Autor.objects.get(id=aid)
+                autor.nome = formulario.cleaned_data['nome']
+                # TODO: ADICIONAR TODOS OS CAMPOS NO FORMULARIO
+                autor.nacionalidade = formulario.cleaned_data['nacionalidade']
+                # ATE AQUI
+                autor.save()
+                messages.add_message(request, messages.SUCCESS, 'Autor atualizado com sucesso.')
+                return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Autor não encontrado.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário inválido.')
+            return redirect('/administrador/livros/')
 
 
 def deletar_autor(request: HttpRequest, aid: int):
@@ -699,31 +698,29 @@ def deletar_autor(request: HttpRequest, aid: int):
 def criar_categoria(request: HttpRequest):
     template_name = 'admin/livro/dashboard_admin_criar_categoria.html'
     if request.method == 'GET':
-        # formulario = FormularioCategoria()
-        # return render(request, template_name, context={'form':formulario})
-        return render(request, template_name)
+        formulario = FormularioCategoria()
+        return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
-        pass
-        # formulario = FormularioCategoria(request.POST)
-        # if formulario.is_valid():
-        #     categoria_existe = Categoria.objects.filter(categoria=formulario.cleaned_data['categoria']).exists()
-        #     if not categoria_existe:
-        #         try:
-        #             Categoria.objects.create(
-        #                 categoria = formulario.cleaned_data['categoria'],
-        #                 descricao = formulario.cleaned_data['descricao']
-        #             )
-        #             messages.add_message(request, messages.SUCCESS, 'Categoria criada com sucesso.')
-        #             return redirect('/administrador/livros/')
-        #         except Exception as e:
-        #             messages.add_message(request, messages.ERROR, f'Erro ao criar categoria.\n{e}')
-        #             return redirect('/administrador/livros/')
-        #     else:
-        #         messages.add_message(request, messages.ERROR, 'Categoria já existe.')
-        #         return redirect('/administrador/livros/')
-        # else:
-        #     messages.add_message(request, messages.ERROR, 'Formulario Invalido.')
-        #     return redirect('/administrador/livros/')
+        formulario = FormularioCategoria(request.POST)
+        if formulario.is_valid():
+            categoria_existe = Categoria.objects.filter(categoria=formulario.cleaned_data['categoria']).exists()
+            if not categoria_existe:
+                try:
+                    Categoria.objects.create(
+                        categoria = formulario.cleaned_data['categoria'],
+                        descricao = formulario.cleaned_data['descricao']
+                    )
+                    messages.add_message(request, messages.SUCCESS, 'Categoria criada com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao criar categoria.\n{e}')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Categoria já existe.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulario Invalido.')
+            return redirect('/administrador/livros/')
 
 
 def informacoes_categoria(request: HttpRequest, cid: int):
@@ -744,31 +741,30 @@ def atualizar_informacoes_categoria(request: HttpRequest, cid: int):
         categoria = Categoria.objects.filter(id=cid).exists()
         if categoria:
             categoria = Categoria.objects.get(id=cid)
-            # data = informacoes_formulario_categoria(categoria)
-            # formulario = FormularioCategoria(initial=data)
-            # return render(request, template_name, context={'form': formulario, 'categoria': categoria})
-            return render(request, template_name, context={'categoria': categoria})
+            data = informacoes_formulario_categoria(categoria)
+            formulario = FormularioCategoria(initial=data)
+            return render(request, template_name, context={'form': formulario, 'categoria': categoria})
         else:
             messages.add_message(request, messages.ERROR, 'A categoria não existe na base de dados.')
             return redirect('/administrador/livros/')
     if request.method=='POST':
         pass
-        # formulario = FormularioCategoria(request.POST)
-        # if formulario.is_valid():
-        #     categoria = Categoria.objects.filter(id=cid).exists()
-        #     if categoria:
-        #         categoria = Categoria.objects.get(id=cid)
-        #         categoria.categoria = formulario.cleaned_data['categoria']
-        #         categoria.descricao = formulario.cleaned_data['descricao']
-        #         categoria.save()
-        #         messages.add_message(request, messages.SUCCESS, 'Categoria atualizada com sucesso.')
-        #         return redirect('/administrador/livros/')
-        #     else:
-        #         messages.add_message(request, messages.ERROR, 'Categoria não encontrada.')
-        #         return redirect('/administrador/livros/')
-        # else: 
-        #     messages.add_message(request, messages.ERROR, 'Formulário inválido.')
-        #     return redirect('/administrador/livros/')
+        formulario = FormularioCategoria(request.POST)
+        if formulario.is_valid():
+            categoria = Categoria.objects.filter(id=cid).exists()
+            if categoria:
+                categoria = Categoria.objects.get(id=cid)
+                categoria.categoria = formulario.cleaned_data['categoria']
+                categoria.descricao = formulario.cleaned_data['descricao']
+                categoria.save()
+                messages.add_message(request, messages.SUCCESS, 'Categoria atualizada com sucesso.')
+                return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Categoria não encontrada.')
+                return redirect('/administrador/livros/')
+        else: 
+            messages.add_message(request, messages.ERROR, 'Formulário inválido.')
+            return redirect('/administrador/livros/')
 
 
 def deletar_categoria(request: HttpRequest, cid: int):
@@ -789,34 +785,33 @@ def deletar_categoria(request: HttpRequest, cid: int):
 def criar_reserva(request: HttpRequest):
     template_name = 'admin/livro/dashboard_admin_criar_reserva.html'
     if request.method == 'GET':
-        # formulario = FormularioReserva()
-        # return render(request, template_name, context={'form':formulario})
-        return render(request, template_name)
+        formulario = FormularioReserva()
+        return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
         pass
-        # formulario = FormularioReserva(request.POST)
-        # if formulario.is_valid():
-        #     reserva_existe = Reserva.objects.filter(usuario=formulario.cleaned_data['usuario'], livro=formulario.cleaned_data['livro']).exists()
-        #     if not reserva_existe:
-        #         try:
-        #             usuario = User.objects.get(id=formulario.cleaned_data['usuario'])
-        #             livro = Livro.objects.get(id=formulario.cleaned_data['livro'])
-        #             Reserva.objects.create(
-        #                 usuario = usuario,
-        #                 livro = livro,
-        #                 data_reserva = formulario.cleaned_data['data_reserva']
-        #             )
-        #             messages.add_message(request, messages.SUCCESS, 'Reserva cadastrado com sucesso.')
-        #             return redirect('/administrador/livros/')
-        #         except Exception as e:
-        #             messages.add_message(request, messages.ERROR, f'Erro ao cadastrar reserva.{e}')
-        #             return redirect('/administrador/livros/')
-        #     else:
-        #         messages.add_message(request, messages.ERROR, 'Essa reserva já existe.')
-        #         return redirect('/administrador/livros/')
-        # else:
-        #     messages.add_message(request, messages.ERROR, 'Formulário Inválido.')
-        #     return redirect('/administrador/livros/')
+        formulario = FormularioReserva(request.POST)
+        if formulario.is_valid():
+            reserva_existe = Reserva.objects.filter(usuario=formulario.cleaned_data['usuario'], livro=formulario.cleaned_data['livro']).exists()
+            if not reserva_existe:
+                try:
+                    usuario = User.objects.get(id=formulario.cleaned_data['usuario'])
+                    livro = Livro.objects.get(id=formulario.cleaned_data['livro'])
+                    Reserva.objects.create(
+                        usuario = usuario,
+                        livro = livro,
+                        data_reserva = formulario.cleaned_data['data_reserva']
+                    )
+                    messages.add_message(request, messages.SUCCESS, 'Reserva cadastrado com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Erro ao cadastrar reserva.{e}')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'Essa reserva já existe.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário Inválido.')
+            return redirect('/administrador/livros/')
 
 
 def informacoes_reserva(request: HttpRequest, rid: int):
@@ -838,33 +833,32 @@ def atualizar_informacoes_reserva(request: HttpRequest, rid: int):
         if not reserva:
             messages.add_message(request, messages.ERROR, "Reserva não encontrada.")
             return redirect("/administrador/livros/")
-        # data = informacoes_formulario_reserva(reserva)
-        # formulario = FormularioReserva(initial=data)
-        # return render(request, template_name, context={'form':formulario, 'reserva':reserva})
-        return render(request, template_name, context={'reserva':reserva})
+        data = informacoes_formulario_reserva(reserva)
+        formulario = FormularioReserva(initial=data)
+        return render(request, template_name, context={'form':formulario, 'reserva':reserva})
     if request.method == 'POST':
         pass
-        # formulario = FormularioReserva(request.POST)
-        # if formulario.is_valid():
-        #     reserva_existe = Reserva.objects.filter(id=rid).exists()
-        #     if reserva_existe:
-        #         try:
-        #             reserva = Reserva.objects.get(id=rid)
-        #             reserva.usuario = formulario.cleaned_data['usuario']
-        #             reserva.livro = formulario.cleaned_data['livro']
-        #             reserva.data_reserva = formulario.cleaned_data['data_reserva']
-        #             reserva.save()
-        #             messages.add_message(request, messages.SUCCESS, "Informações salvas com sucesso.")
-        #             return redirect("/administrador/livros/")
-        #         except Exception as e:
-        #             messages.add_message(request, messages.ERROR, f"Um erro aconteceu ao tentar atualizar as informações de reserva.{e}")
-        #             return redirect("/administrador/livros/")
-        #     else:
-        #         messages.add_message(request, messages.ERROR, "A reserva informada não existe.")
-        #         return redirect("/administrador/livros/")
-        # else:
-        #     messages.add_message(request, messages.ERROR, "Formulário inválido.")
-        #     return redirect("/administrador/livros/")
+        formulario = FormularioReserva(request.POST)
+        if formulario.is_valid():
+            reserva_existe = Reserva.objects.filter(id=rid).exists()
+            if reserva_existe:
+                try:
+                    reserva = Reserva.objects.get(id=rid)
+                    reserva.usuario = formulario.cleaned_data['usuario']
+                    reserva.livro = formulario.cleaned_data['livro']
+                    reserva.data_reserva = formulario.cleaned_data['data_reserva']
+                    reserva.save()
+                    messages.add_message(request, messages.SUCCESS, "Informações salvas com sucesso.")
+                    return redirect("/administrador/livros/")
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f"Um erro aconteceu ao tentar atualizar as informações de reserva.{e}")
+                    return redirect("/administrador/livros/")
+            else:
+                messages.add_message(request, messages.ERROR, "A reserva informada não existe.")
+                return redirect("/administrador/livros/")
+        else:
+            messages.add_message(request, messages.ERROR, "Formulário inválido.")
+            return redirect("/administrador/livros/")
 
 
 def deletar_reserva(request: HttpRequest, rid: int):
@@ -885,44 +879,43 @@ def deletar_reserva(request: HttpRequest, rid: int):
 
 def criar_emprestimo(request: HttpRequest):
     template_name = "admin/livro/dashboard_admin_criar_emprestimo.html"
-    # url_redirect = "/administrador/livros/"
+    url_redirect = "/administrador/livros/"
     if request.method == 'GET':
-        # formulario = FormularioCriarEmprestimo()
-        # return render(request, template_name, context={'form':formulario})
-        return render(request, template_name)
+        formulario = FormularioCriarEmprestimo()
+        return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
         pass
-        # formulario = FormularioCriarEmprestimo(request.POST)
-        # if formulario.is_valid():
-        #     usuario_formulario = formulario.cleaned_data['usuario']
-        #     livro_formulario = formulario.cleaned_data['livro']
-        #     emprestimo_existe = Emprestimo.objects.filter(usuario=usuario_formulario, livro=livro_formulario).exists()
-        #     if not emprestimo_existe:
-        #         # 1. É necessário verificar o tipo de usuário a qual o emprestimo está sendo associado
-        #         # 2. A partir do tipo de usuário, verificar se aquele já tem um numero máximo de emprestimos
-        #         #    para seu tipo de usuário.Como segue abaixo:
-        #         #       i. Alunos podem fazer até 4 emprestimos ao mesmo tempo por até 15 dias cada;
-        #         #       ii. Professores podem fazer até 5 emprestimos ao mesmo tempo por até 30 dias cada;
-        #         #       iii. Funcionários podem fazer até 4 emprestimos ao mesmo tempo por até 21 dias cada;
-        #         # 3. A quantidade de emprestimos de um livro deve obedecer ao numéro máximo de cópias
-        #         #    cadastradas no banco de dados.
-        #         tipo_usuario = retorna_instancia_usuario(usuario=formulario.cleaned_data['usuario'])
-        #         if isinstance(tipo_usuario, Aluno):                    
-        #             return salvar_emprestimo(request, formulario, 'aluno') # Para Aluno
-        #         elif isinstance(tipo_usuario, Professor):
-        #             return salvar_emprestimo(request, formulario, 'professor') # Para Professor
-        #         elif isinstance(tipo_usuario, Funcionario):
-        #             return salvar_emprestimo(request, formulario, 'funcionario') # Para Funcionario
-        #         else:
-        #             # Levanta uma mensagem de erro, porque o usuário não é nenhum desses três elementos
-        #             messages.add_message(request, messages.ERROR, 'O usuário não pode alugar um livro')
-        #             return redirect(url_redirect)
-        #     else:
-        #         messages.add_message(request, messages.ERROR, 'Esse registro já existe no banco de dados.')
-        #         return redirect(url_redirect)
-        # else:
-        #     messages.add_message(request, messages.ERROR, 'Formulário inválido.')
-        #     return redirect(url_redirect)
+        formulario = FormularioCriarEmprestimo(request.POST)
+        if formulario.is_valid():
+            usuario_formulario = formulario.cleaned_data['usuario']
+            livro_formulario = formulario.cleaned_data['livro']
+            emprestimo_existe = Emprestimo.objects.filter(usuario=usuario_formulario, livro=livro_formulario).exists()
+            if not emprestimo_existe:
+                # 1. É necessário verificar o tipo de usuário a qual o emprestimo está sendo associado
+                # 2. A partir do tipo de usuário, verificar se aquele já tem um numero máximo de emprestimos
+                #    para seu tipo de usuário.Como segue abaixo:
+                #       i. Alunos podem fazer até 4 emprestimos ao mesmo tempo por até 15 dias cada;
+                #       ii. Professores podem fazer até 5 emprestimos ao mesmo tempo por até 30 dias cada;
+                #       iii. Funcionários podem fazer até 4 emprestimos ao mesmo tempo por até 21 dias cada;
+                # 3. A quantidade de emprestimos de um livro deve obedecer ao numéro máximo de cópias
+                #    cadastradas no banco de dados.
+                tipo_usuario = retorna_instancia_usuario(usuario=formulario.cleaned_data['usuario'])
+                if isinstance(tipo_usuario, Aluno):                    
+                    return salvar_emprestimo(request, formulario, 'aluno') # Para Aluno
+                elif isinstance(tipo_usuario, Professor):
+                    return salvar_emprestimo(request, formulario, 'professor') # Para Professor
+                elif isinstance(tipo_usuario, Funcionario):
+                    return salvar_emprestimo(request, formulario, 'funcionario') # Para Funcionario
+                else:
+                    # Levanta uma mensagem de erro, porque o usuário não é nenhum desses três elementos
+                    messages.add_message(request, messages.ERROR, 'O usuário não pode alugar um livro')
+                    return redirect(url_redirect)
+            else:
+                messages.add_message(request, messages.ERROR, 'Esse registro já existe no banco de dados.')
+                return redirect(url_redirect)
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário inválido.')
+            return redirect(url_redirect)
 
 
 def informacoes_emprestimo(request: HttpRequest, eid: int):
@@ -945,38 +938,37 @@ def atualizar_informacoes_emprestimo(request: HttpRequest, eid: int):
         emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
         if emprestimo_existe:
             emprestimo = Emprestimo.objects.get(id=eid)
-            # data = informacoes_formulario_emprestimo(emprestimo)
-            # formulario = FormularioAtualizarEmprestimo(initial=data)
-            # return render(request, template_name, context={'form':formulario, 'emprestimo':emprestimo})
-            return render(request, template_name, context={'emprestimo':emprestimo})
+            data = informacoes_formulario_emprestimo(emprestimo)
+            formulario = FormularioAtualizarEmprestimo(initial=data)
+            return render(request, template_name, context={'form':formulario, 'emprestimo':emprestimo})
         else:
             messages.add_message(request, messages.ERROR, 'Emprestimo solicitado não existe na base de dados.')
             return redirect('/administrador/livros/')
     if request.method == 'POST':
         pass
         # Salvar as informações do formulário na base de dados
-        # formulario = FormularioAtualizarEmprestimo(request.POST)
-        # if formulario.is_valid():
-        #     emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
-        #     if emprestimo_existe:
-        #         try:
-        #             emprestimo = Emprestimo.objects.get(id=eid)
-        #             emprestimo.usuario = User.objects.get(id=formulario.cleaned_data['usuario'])
-        #             emprestimo.livro = Livro.objects.get(id=formulario.cleaned_data['livro'])
-        #             emprestimo.data_emprestimo = formulario.cleaned_data['data_emprestimo']
-        #             emprestimo.data_devolucao = formulario.cleaned_data['data_devolucao']
-        #             emprestimo.save()
-        #             messages.add_message(request, messages.SUCCESS, 'Emprestimo Atualizado com sucesso.')
-        #             return redirect('/administrador/livros/')
-        #         except Exception as e:
-        #             messages.add_message(request, messages.ERROR, f'Um erro aconteceu ao salvar as informações de emprestimo. {e}.')
-        #             return redirect('/administrador/livros/')
-        #     else:
-        #         messages.add_message(request, messages.ERROR, 'o Registro não existe  na base de dados.')
-        #         return redirect('/administrador/livros/')
-        # else:
-        #     messages.add_message(request, messages.ERROR, 'Formulário inválido.')
-        #     redirect('/administrador/livros/')
+        formulario = FormularioAtualizarEmprestimo(request.POST)
+        if formulario.is_valid():
+            emprestimo_existe = Emprestimo.objects.filter(id=eid).exists()
+            if emprestimo_existe:
+                try:
+                    emprestimo = Emprestimo.objects.get(id=eid)
+                    emprestimo.usuario = User.objects.get(id=formulario.cleaned_data['usuario'])
+                    emprestimo.livro = Livro.objects.get(id=formulario.cleaned_data['livro'])
+                    emprestimo.data_emprestimo = formulario.cleaned_data['data_emprestimo']
+                    emprestimo.data_devolucao = formulario.cleaned_data['data_devolucao']
+                    emprestimo.save()
+                    messages.add_message(request, messages.SUCCESS, 'Emprestimo Atualizado com sucesso.')
+                    return redirect('/administrador/livros/')
+                except Exception as e:
+                    messages.add_message(request, messages.ERROR, f'Um erro aconteceu ao salvar as informações de emprestimo. {e}.')
+                    return redirect('/administrador/livros/')
+            else:
+                messages.add_message(request, messages.ERROR, 'o Registro não existe  na base de dados.')
+                return redirect('/administrador/livros/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Formulário inválido.')
+            redirect('/administrador/livros/')
 
 
 def deletar_emprestimo(request: HttpRequest, eid: int):
