@@ -184,9 +184,9 @@
     <main>
         <div id="tabela-livros">
             <div id="formulario-pesquisa">
-                <!-- TODO: Implementar Lógica de Pesquisa -->
-                <form action="" class="roboto-normal">
-                    <input type="text" placeholder="Titulo, Subtitulo, Autor">
+                <!-- TODO: Pesquisa por Autor, Titulo e Subtitulo já implementada. O que falta agora é resolver o bug com a paginacao -->
+                <form action="{% url 'livro:listar_livros' %}" class="roboto-normal">
+                    <input type="text" placeholder="Titulo, Subtitulo, Autor" name="pesquisa">
                     <input type="submit" value="Pesquisar">
                 </form>
             </div>
@@ -214,7 +214,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <div class="pagination">
+            <div class="pagination roboto-normal">
                 <span class="step-links">
                     {% if livros.has_previous %}
                     <a href="?page=1">&laquo; Primeira</a>
