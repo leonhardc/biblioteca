@@ -162,7 +162,7 @@
                     <a href="#">Página Inicial</a>
                 </li>
                 <li>
-                    <a href="#" class="ativo">Livros</a>
+                    <a href="{% url 'livro:listar_livros' %}" class="ativo">Livros</a>
                 </li>
                 <li>
                     <a href="#">Reservas</a>
@@ -186,7 +186,7 @@
             <div id="formulario-pesquisa">
                 <!-- TODO: Pesquisa por Autor, Titulo e Subtitulo já implementada. O que falta agora é resolver o bug com a paginacao -->
                 <form action="{% url 'livro:listar_livros' %}" class="roboto-normal">
-                    <input type="text" placeholder="Titulo, Subtitulo, Autor" name="pesquisa">
+                    <input type="text" placeholder="Titulo, Subtitulo, Autor" name="pesquisa" value="{{ termo_busca }}">
                     <input type="submit" value="Pesquisar">
                 </form>
             </div>
@@ -217,8 +217,8 @@
             <div class="pagination roboto-normal">
                 <span class="step-links">
                     {% if livros.has_previous %}
-                    <a href="?page=1">&laquo; Primeira</a>
-                    <a href="?page={{ livros.previous_page_number }}">Anterior</a>
+                    <a href="?pesquisa={{ termo_busca }}&page=1">&laquo; Primeira</a>
+                    <a href="?pesquisa={{ termo_busca }}&page={{ livros.previous_page_number }}">Anterior</a>
                     {% endif %}
 
                     <span class="current">
@@ -226,8 +226,8 @@
                     </span>
 
                     {% if livros.has_next %}
-                    <a href="?page={{ livros.next_page_number }}">Proxima</a>
-                    <a href="?page={{ livros.paginator.num_pages }}">Ultima &raquo;</a>
+                    <a href="?pesquisa={{ termo_busca }}&page={{ livros.next_page_number }}">Proxima</a>
+                    <a href="?pesquisa={{ termo_busca }}&page={{ livros.paginator.num_pages }}">Ultima &raquo;</a>
                     {% endif %}
                 </span>
             </div>

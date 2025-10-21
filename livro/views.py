@@ -21,7 +21,7 @@ def listar_livros(request: HttpRequest) -> HttpResponse:
         paginator = Paginator(pesquisa, itens_por_pagina)
         page_number = request.GET.get("page")
         livros = paginator.get_page(page_number)
-        return render(request, template_name=template_name, context={"livros": livros})
+        return render(request, template_name=template_name, context={"livros": livros, 'termo_busca': termo_pesquisa})
     else:
         livros = Livro.objects.all()
         paginator = Paginator(livros, itens_por_pagina)
