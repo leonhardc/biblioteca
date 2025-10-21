@@ -1,4 +1,4 @@
-from curso.models import Curso
+# from curso.models import Curso
 
 ESTADOS_BRASIL = (
     ('AC', 'Acre'),
@@ -30,7 +30,17 @@ ESTADOS_BRASIL = (
     ('TO', 'Tocantins'),
 )
 
-OPCOES_CURSOS = tuple([(e.cod_curso, f'{e.cod_curso} - {e.curso}') for e in Curso.objects.all()]) # type: ignore
+lista_de_cursos = [
+        ('ENGCOMP','Engenharia de Computação'),
+        ('ENGELE','Engenharia Eletrica'),
+        ('MUSIC','Musica'),
+        ('ECON','Economia'),
+        ('ODONTO','Odontologia'),
+        ('MED','Medicina'),
+        ('ENFER','Enfermagem'),        
+    ]
+
+OPCOES_CURSOS = tuple(lista_de_cursos)
 
 JORNADA = (
         ('20', '20hr'),

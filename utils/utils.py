@@ -10,7 +10,7 @@ from livro.forms import FormularioCriarEmprestimo
 from livro.models import Emprestimo, Livro, Reserva
 from django.contrib import messages
 import random
-from django.db.models.query import QuerySet
+# from django.db.models.query import QuerySet
 
 
 def formatar_endereco(formulario:FormularioAluno|FormularioProfessor|FormularioFuncionario):

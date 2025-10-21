@@ -1,15 +1,30 @@
 from django import forms
-from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo # type: ignore
+from livro.models import Categoria
 from livro.constants import NACIONALIDADES
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-# import re 
+from django.core.exceptions import ValidationError 
 
-# Constantes de Formulários.
-CATEGORIAS = tuple([(categoria.id, categoria.categoria) for categoria in Categoria.objects.all()])  # type: ignore
-AUTORES =  tuple([(autor.id, autor.nome) for autor in Autor.objects.all()])                         # type: ignore
-USUARIOS = tuple([(usuario.id, usuario.username) for usuario in User.objects.all()])                 # type: ignore
-LIVROS = tuple([(livro.id, livro.titulo) for livro in Livro.objects.all()])                         # type: ignore
+def get_categorias() -> tuple[tuple[int, str]]:
+    from livro.models import Categoria
+    return tuple([(categoria.id, categoria.categoria) for categoria in Categoria.objects.all()])  # type: ignore
+
+def get_autores() -> tuple[tuple[int, str]]:
+    from livro.models import Autor
+    return tuple([(autor.id, autor.nome) for autor in Autor.objects.all()])                         # type: ignore
+
+def get_livros() -> tuple[tuple[int, str]]:
+    from livro.models import Livro
+    return tuple([(livro.id, livro.titulo) for livro in Livro.objects.all()])  # type: ignore
+
+def get_usuarios() -> tuple[tuple[int, str]]:
+    from django.contrib.auth.models import User
+    return tuple([(usuario.id, usuario.username) for usuario in User.objects.all()])                 # type: ignore
+
+# # Constantes de Formulários.
+
+CATEGORIAS = get_categorias()
+AUTORES =  get_autores() 
+USUARIOS = get_usuarios() 
+LIVROS = get_livros()
 
 class FormularioLivro(forms.Form):
     isbn = forms.CharField(label='ISBN', max_length=6, widget=forms.TextInput(attrs={'placeholder':'Digite o numero de ISBN'}))

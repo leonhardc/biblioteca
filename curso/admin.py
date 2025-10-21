@@ -1,7 +1,7 @@
 from django.contrib import admin
 from curso.models import Curso
 
-class CursoAdmin(admin.ModelAdmin):
+class CursoAdmin(admin.ModelAdmin): # type: ignore
     list_display = [
         'cod_curso',
         'curso',

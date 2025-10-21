@@ -502,8 +502,9 @@ def criar_livro(request: HttpRequest):
     template_name = 'admin/livro/dashboard_admin_criar_livro.html'
     if request.method == 'GET':
         formulario = FormularioLivro()
-        return render(request,template_name, context={'form':formulario})
+        return render(request,template_name)
     if request.method == 'POST':
+        pass
         formulario = FormularioLivro(request.POST)
         if formulario.is_valid():
             livro_exite = Livro.objects.filter(isbn=formulario.cleaned_data['isbn']).exists()
@@ -529,7 +530,7 @@ def criar_livro(request: HttpRequest):
                 return render(request, template_name, context={'form':formulario})
         else:
             messages.add_message(request, messages.ERROR, 'Não foi possível criar o livro. Formulário inválido.')
-            return render(request, template_name, context={'form':formulario})
+            return render(request, template_name)
 
 
 def informacoes_livro(request: HttpRequest, lid: int):
@@ -552,11 +553,12 @@ def atualizar_informacoes_livro(request: HttpRequest, lid: int):
             livro = Livro.objects.get(id=lid)
             data = informacoes_formulario_livro(livro)
             formulario = FormularioLivro(initial=data)
-            return render(request, template_name, context={'form':formulario, 'livro':livro})
+            return render(request, template_name, context={'livro':livro, 'form': formulario})
         else:
             messages.add_message(request, messages.ERROR, 'Livro não encontrado.')
             return redirect('/administrador/livros/')
     if request.method=='POST':
+        pass
         formulario = FormularioLivro(request.POST)
         if formulario.is_valid():
             livro_existe:bool = Livro.objects.filter(id=lid).exists()
@@ -605,6 +607,7 @@ def criar_autor(request: HttpRequest):
         formulario = FormularioAutor()
         return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
+        pass
         formulario = FormularioAutor(request.POST)
         if formulario.is_valid():
             autor = Autor.objects.filter(
@@ -656,14 +659,16 @@ def atualizar_informacoes_autor(request: HttpRequest, aid: int):
             messages.add_message(request, messages.ERROR, 'O autor não foi encontrado na base de dados.')
             return redirect('/administrador/livros/')
     if request.method == 'POST':
+        pass
         formulario = FormularioAutor(request.POST)
         if formulario.is_valid():
             autor = Autor.objects.filter(id=aid).exists()
             if autor:
                 autor = Autor.objects.get(id=aid)
                 autor.nome = formulario.cleaned_data['nome']
-                autor.cpf = formulario.cleaned_data['cpf']
+                # TODO: ADICIONAR TODOS OS CAMPOS NO FORMULARIO
                 autor.nacionalidade = formulario.cleaned_data['nacionalidade']
+                # ATE AQUI
                 autor.save()
                 messages.add_message(request, messages.SUCCESS, 'Autor atualizado com sucesso.')
                 return redirect('/administrador/livros/')
@@ -743,6 +748,7 @@ def atualizar_informacoes_categoria(request: HttpRequest, cid: int):
             messages.add_message(request, messages.ERROR, 'A categoria não existe na base de dados.')
             return redirect('/administrador/livros/')
     if request.method=='POST':
+        pass
         formulario = FormularioCategoria(request.POST)
         if formulario.is_valid():
             categoria = Categoria.objects.filter(id=cid).exists()
@@ -782,6 +788,7 @@ def criar_reserva(request: HttpRequest):
         formulario = FormularioReserva()
         return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
+        pass
         formulario = FormularioReserva(request.POST)
         if formulario.is_valid():
             reserva_existe = Reserva.objects.filter(usuario=formulario.cleaned_data['usuario'], livro=formulario.cleaned_data['livro']).exists()
@@ -830,6 +837,7 @@ def atualizar_informacoes_reserva(request: HttpRequest, rid: int):
         formulario = FormularioReserva(initial=data)
         return render(request, template_name, context={'form':formulario, 'reserva':reserva})
     if request.method == 'POST':
+        pass
         formulario = FormularioReserva(request.POST)
         if formulario.is_valid():
             reserva_existe = Reserva.objects.filter(id=rid).exists()
@@ -876,6 +884,7 @@ def criar_emprestimo(request: HttpRequest):
         formulario = FormularioCriarEmprestimo()
         return render(request, template_name, context={'form':formulario})
     if request.method == 'POST':
+        pass
         formulario = FormularioCriarEmprestimo(request.POST)
         if formulario.is_valid():
             usuario_formulario = formulario.cleaned_data['usuario']
@@ -936,6 +945,7 @@ def atualizar_informacoes_emprestimo(request: HttpRequest, eid: int):
             messages.add_message(request, messages.ERROR, 'Emprestimo solicitado não existe na base de dados.')
             return redirect('/administrador/livros/')
     if request.method == 'POST':
+        pass
         # Salvar as informações do formulário na base de dados
         formulario = FormularioAtualizarEmprestimo(request.POST)
         if formulario.is_valid():
