@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Carme&family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <title>Pagina de Usuario - Aluno</title>
+    <style>
+        :root {
+            --cor-do-text: #fff;
+            --cor-de-fundo-header: #343a40;
+            --cor-de-fundo-hover: #343a4050;
+            --padding-padrao-botao: 4px 8px;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        header nav {
+            width: 100%;
+            height: 50px;
+            background-color: #343a40;
+            color: #fff;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: left;
+        }
+
+        header span {
+            margin: 0 20px;
+        }
+
+        header ul {
+            list-style: None;
+            display: flex;
+            flex-direction: row;
+            font-size: 14px;
+        }
+
+        header ul li {
+            margin-right: 10px;
+        }
+
+        header ul li a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        main {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        main #tabela-livros #formulario-pesquisa {
+            width: 100%;
+            margin: 10px 0px;
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        main #formulario-pesquisa form {
+            width: fit-content;
+        }
+
+        main #formulario-pesquisa form input {
+            padding: var(--padding-padrao-botao);
+        }
+
+        main #tabela-livros {
+            margin-top: 20px;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        main #tabela-livros table {
+            width: 100%;
+            font-size: 14px;
+        }
+
+        main #tabela-livros table thead tr th {
+            background-color: var(--cor-de-fundo-header);
+            color: var(--cor-do-text);
+        }
+
+        main #tabela-livros table thead tr th:nth-child(1) {
+            border-top-left-radius: 5px;
+        }
+
+        main #tabela-livros table thead tr th:nth-last-child(1) {
+            border-top-right-radius: 5px;
+        }
+
+        main #tabela-livros table tbody tr:hover {
+            background-color: var(--cor-de-fundo-hover);
+            transition: background-color 200ms ease-in-out;
+        }
+
+        main #tabela-livros table tbody tr td {
+            text-align: start;
+        }
+
+        main #tabela-livros table thead tr th,
+        main #tabela-livros table tbody tr td {
+            padding: 5px 20px;
+        }
+
+        .roboto-normal {
+            font-family: "Roboto", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+        }
+
+        .roboto-bold {
+            font-family: "Roboto", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: bold;
+        }
+
+        .ativo {
+            color: #738597;
+        }
+
+        .pagination {
+            margin: 20px 0px
+        }
+
+        .pagination a {
+            text-decoration: none;
+            border-radius: 2px;
+            border: 1px solid var(--cor-de-fundo-header);
+            padding: var(--padding-padrao-botao);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- Opções do topo da página -->
+        <nav>
+            <span class="roboto-bold">Biblioteca</span>
+            <ul class="roboto-normal">
+                <li>
+                    <a href="#">Página Inicial</a>
+                </li>
+                <li>
+                    <a href="#" class="ativo">Livros</a>
+                </li>
+                <li>
+                    <a href="#">Reservas</a>
+                </li>
+                <li>
+                    <a href="#">Emprestimos</a>
+                </li>
+                <li>
+                    <a href="#">Notificações</a>
+                </li>
+                <li>
+                    <a href="#">Conta</a>
+                </li>
+            </ul>
+        </nav>
+
+    </header>
+
+    <main>
+        <div id="tabela-livros">
+            <div id="formulario-pesquisa">
+                <!-- TODO: Implementar Lógica de Pesquisa -->
+                <form action="" class="roboto-normal">
+                    <input type="text" placeholder="Titulo, Subtitulo, Autor">
+                    <input type="submit" value="Pesquisar">
+                </form>
+            </div>
+            <table class="roboto-normal">
+                <thead>
+                    <tr>
+                        <th>ISBN</th>
+                        <th>Titulo</th>
+                        <th>Autor(es)</th>
+                        <th>Qt Cópias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for livro in livros %}
+                    <tr>
+                        <td>{{livro.isbn}}</td>
+                        <td>{{livro.titulo}}</td>
+                        <td>
+                            {% for autor in livro.autores.all %}
+                            {{autor.nome}} {{autor.sobrenome}}.
+                            {% endfor %}
+                        </td>
+                        <td>{{livro.copias}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if livros.has_previous %}
+                    <a href="?page=1">&laquo; Primeira</a>
+                    <a href="?page={{ livros.previous_page_number }}">Anterior</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ livros.number }} of {{ livros.paginator.num_pages }}.
+                    </span>
+
+                    {% if livros.has_next %}
+                    <a href="?page={{ livros.next_page_number }}">Proxima</a>
+                    <a href="?page={{ livros.paginator.num_pages }}">Ultima &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </main>
+    <script src="./script.js"></script>
+</body>
+
+</html>
