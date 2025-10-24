@@ -11,7 +11,7 @@ from usuario.models import Aluno, Professor, Funcionario
 from utils.utils import *
 
 # TODO: Essa view só pode ser acessada se o usuário estiver logado
-def index(request:HttpRequest):
+def index(request:HttpRequest) -> HttpResponse:
     template = 'usuario/index.html'
     return render(
         request,
@@ -25,7 +25,7 @@ def autentica_informacoes_de_usuario(request:HttpRequest):
     pass
 
 
-def entrar(request:HttpRequest):
+def entrar(request:HttpRequest) -> HttpResponse:
     template = 'usuario/entrar.html'
     if request.method == 'GET':
         # Carrega página de login
@@ -149,26 +149,18 @@ def autenticar(request:HttpRequest):
                 password=formularioLogin.cleaned_data['senha']
             )
             if usuario is None:
-                # retorna para página de login com um código de erro
                 messages.error(request, 'Usuário não autorizado.')
                 return redirect('usuario:entrar')
-            # Faz login e retorna a página inicial da aplicação
-            # Mostra mensagem de sucesso no login
             login(request, usuario)
-            usuario = User.objects.get(username=formularioLogin['usuario'])
-            tipo_usuario = retorna_instancia_usuario(usuario)
-            messages.info(request, f'{formularioLogin.cleaned_data["usuario"]} logado com Sucesso')
-            if isinstance(tipo_usuario, Aluno):
-                # RETORNA A PÁGINA DE USUÁRIO DE ALUNO
-                return redirect('usuario:index')
-            if isinstance(tipo_usuario, Professor):
-                # RETORNA A PÁGINA DE USUÁRIO DE PROFESSOR
-                return redirect('usuario:index')
-            if isinstance(tipo_usuario, Funcionario):
-                # RETORNA A PÁGINA DE USUÁRIO DE FUNCIONARIO
-                return redirect('usuario:index')
-            # TODO: Se o usuário for administrador, retorna a página de administrador
-            
+            if user_is_aluno(usuario):
+                return HttpResponse('Pagina de Aluno')
+            elif user_is_professor(usuario):
+                return HttpResponse('Pagina de Professor')
+            elif user_is_funcionario(usuario):
+                return HttpResponse('Pagina de Funcionario')
+            else: 
+                messages.info(request, 'Usuario ou senhas inválidos')
+                return redirect('usuario:entrar')
         else:
             # Formulário inválido
             messages.info(request, 'Formulário inválido')

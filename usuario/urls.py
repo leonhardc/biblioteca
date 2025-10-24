@@ -2,29 +2,29 @@ from django.urls import path
 from usuario import views
 
 app_name = 'usuario'
-urlpatterns = [
+urlpatterns = [                                                                                                         # type: ignore
     path('', views.index, name='index'),
-    path('entrar/', views.entrar, name='entrar'),
-    path('autenticar/', views.autenticar, name='autenticar'),
+    path('entrar/', views.entrar, name='entrar'),                                                                       # type: ignore
+    path('autenticar/', views.autenticar, name='autenticar'),                                                           # type: ignore
     path('sair/', views.sair, name='sair'),
 
     # CRUD de alunos
     path('listar-alunos/', views.listar_alunos, name='listar-alunos'),
-    path('criar-aluno/', views.criar_aluno, name='criar-aluno'),
-    path('ler-aluno/<int:uid>/', views.ler_aluno, name='ler-aluno'),
-    path('atualizar-aluno/<int:uid>/', views.atualizar_aluno, name='atualizar-aluno'),
-    path('deletar-aluno/<int:uid>/', views.deletar_aluno, name='deletar-aluno'),
-    path('detalhes-aluno/<int:uid>/', views.detalhes_aluno, name='detalhes-aluno'),
+    path('criar-aluno/', views.criar_aluno, name='criar-aluno'),                                                        # type: ignore
+    path('ler-aluno/<int:uid>/', views.ler_aluno, name='ler-aluno'),                                                    # type: ignore
+    path('atualizar-aluno/<int:uid>/', views.atualizar_aluno, name='atualizar-aluno'),                                  # type: ignore
+    path('deletar-aluno/<int:uid>/', views.deletar_aluno, name='deletar-aluno'),                                        # type: ignore
+    path('detalhes-aluno/<int:uid>/', views.detalhes_aluno, name='detalhes-aluno'),                                     # type: ignore
     # CRUD de professor
-    path('criar-professor/', views.criar_professor, name='criar-professor'),
-    path('ler-professor/<int:uid>/', views.ler_professor, name='ler-professor'),
-    path('atualizar-professor/<int:uid>/', views.atualizar_professor, name='atualizar-professor'),
-    path('deletar-professor/<int:uid>/', views.deletar_professor, name='deletar-professor'),
-    path('detalhes-professor/<int:uid>/', views.detalhes_professor, name='detalhes-professor'),
+    path('criar-professor/', views.criar_professor, name='criar-professor'),                                            # type: ignore
+    path('ler-professor/<int:uid>/', views.ler_professor, name='ler-professor'),                                        # type: ignore
+    path('atualizar-professor/<int:uid>/', views.atualizar_professor, name='atualizar-professor'),                      # type: ignore
+    path('deletar-professor/<int:uid>/', views.deletar_professor, name='deletar-professor'),                            # type: ignore
+    path('detalhes-professor/<int:uid>/', views.detalhes_professor, name='detalhes-professor'),                         # type: ignore
     # CRUD de funcionario
-    path('criar-funcionario/', views.criar_funcionario, name='criar-funcionario'),
-    path('ler-funcionario/<int:uid>/', views.ler_funcionario, name='ler-funcionario'),
-    path('atualizar-funcionario/<int:uid>/', views.atualizar_funcionario, name='atualizar-funcionario'),
-    path('deletar-funcionario/<int:uid>/', views.deletar_funcionario, name='deletar-funcionario'),
-    path('detalhes-funcionario/<int:uid>/', views.detalhes_funcionario, name='detalhes-funcionario'),
+    path('criar-funcionario/', views.criar_funcionario, name='criar-funcionario'),                                      # type: ignore
+    path('ler-funcionario/<int:uid>/', views.ler_funcionario, name='ler-funcionario'),                                  # type: ignore
+    path('atualizar-funcionario/<int:uid>/', views.atualizar_funcionario, name='atualizar-funcionario'),                # type: ignore
+    path('deletar-funcionario/<int:uid>/', views.deletar_funcionario, name='deletar-funcionario'),                      # type: ignore
+    path('detalhes-funcionario/<int:uid>/', views.detalhes_funcionario, name='detalhes-funcionario'),                   # type: ignore
 ]
