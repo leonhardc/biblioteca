@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
 from usuario.forms import LoginForm, FormularioAluno
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from usuario.models import Aluno, Professor, Funcionario
@@ -21,122 +21,20 @@ def index(request:HttpRequest) -> HttpResponse:
         }
     )
 
+
 def autentica_informacoes_de_usuario(request:HttpRequest):
     pass
 
 
-def entrar(request:HttpRequest) -> HttpResponse:
+def entrar(request:HttpRequest):
     template = 'usuario/entrar.html'
     if request.method == 'GET':
-        # Carrega página de login
         formulario = LoginForm()
         return render(
             request, 
             template_name=template, 
             context={'form':formulario}
             )
-    if request.method == 'POST':
-        # Faz login na plataforma
-        formularioLogin = LoginForm(request.POST)
-        if formularioLogin.is_valid():
-            usuario_formulario = formularioLogin['usuario']
-            senha_formulario = formularioLogin["senha"]
-            usuario = authenticate(
-                username = usuario_formulario, 
-                password = senha_formulario
-            )
-            if usuario is None:
-                pass
-            else:
-                tipo_usuario = retorna_instancia_usuario(usuario) # type: ignore
-                # TODO: Adicionar links dos templates de aluno, professor e 
-                #       funcionario
-                # TODO: Implementar uma função 'pegar_informacoes' que irá retor-
-                #       nar todas as informações de usuário daquele usuário.
-                #       - Informações de Aluno, Professor ou Funcionario [x]
-                #       - Informações de emprestimos [x]
-                #       - Informações de reservas [x]
-                # TODO: Implementar função que verifica se esse usuário está em 
-                #       débito
-                template_name_aluno = "usuario/aluno/index.html"
-                template_name_professor = "usuario/professor/index.html"
-                template_name_funcionario = "usuario/funcionario/index.html"
-                if isinstance(tipo_usuario, Aluno):
-                    try:
-                        login(request,usuario)
-                        messages.add_message(
-                            request, 
-                            messages.SUCCESS, 
-                            f'{usuario.username} logado com sucesso.' # type: ignore
-                        ) 
-                        data_context = pegar_informacoes_aluno(tipo_usuario)
-                        return render(request, template_name_aluno, context=data_context)
-                    except Exception as e:
-                        messages.add_message(
-                            request, 
-                            messages.ERROR, 
-                            'Erro ao fazer login. Tente novamente mais tarde.'
-                        )
-                        # TODO: Salvar o erro num arquivo de log
-                        print(e)
-                        return redirect('usuario:index') 
-                elif isinstance(tipo_usuario, Professor):
-                    try:
-                        login(request,usuario)
-                        messages.add_message(
-                            request,
-                            messages.SUCCESS,
-                            f'{usuario.username} logado com sucesso.' # type: ignore
-                        )
-                        data_context = pegar_informacoes_professor(tipo_usuario)
-                        return render(request, template_name_professor, context=data_context)
-                    except Exception as e:
-                        # TODO: Salvar o erro num arquivo de log
-                        print(e)
-                        messages.add_message(
-                            request,
-                            messages.ERROR,
-                            'Erro ao fazer login. Tente novamente mais tarde.'
-                        )
-                        return redirect('usuario:index')
-                elif isinstance(tipo_usuario, Funcionario):
-                    try:
-                        login(request,usuario)
-                        messages.add_message(
-                            request,
-                            messages.SUCCESS,
-                            f'{usuario.username} logado com sucesso.' # type: ignore
-                        )
-                        data_context = pegar_informacoes_funcionario(tipo_usuario)
-                        return render(request, template_name_funcionario, context=data_context)
-                    except Exception as e:
-                        # TODO: Salvar o erro num arquivo de log
-                        print(e)
-                        messages.add_message(
-                            request,
-                            messages.ERROR,
-                            'Erro ao fazer login. Tente novamente mais tarde.'
-                        )
-                        return redirect('usuario:index')
-                elif usuario.is_staff(): # type: ignore
-                    # Usuário é administrador
-                    # FIXME: Aqui pode causar algum problema futuramente
-                    messages.add_message(
-                        request,
-                        messages.INFO,
-                        'O usuário informado é um administrador. Por favor, faça login na página de administrador.'
-                    )
-                    return render(
-                        request,
-                        template_name='usuario/redirecionar_para_administrador.html'
-                    )
-                else:
-                    messages.add_message(
-                        request,
-                        messages.ERROR,
-                        'Usuário não encontrado.'
-                    )
-                    return redirect("usuario:index")
 
 
 def autenticar(request:HttpRequest):
@@ -153,7 +51,10 @@ def autenticar(request:HttpRequest):
                 return redirect('usuario:entrar')
             login(request, usuario)
             if user_is_aluno(usuario):
-                return HttpResponse('Pagina de Aluno')
+                # TODO: MUDAR PARA RETORNAR AS PAGINAS DE USUARIO
+                # return HttpResponse('Pagina de Aluno')
+                template_name='livro/livros.html'
+                return render(request, template_name=template_name)
             elif user_is_professor(usuario):
                 return HttpResponse('Pagina de Professor')
             elif user_is_funcionario(usuario):
@@ -170,7 +71,6 @@ def autenticar(request:HttpRequest):
 def sair(request:HttpRequest):
     logout(request)
     return redirect('usuario:entrar')
-
 
 
 # CRUD de Aluno
@@ -232,7 +132,6 @@ def detalhes_professor(request:HttpRequest, uid:int):
         contexto = {}
         contexto['professor'] = professor
         return render(request, template_name, context=contexto) # type: ignore
-
 
 
 # CRUD de Funcionário
