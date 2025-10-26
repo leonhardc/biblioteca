@@ -15,6 +15,7 @@ urlpatterns = [                                                                 
     path('atualizar-aluno/<int:uid>/', views.atualizar_aluno, name='atualizar-aluno'),                                  # type: ignore
     path('deletar-aluno/<int:uid>/', views.deletar_aluno, name='deletar-aluno'),                                        # type: ignore
     path('detalhes-aluno/<int:uid>/', views.detalhes_aluno, name='detalhes-aluno'),                                     # type: ignore
+    path('dashboard-aluno/', views.dashaboard_aluno, name='dashboard_aluno'), # type: ignore
     # CRUD de professor
     path('criar-professor/', views.criar_professor, name='criar-professor'),                                            # type: ignore
     path('ler-professor/<int:uid>/', views.ler_professor, name='ler-professor'),                                        # type: ignore

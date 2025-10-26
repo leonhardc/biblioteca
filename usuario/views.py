@@ -53,7 +53,7 @@ def autenticar(request:HttpRequest):
             if user_is_aluno(usuario):
                 # TODO: MUDAR PARA RETORNAR AS PAGINAS DE USUARIO
                 # return HttpResponse('Pagina de Aluno')
-                template_name='aluno/dashboard_aluno.html'
+                template_name='usuario/aluno/dashboard_aluno.html'
                 return render(request, template_name=template_name)
             elif user_is_professor(usuario):
                 return HttpResponse('Pagina de Professor')
@@ -93,7 +93,14 @@ def criar_aluno(request:HttpRequest):
                 return HttpResponse('OK')
             else:
                 return render(request, template_name='formulario-cadastro-aluno.html', context={'form':formulario_novo_aluno})
-    
+
+def dashaboard_aluno(request:HttpRequest):
+    if request.method == "GET":
+        template_name = "usuario/aluno/dashboard_aluno.html"
+        contexto = {
+            'dashboard': True,
+        }
+        return render(request, template_name, context=contexto)
 
 def ler_aluno(request:HttpRequest, uid:int):
     pass

@@ -1,0 +1,25 @@
+{% load static %}
+
+<nav>
+    <span class="roboto-bold">Biblioteca</span>
+    <ul class="roboto-normal">
+        <li>
+            <a href="{% url 'usuario:dashboard_aluno' %}" class="{%if dashboard%}ativo{%endif%}">Página Inicial</a>
+        </li>
+        <li>
+            <a href="{% url 'livro:listar_livros' %}" class="{%if livros%}ativo{%endif%}">Livros</a>
+        </li>
+        <li>
+            <a href="#" class="{%if reservas%}ativo{%endif%}">Reservas</a>
+        </li>
+        <li>
+            <a href="#" class="{%if emprestimos%}ativo{%endif%}">Emprestimos</a>
+        </li>
+        <li>
+            <a href="#" class="{%if notificacoes%}ativo{%endif%}">Notificações</a>
+        </li>
+        <li>
+            <a href="#" class="{%if conta%}ativo{%endif%}">Conta</a>
+        </li>
+    </ul>
+</nav>
