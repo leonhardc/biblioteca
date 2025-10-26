@@ -27,6 +27,7 @@
             width: 100%;
             height: 100%;
             overflow-x: hidden;
+            /* background-color: #CAEFFF; */
         }
 
         main {
@@ -82,11 +83,12 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            /* background-color: #CAEFFF; */
         }
 
         .img img {
             width: 90%;
-            z-index: -1;
+            z-index: 0;
         }
 
         .img span {
@@ -110,7 +112,7 @@
     <header class="roboto-normal">
         <nav>
             <ul>
-                <li><a href="#">Inscrever-se</a></li>
+                <li><a href="#">Cadastre-se</a></li>
                 <li><a href="{% url 'usuario:entrar' %}">Entrar</a></li>
             </ul>
         </nav>

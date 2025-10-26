@@ -53,7 +53,7 @@ def autenticar(request:HttpRequest):
             if user_is_aluno(usuario):
                 # TODO: MUDAR PARA RETORNAR AS PAGINAS DE USUARIO
                 # return HttpResponse('Pagina de Aluno')
-                template_name='livro/livros.html'
+                template_name='aluno/dashboard_aluno.html'
                 return render(request, template_name=template_name)
             elif user_is_professor(usuario):
                 return HttpResponse('Pagina de Professor')
