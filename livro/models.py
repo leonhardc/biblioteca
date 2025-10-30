@@ -38,6 +38,7 @@ class Categoria(models.Model):
 class Livro(models.Model):
     isbn = models.CharField(max_length=6, blank=False, null=False, verbose_name='ISBN')                                 # type: ignore
     titulo = models.CharField(max_length=100, blank=False, null=False, verbose_name='Titulo')                           # type: ignore
+    resumo = models.CharField(max_length=2000, blank=True, null=True, verbose_name='Resumo')
     subtitulo = models.CharField(max_length=250, blank=False, null=False, verbose_name='Subtitulo')                     # type: ignore
     lancamento = models.DateField(verbose_name='Ano de Lançamento')                                                     # type: ignore
     editora = models.CharField(max_length=100, blank=False, null=False, verbose_name='Editora')                         # type: ignore
