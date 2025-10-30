@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livro | Detalhar Livro</title>
+    <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
+</head>
+
+<body>
+    <header>
+        {% include 'usuario/aluno/parciais/_nav.html' %}
+    </header>
+    <main>
+        <style>
+            /* TODO: Finalizar o template de detalhes de livro */
+
+
+            .container-livro {
+                width: 100%;
+            }
+
+            .titulo {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .titulo span:nth-child(1) {
+                font-size: large;
+                font-weight: bold;
+            }
+
+            .titulo span:nth-child(2) {
+                font-size: small;
+            }
+
+            .autores span {
+                font-size: small;
+                border: 1px solid #343A40;
+                border-radius: 2px;
+                padding: 2px 4px;
+            }
+
+            .resumo p {
+                width: 60%;
+                font-size: small;
+                text-align: justify;
+            }
+
+            .outras-informacoes {
+                max-width: 60%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .titulo,
+            .autores,
+            .resumo p,
+            .outras-informacoes {
+                margin: 10px 25px;
+                color: #343A40;
+            }
+
+            .informacoes-editora,
+            .copias {
+                font-size: small;
+            }
+
+            .botoes {
+                max-width: 60%;
+                display: flex;
+                flex-direction: row;
+                justify-content: end;
+                margin: 0px 25px;
+            }
+
+            .botoes a {
+                text-decoration: None;
+                color: #343A40;
+                border: 1px solid #343A40;
+                border-radius: 2px;
+                margin-left: 10px;
+                font-size: small;
+                padding: 2px 4px;
+                transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+            }
+
+            .botoes a:hover {
+                background-color: #343A40;
+                color: #fff;
+            }
+        </style>
+        <div class="container-livro">
+            <div class="titulo">
+                <span>{{livro.titulo}}</span>
+                <span>{{livro.subtitulo}}</span>
+            </div>
+            <div class="autores">
+                {% for autor in livro.autores.all %}
+                <span>{{autor.nome}} {{autor.sobrenome}}</span>
+                {%endfor%}
+            </div>
+            <div class="resumo">
+                <p>
+                    {{livro.resumo}}
+                </p>
+            </div>
+            <div class="outras-informacoes">
+                <div class="informacoes-editora">
+                    <span>{{livro.editora}}</span>
+                    <span>{{livro.lancamento|date:'Y'}}</span>
+                </div>
+                <div class="copias">
+                    <span>Cópias: {{livro.copias}}</span>
+                </div>
+            </div>
+            <div class="botoes">
+                <a href="#">Reservar</a>
+                <a href="#">Alugar</a>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
