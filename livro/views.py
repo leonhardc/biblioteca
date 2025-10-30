@@ -41,7 +41,13 @@ def criar_livro(request: HttpRequest) -> HttpResponse:
     return HttpResponse("View Criar Livro")
 
 def detalhar_livro(request: HttpRequest, id_livro:int) -> HttpResponse:
-    return HttpResponse("View detalhar Livro")
+    livro = Livro.objects.filter(id=id_livro).exists()
+    if livro:
+        livro = Livro.objects.get(id=id_livro)
+        template_name = "livro/detalhar_livro.html"
+        return render(request, template_name, context={'livro':livro})
+    else:
+        return HttpResponse('Livro não encontrado.')
 
 def atualizar_livro(request:HttpRequest, id_livro:int) -> HttpResponse:
     return HttpResponse("View Atualizar Livro")
