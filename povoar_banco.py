@@ -193,6 +193,7 @@ def get_data_livro() -> dict[str, str|int|Categoria|list[Autor]|Categoria|dateti
     ids_categorias = list(Categoria.objects.values_list('id', flat=True))
     data['isbn'] = gerar_isbn_unico()
     data['titulo'] = fake.sentence(nb_words=4)
+    data['resumo'] = fake.text(max_nb_chars=2000)
     data['subtitulo'] = fake.sentence(nb_words=10)
     data['lancamento'] = gerar_data()
     data['editora'] = f'Editora {fake.sentence(nb_words=2)}'
@@ -390,6 +391,11 @@ def deletar_dados_banco() -> None:
     else:
         print("Não ha cursos a deletar.")
 
+def deletar_todos_livros() -> None: 
+    livros = Livro.objects.all()
+    for livro in livros:
+        print(f"Deletando livro {livro.isbn}: {livro.titulo}")
+        livro.delete()
 
 if __name__ == '__main__':
     pass
