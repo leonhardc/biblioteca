@@ -4,7 +4,15 @@
     <span class="roboto-bold">Biblioteca</span>
     <ul class="roboto-normal">
         <li>
-            <a href="{% url 'usuario:dashboard_aluno' %}" class="{%if dashboard%}ativo{%endif%}">Página Inicial</a>
+            {% if not dashboard and not livros and not reservas and not emprestimos and not conta and not notificacoes%}
+            <a href="{% url 'usuario:dashboard_aluno' %}" class="ativo">
+                Página Inicial
+            </a>
+            {%else%}
+            <a href="{% url 'usuario:dashboard_aluno' %}" class="{%if dashboard%}ativo{%endif%}">
+                Página Inicial
+            </a>
+            {% endif %}
         </li>
         <li>
             <a href="{% url 'livro:listar_livros' %}" class="{%if livros%}ativo{%endif%}">Livros</a>

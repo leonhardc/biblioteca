@@ -10,7 +10,37 @@
         {% include 'usuario/aluno/parciais/_nav.html' %}
     </header>
     <main>
-        <!-- TODO: Implementar codigo do dashboard -->
+        <style>
+            .dashboard-container {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .container-reservas,
+            .container-emprestimos {
+                color: #fff;
+                background-color: #343a40;
+                margin: 0px 20px;
+                border-radius: 2px;
+                min-height: 100px;
+            }
+
+            .container-reservas span,
+            .container-emprestimos span {
+                padding: 10px 10px;
+            }
+        </style>
+        <div class="dashboard-container">
+            <div class="container-reservas roboto-normal">
+                <span>Reservas</span>
+            </div>
+            <div class="container-emprestimos roboto-normal">
+                <span>Emprestimos</span>
+            </div>
+        </div>
     </main>
     <script src="./script.js"></script>
 </body>
