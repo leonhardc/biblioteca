@@ -15,9 +15,6 @@
     </header>
     <main>
         <style>
-            /* TODO: Finalizar o template de detalhes de livro */
-
-
             .container-livro {
                 width: 100%;
             }
@@ -118,7 +115,7 @@
                 </div>
             </div>
             <div class="botoes">
-                <a href="#">Reservar</a>
+                <a href="{% url 'livro:criar_reserva' livro.id %}">Reservar</a>
                 <a href="#">Alugar</a>
             </div>
         </div>
