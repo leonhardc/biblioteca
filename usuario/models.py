@@ -13,6 +13,8 @@ class Aluno(models.Model):
     ingresso = models.DateField(default=datetime.date.today, null=False, blank=False, verbose_name='Data de ingresso')
     conclusao_prevista = models.DateField(default=datetime.date.today,blank=False, null=False, verbose_name='Conclusão')
     ativo = models.BooleanField(default=True, verbose_name='Aluno ativo')
+    reservas = models.IntegerField(default=0, null=False, blank=False, verbose_name="Reservas do Usuario")
+    emprestimos = models.IntegerField(default=0, null=False, blank=False,verbose_name="Emprestimos do Usuario")
 
     def __str__(self):
         return f'<{self.usuario}>'
@@ -30,6 +32,8 @@ class Professor(models.Model):
     regime = models.CharField(max_length=3, blank=False, null=False, choices=JORNADA, verbose_name='Regime de trabalho')
     contratacao = models.DateField(default=datetime.date.today, blank=False, null=False, verbose_name='Data de Contratação')
     ativo = models.BooleanField(default=True, verbose_name='Professor ativo')
+    reservas = models.IntegerField(default=0, null=False, blank=False, verbose_name="Reservas do Usuario")
+    emprestimos = models.IntegerField(default=0, null=False, blank=False,verbose_name="Emprestimos do Usuario")
 
     def __str__(self):
         return f'{self.usuario.first_name} {self.usuario.last_name}'
@@ -44,6 +48,8 @@ class Funcionario(models.Model):
     matricula = models.CharField(unique=True, max_length=4, blank=False, null=False, verbose_name='Matricula')
     cpf = models.CharField(unique=True, max_length=11, blank=False, null=False, verbose_name='CPF')
     ativo = models.BooleanField(default=True, verbose_name='Funcionario ativo')
+    reservas = models.IntegerField(default=0, null=False, blank=False, verbose_name="Reservas do Usuario")
+    emprestimos = models.IntegerField(default=0, null=False, blank=False,verbose_name="Emprestimos do Usuario")
     def __str__(self):
         return f'<{self.usuario}>'
 
