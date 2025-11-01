@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <title>Aluno | Listar reservas</title>
+    <style>
+        .container-reservas {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .reservas {
+            margin-top: 20px;
+        }
+
+        table {
+            margin-top: 10px;
+        }
+
+        table thead tr {
+            background-color: #343A40;
+            color: #fff;
+
+        }
+
+        table thead tr th {
+            text-align: start;
+            border-radius: 2px;
+        }
+
+        table thead tr th,
+        table tbody tr td {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        {% include 'usuario/aluno/parciais/_nav.html' %}
+    </header>
+    <div class="container-reservas">
+        <div class="reservas">
+            <h3 class="roboto-normal" style="font-weight: bolder;">Minhas Reservas</h3>
+            <table class="roboto-normal">
+                <thead>
+                    <tr>
+                        <th>Livro</th>
+                        <th>Data</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in reservas %}
+                    <tr>
+                        <td>
+                            <span>{{reserva.livro}}</span>
+                        </td>
+                        <td>
+                            <span>{{reserva.data_reserva}}</span>
+                        </td>
+                        <td><a href="#">Detalhes</a></td>
+                        <td><a href="#">Excluir</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
