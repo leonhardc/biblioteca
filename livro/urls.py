@@ -3,7 +3,7 @@ from livro.views import *
 
 app_name = "livro"
 
-urlpatterns = [
+urlpatterns = [ # type: ignore
     # Livros
     path("listar-livros/",view=listar_livros, name="listar_livros"),
     path("criar-livro/",view=criar_livro, name="criar_livro"),
@@ -24,4 +24,16 @@ urlpatterns = [
     path("detalhar-categoria/<int:id_categoria>/",view=detalhar_categoria, name="detalhar_categoria"),
     path("atualizar-categoria/<int:id_categoria>/",view=atualizar_categoria, name="atualizar_categoria"),
     path("deletar-categoria/<int:id_categoria>/",view=deletar_categoria, name="deletar_categoria"),
+    # Reservas
+    path("criar-reserva/<int:id_livro>/", view=criar_reserva, name="criar_reserva"), # type: ignore
+    path("listar-reservas/", view=listar_reservas, name="listar_reservas"),
+    path("ler-reserva/<int:id_reserva>/", view=ler_reserva, name="ler_reserva"),
+    path("atualizar-reserva/<int:id_reserva>/", view=atualizar_reserva, name="atualizar_reserva"),
+    path("deletar-reserva/<int:id_reserva>/", view=deletar_reserva, name="deletar_reserva"),
+    # Emprestimos
+    path('criar-emprestimo/<int:id_livro>/', view=criar_emprestimo, name="criar_emprestimo"),
+    path('listar-emprestimos/', view=listar_emprestimos, name="listar_emprestimos"),
+    path('ler-emprestimo/<int:id_emprestimo>/', view=ler_emprestimo, name="ler_emprestimo"),
+    path('atualizar-emprestimo/<int:id_emprestimo>/', view=atualizar_emprestimo, name="atualizar_emprestimo"),
+    path('deletar-emprestimo/<int:id_emprestimo>/', view=deletar_emprestimo, name="deletar_emprestimo"),
 ]
