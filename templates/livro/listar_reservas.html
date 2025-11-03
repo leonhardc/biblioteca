@@ -67,7 +67,7 @@
                             <span>{{reserva.data_reserva}}</span>
                         </td>
                         <td><a href="#">Detalhes</a></td>
-                        <td><a href="#">Excluir</a></td>
+                        <td><a href="{% url 'livro:deletar_reserva' reserva.id %}">Excluir</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

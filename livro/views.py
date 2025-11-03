@@ -164,18 +164,40 @@ def listar_reservas(request:HttpRequest):
         return HttpResponse('O Usuário ainda não fez nenhuma reserva.')
 
 def ler_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
-    return HttpResponse('View de ler reserva')
+    reserva = Reserva.objects.filter(id=id_reserva).exists()
+    if reserva:
+        # TODO: Logica implementada, falta criar o template
+        template_name = ""
+        reserva = Reserva.objects.get(id=id_reserva)
+        return render(request, template_name=template_name, context={})
+    else:
+        return HttpResponse("Reserva não encontrada.")
 
 def atualizar_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
+    # Nao deve ser usada ja que a logica de cada reserva impossibilita que os 
+    # dados sejam alterados
     return HttpResponse('View de atualizar reserva')
 
 def deletar_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
-    return HttpResponse('View de deletar reserva')
+    reserva = Reserva.objects.filter(id=id_reserva).exists()
+    if reserva:
+        # TODO: Logica implementada, falta criar o template
+        reserva = Reserva.objects.get(id=id_reserva)
+        reserva.delete()
+        return HttpResponse("Reserva deletada com sucesso.")
+    else:
+        return HttpResponse("Reserva não encontrada.")
 
 # Views de Emprestimo
 
-def criar_emprestimo(request: HttpRequest) -> HttpResponse:
-    return HttpResponse('View de criar emprestimo.')
+def criar_emprestimo(request: HttpRequest, id_livro:int, id_usuario:int) -> HttpResponse:
+    usuario = request.user  # O usuário deve ser um funcionario. Ele pode emprestar livros 
+                            # para outros funcionarios, para si mesmo e para alunos e professores
+    if usuario.is_authenticated and user_is_funcionario(usuario):
+        # O proximo passo é identificar se o usuario que quer fazer o emprestimo eh
+        # professor, aluno ou outro funcionario
+        pass
+
 
 def listar_emprestimos(request: HttpRequest) -> HttpResponse:
     return HttpResponse("View de listar emprestimos")
