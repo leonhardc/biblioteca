@@ -21,7 +21,7 @@
             <a href="{% url 'livro:listar_reservas' %}" class="{%if reservas%}ativo{%endif%}">Reservas</a>
         </li>
         <li>
-            <a href="#" class="{%if emprestimos%}ativo{%endif%}">Emprestimos</a>
+            <a href="{% url 'livro:listar_emprestimos' %}" class="{%if emprestimos%}ativo{%endif%}">Emprestimos</a>
         </li>
         <li>
             <a href="#" class="{%if notificacoes%}ativo{%endif%}">Notificações</a>
