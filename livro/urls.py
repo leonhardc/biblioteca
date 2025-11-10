@@ -31,7 +31,8 @@ urlpatterns = [ # type: ignore
     path("atualizar-reserva/<int:id_reserva>/", view=atualizar_reserva, name="atualizar_reserva"),
     path("deletar-reserva/<int:id_reserva>/", view=deletar_reserva, name="deletar_reserva"),
     # Emprestimos
-    path('criar-emprestimo/<int:id_livro>/', view=criar_emprestimo, name="criar_emprestimo"),
+    path('criar-emprestimo/<int:id_livro>/<int:id_usuario>/', view=criar_emprestimo, name="criar_emprestimo"), # type: ignore
+    path('novo-emprestimo/', view=criar_emprestimo_formulario, name="novo_emprestimo"), # type: ignore
     path('listar-emprestimos/', view=listar_emprestimos, name="listar_emprestimos"),
     path('ler-emprestimo/<int:id_emprestimo>/', view=ler_emprestimo, name="ler_emprestimo"),
     path('atualizar-emprestimo/<int:id_emprestimo>/', view=atualizar_emprestimo, name="atualizar_emprestimo"),
