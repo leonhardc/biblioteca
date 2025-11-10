@@ -67,3 +67,9 @@ class FormularioAtualizarEmprestimo(forms.Form):
     livro = forms.ChoiceField(label='Livro', choices=get_livros(), widget=forms.Select())                                     # type: ignore
     data_emprestimo = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))           # type: ignore
     data_devolucao = forms.DateField(label='Data da Devolução', widget=forms.DateInput(attrs={'type':'date'}))            # type: ignore
+
+class EmprestimoForm(forms.Form):
+    usuario = forms.ModelChoiceField(queryset=User.objects.all())
+    livro = forms.ModelChoiceField(queryset=Livro.objects.all())
+    data_emprestimo = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    data_devolucao = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
