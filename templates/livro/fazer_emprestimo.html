@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Emprestimo</title>
+    <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
+</head>
+
+<body>
+    <header>
+        {% include 'usuario/aluno/parciais/_nav.html' %}
+    </header>
+    <main>
+        <h2>Novo Empréstimo</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Salvar</button>
+        </form>
+    </main>
+</body>
+
+</html>
