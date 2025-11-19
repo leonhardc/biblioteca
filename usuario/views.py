@@ -8,30 +8,26 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
 from usuario.forms import LoginForm, FormularioAluno
-# from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from usuario.models import Aluno, Professor, Funcionario
-# from livro.models import Livro, Autor, Categoria, Reserva, Emprestimo
-# from curso.models import Curso
-# from django.core.paginator import Paginator
 from utils.utils import *
 from utils.formularios.utils_forms import informacoes_formulario_aluno
-# TODO: Essa view só pode ser acessada se o usuário estiver logado
+
+# Views de controle de usuario
 def index(request:HttpRequest) -> HttpResponse:
-    template = 'usuario/index.html'
-    return render(
-        request,
-        template,
-        context={
-            'user':'Usuário'
-        }
-    )
-
-
-def autentica_informacoes_de_usuario(request:HttpRequest):
-    pass
-
+    if request.user.is_authenticated:
+        template = 'usuario/index.html'
+        return render(
+            request,
+            template,
+            context={
+                'user':request.user
+            }
+        )
+    messages.add_message(request, messages.ERROR, "Operação inválida. O Usuário não está logado.")
+    url_anterior = request.META.get('HTTP_REFERER')
+    return redirect(url_anterior)
 
 def entrar(request:HttpRequest):
     template = 'usuario/entrar.html'
@@ -42,7 +38,6 @@ def entrar(request:HttpRequest):
             template_name=template, 
             context={'form':formulario}
             )
-
 
 def autenticar(request:HttpRequest):
     # Faz a autenticação de usuário
@@ -58,80 +53,137 @@ def autenticar(request:HttpRequest):
                 return redirect('usuario:entrar')
             login(request, usuario)
             if user_is_aluno(usuario):
-                # TODO: MUDAR PARA RETORNAR AS PAGINAS DE USUARIO
-                # return HttpResponse('Pagina de Aluno')
                 template_name='usuario/aluno/dashboard_aluno.html'
+                messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
                 return render(request, template_name=template_name)
             elif user_is_professor(usuario):
-                return HttpResponse('Pagina de Professor')
+                template_name='usuario/professor/dashboard_professor.html'
+                messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
+                return render(request, template_name=template_name)
             elif user_is_funcionario(usuario):
-                return HttpResponse('Pagina de Funcionario')
+                template_name='usuario/funcionario/dashboard_funcionario.html'
+                messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
+                return render(request, template_name=template_name)
             else: 
-                messages.info(request, 'Usuario ou senhas inválidos')
+                messages.add_message(request, messages.INFO, 'Usuario ou senhas inválidos')
                 return redirect('usuario:entrar')
         else:
-            # Formulário inválido
-            messages.info(request, 'Formulário inválido')
+            messages.add_message(request, messages.INFO, 'Formulário inválido')
             return redirect('usuario:entrar')
 
-# TODO: Essa view só pode ser acessada se o usuário estiver logado
 def sair(request:HttpRequest):
-    logout(request)
+    if request.user.is_authenticated:
+        logout(request)
+        return redirect('usuario:entrar')
+    messages.add_message(request, messages.ERROR, 'Operacao inválida. Usuário não autenticado')
     return redirect('usuario:entrar')
 
 
 # CRUD de Aluno
 def listar_alunos(request:HttpRequest):
-    template_name = 'usuario/aluno/listar_alunos.html'
-    return render(
-        request, 
-        template_name, 
-        context={
-            'alunos':Aluno.objects.all()
-            }
-        )
+    if request.user.is_authenticated:
+        template_name = 'usuario/aluno/listar_alunos.html'
+        return render(
+            request, 
+            template_name, 
+            context={
+                'alunos':Aluno.objects.all()
+                }
+            )
+    messages.add_message(
+        request,
+        messages.ERROR,
+        "O usuario não está autenticado"
+    )
+    url_anterior = request.META.get('HTTP_REFERER')
+    return redirect(url_anterior)
 
 def dashaboard_aluno(request:HttpRequest):
-    if request.method == "GET":
+    if request.method == "GET" and request.user.is_authenticated:
         template_name = "usuario/aluno/dashboard_aluno.html"
         contexto = {
             'dashboard': True,
         }
         return render(request, template_name, context=contexto)
+    messages.add_message(
+        request,
+        messages.ERROR,
+        'Operação inválida. O usuário não está logado.'
+    )
+    url_anterior = request.META.get('HTTP_REFERER')
+    return redirect(url_anterior)
 
 def criar_aluno(request:HttpRequest):
-    if request.method == 'GET':
+    if request.method == 'GET' and request.user.is_authenticated:
         formulario_aluno = FormularioAluno()
         template_name = 'formulario-cadastro-aluno.html'
         return render(request, template_name, context={'form':formulario_aluno})
+    else:
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'Operação inválida. O usuário não está logado.'
+        )
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior)
     if request.method == 'POST':
+            # TODO: Implementar a logica de criar aluno na base de dados
             pass
 
 def ler_aluno(request:HttpRequest, uid:int):
-    # TODO: O usuario do tipo aluno e usuario do tipo funcionario e administrador tem acesso a essa view
     # TODO: Criar o template abaixo
-    template_name = "usuario/aluno/ler_aluno.html"
-    if Aluno.objects.filter(id=uid).exists():
-        aluno = Aluno.objects.get(id=uid)
-        return render(request, template_name, context={'aluno':aluno})
-    else: 
+    if request.user.is_authenticated:
+        if request.user.is_staff or user_is_funcionario(request.user):
+            template_name = "usuario/aluno/ler_aluno.html"
+            if Aluno.objects.filter(id=uid).exists():
+                aluno = Aluno.objects.get(id=uid)
+                return render(request, template_name, context={'aluno':aluno})
+            else: 
+                url_anterior = request.META.get('HTTP_REFERER')
+                messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
+                return redirect(url_anterior)
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'Operação inválida. O usuário logado não tem permissão para fazer esta operação.'
+        )   
         url_anterior = request.META.get('HTTP_REFERER')
-        messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
-        return redirect(url_anterior)
+        return redirect(url_anterior)    
+    messages.add_message(
+        request,
+        messages.ERROR,
+        'Operação inválida. O usuário não está logado, ou não tem permissões de administrador.'
+    )
+    url_anterior = request.META.get('HTTP_REFERER')
+    return redirect(url_anterior)
 
 def atualizar_aluno(request:HttpRequest, uid:int):
     # TODO: Essa view so pode ser acessada por funcionarios, administradores e pelo aluno
     # TODO: Criar o template abaixo
     template_name = 'usuario/aluno/atualizar_dados_aluno.html'
     if request.method == "GET":
-        if Aluno.objects.filter(id=uid).exists():
-            aluno = Aluno.objects.get(id=uid)
-            endereco = separar_endereco(aluno.endereco) 
-            data_aluno = informacoes_formulario_aluno(aluno, endereco)
-            formulario = FormularioAluno(initial=data_aluno)
-            return render(request, template_name, context={'aluno':aluno, 'form':formulario})
-        else:
-            messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
+        if request.user.is_authenticated:
+            if request.user.is_staff or user_is_funcionario(request.user):
+                if Aluno.objects.filter(id=uid).exists():
+                    aluno = Aluno.objects.get(id=uid)
+                    endereco = separar_endereco(aluno.endereco) 
+                    data_aluno = informacoes_formulario_aluno(aluno, endereco)
+                    formulario = FormularioAluno(initial=data_aluno)
+                    return render(request, template_name, context={'aluno':aluno, 'form':formulario})
+                else:
+                    messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
+                    url_anterior = request.META.get('HTTP_REFERER')
+                    return redirect(url_anterior)
+            else: 
+                messages.add_message(request, messages.ERROR, 'O Usuário logado não tem permissão para fazer essa operação')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior)
+        else: 
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'Operação inválida. O usuário não está logado, ou não tem permissões de administrador.'
+            )
             url_anterior = request.META.get('HTTP_REFERER')
             return redirect(url_anterior)
     if request.method == "POST":
