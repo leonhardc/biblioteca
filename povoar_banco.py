@@ -19,9 +19,6 @@ django.setup()
 
 fake = Faker('pt_BR') # Faz mapeamento de dados para nomes brasileiros.
 
-# TODO: Testar as funções abaixo
-# TODO: Implementar script para remover acentos e usar em usernames no banco de dados
-
 def remover_acentos(texto:str):
     # Normaliza o texto (separa acento da letra base)
     nfkd = unicodedata.normalize('NFKD', texto)

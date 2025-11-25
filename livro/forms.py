@@ -1,4 +1,5 @@
 from django import forms
+<<<<<<< Updated upstream
 from livro.models import Categoria
 from livro.constants import NACIONALIDADES
 from django.core.exceptions import ValidationError 
@@ -25,14 +26,35 @@ CATEGORIAS = get_categorias()
 AUTORES =  get_autores() 
 USUARIOS = get_usuarios() 
 LIVROS = get_livros()
+=======
+from livro.constants import NACIONALIDADES
+from utils.formularios.getters_forms import * 
+
+>>>>>>> Stashed changes
 
 class FormularioLivro(forms.Form):
-    isbn = forms.CharField(label='ISBN', max_length=6, widget=forms.TextInput(attrs={'placeholder':'Digite o numero de ISBN'}))
-    titulo = forms.CharField(label='Titulo', max_length=100, widget=forms.TextInput(attrs={'placeholder':'Digite o titulo do livro'}))
-    subtitulo = forms.CharField(label='Subtitulo', max_length=100, widget=forms.TextInput(attrs={'placeholder':'Digite o subtitulo do livro'}))
+    isbn = forms.CharField(
+        label='ISBN', 
+        max_length=6, 
+        widget=forms.TextInput(attrs={'placeholder':'Digite o numero de ISBN'})
+    )
+    titulo = forms.CharField(
+        label='Titulo', 
+        max_length=100, 
+        widget=forms.TextInput(attrs={'placeholder':'Digite o titulo do livro'})
+    )
+    subtitulo = forms.CharField(
+        label='Subtitulo', 
+        max_length=100, 
+        widget=forms.TextInput(attrs={'placeholder':'Digite o subtitulo do livro'})
+    )
     lancamento = forms.DateField(label='Ano de Lançamento', widget=forms.DateInput())
-    editora = forms.CharField(label='Editora', widget=forms.TextInput(attrs={'placeholder':'Digite a Editora do livro'}))    
+    editora = forms.CharField(
+        label='Editora', 
+        widget=forms.TextInput(attrs={'placeholder':'Digite a Editora do livro'})
+    )    
     copias = forms.IntegerField(label='Quantidade de cópias', max_value=999, min_value=0)
+<<<<<<< Updated upstream
     autores = forms.MultipleChoiceField(label='Autores', choices=AUTORES, widget=forms.SelectMultiple())    # type: ignore
     categoria = forms.ChoiceField(label='Categoria', choices=CATEGORIAS, widget=forms.Select(attrs={}))     # type: ignore
 
@@ -42,6 +64,10 @@ class FormularioLivro(forms.Form):
         if not categoria:
             raise ValidationError('Categoria não existe na base de dados.')
         return categoria
+=======
+    autores = forms.MultipleChoiceField(label='Autores', choices=get_autores(), widget=forms.SelectMultiple())          # type: ignore
+    categoria = forms.ChoiceField(label='Categoria', choices=get_categorias(), widget=forms.Select(attrs={}))           # type: ignore
+>>>>>>> Stashed changes
 
 class FormularioAutor(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100, widget=forms.TextInput())
@@ -53,6 +79,7 @@ class FormularioCategoria(forms.Form):
     descricao = forms.CharField(label='Descrição', max_length=2000, widget=forms.Textarea())
 
 class FormularioReserva(forms.Form):
+<<<<<<< Updated upstream
     usuario = forms.ChoiceField(label='Usuário', choices=USUARIOS,widget=forms.Select())                                # type: ignore
     livro = forms.ChoiceField(label='Livro', choices=LIVROS, widget=forms.Select())                                     # type: ignore
     data_reserva = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))              # type: ignore
@@ -68,3 +95,19 @@ class FormularioAtualizarEmprestimo(forms.Form):
     livro = forms.ChoiceField(label='Livro', choices=LIVROS, widget=forms.Select())                                     # type: ignore
     data_emprestimo = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))           # type: ignore
     data_devolucao = forms.DateField(label='Data da Devolução', widget=forms.DateInput(attrs={'type':'date'}))            # type: ignore
+=======
+    usuario = forms.ChoiceField(label='Usuário', choices=get_usuarios(),widget=forms.Select())                          # type: ignore
+    livro = forms.ChoiceField(label='Livro', choices=get_livros(), widget=forms.Select())                               # type: ignore
+    data_reserva = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))              # type: ignore
+
+class FormularioAtualizarEmprestimo(forms.Form):
+    usuario = forms.ChoiceField(label='Usuário', choices=get_usuarios(),widget=forms.Select(attrs={'disabled':True}))   # type: ignore
+    livro = forms.ChoiceField(label='Livro', choices=get_livros(), widget=forms.Select())                               # type: ignore
+    data_emprestimo = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))           # type: ignore
+    data_devolucao = forms.DateField(label='Data da Devolução', widget=forms.DateInput(attrs={'type':'date'}))          # type: ignore
+
+class EmprestimoForm(forms.Form):
+    usuario = forms.ModelChoiceField(queryset=User.objects.all())
+    livro = forms.ModelChoiceField(queryset=Livro.objects.all())
+    data_emprestimo = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+>>>>>>> Stashed changes

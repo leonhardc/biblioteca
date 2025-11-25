@@ -1,8 +1,8 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.forms import ModelForm
-from usuario.models import Aluno
-from curso.models import Curso
+# from django.contrib.auth.models import User
+# from django.forms import ModelForm
+# from usuario.models import Aluno
+# from curso.models import Curso
 from django.core.exceptions import ValidationError
 import re
 from usuario.constants import ESTADOS_BRASIL, OPCOES_CURSOS, JORNADA, LOGRADOUROS

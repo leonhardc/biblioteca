@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Emprestimo</title>
+    <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
+    <style>
+        h2 {
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: end;
+        }
+
+        form p {
+            width: 100%;
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        {% include 'usuario/aluno/parciais/_nav.html' %}
+    </header>
+    <main>
+        <h2>Novo Empréstimo</h2>
+        <form method="POST" action="{% url 'livro:novo_emprestimo' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Salvar</button>
+        </form>
+    </main>
+    <!-- TODO: Fazer um script para substituir automaticamente a data de devolucao -->
+</body>
+
+</html>

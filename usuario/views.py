@@ -222,16 +222,52 @@ def detalhes_aluno(request:HttpRequest, uid:int):
 
 # CRUD de Professor
 def criar_professor(request:HttpRequest):
-    pass
+    if request.method == 'GET' and request.user.is_authenticated:
+        # TODO: Implementar o template abaixo
+        template_name = 'usuario/professor/criar_professor.html'
+        formulario_professor = FormularioProfessor()
+        return render(request, template_name, context={'form': formulario_professor})
+    if request.method == 'POST':
+        # TODO: Implementar a regra de POST da view
+        pass
 
 def ler_professor(request:HttpRequest, uid:int):
-    pass
+    if request.method == 'GET' and request.user.is_authenticated:
+        # TODO: Implementar o template abaixo
+        template_name = 'usuario/professor/detalhes_professor.html'
+        professor_existe = Professor.objects.filter(id=uid).exists()
+        if professor_existe:
+            professor = Professor.objects.get(id=uid)
+            return render(request, template_name, context={'professor': professor})
+        else:
+            messages.add_message(request, messages.ERROR, 'O usuário solicitado nao existe na base de dados')
+            url_anterior = request.META.get('HTTP_REFERER')
+            return redirect(url_anterior)
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuário nao esta logado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior)
 
 def atualizar_professor(request:HttpRequest, uid:int):
     pass
 
 def deletar_professor(request:HttpRequest, uid:int):
-    pass
+    if request.method == 'GET' and request.user.is_authenticated:
+        professor_existe = Professor.objects.filter(id=uid).exists()
+        if professor_existe:
+            professor = Professor.objects.get(id=uid)
+            professor.delete()
+            messages.add_message(request, messages.SUCCESS, 'Professor deletado com sucesso.')
+            url_anterior = request.META.get('HTTP_REFERER')
+            return redirect(url_anterior)
+        else: 
+            messages.add_message(request, messages.ERROR, 'O usuario solicitado não existe na base de dados.')
+            url_anterior = request.META.get('HTTP_REFERER')
+            return redirect(url_anterior)
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior)
 
 def detalhes_professor(request:HttpRequest, uid:int):
     if request.method=='GET':

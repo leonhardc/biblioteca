@@ -1,9 +1,29 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 from django.core.paginator import Paginator
+# from django.contrib.auth.decorators import login_required
 from .models import Livro
 from django.db.models import Q
+from .forms import EmprestimoForm
 
+<<<<<<< Updated upstream
+=======
+MAX_RESERVAS_POR_USUARIO = (
+    ('aluno', 10),
+    ('professor', 10),
+    ('funcionario', 10),
+)
+MAX_EMPRESTIMOS_POR_USUARIO = (
+    ('aluno', 10),
+    ('professor', 10),
+    ('funcionario', 10),
+)
+MAX_DIAS_EMPRESTIMOS = {
+    'aluno': 15,
+    'professor': 25,
+    'aluno': 20,
+}
+>>>>>>> Stashed changes
 # Método de Listar Livros, Autores e Categorias
 def listar_livros(request: HttpRequest) -> HttpResponse:
     template_name = "livro/livros.html"
@@ -78,5 +98,132 @@ def detalhar_categoria(request, id_categoria):
 def atualizar_categoria(request, id_categoria):
     pass
 
+<<<<<<< Updated upstream
 def deletar_categoria(request, id_categoria):
     pass
+=======
+def deletar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
+    return HttpResponse("View deletar Categoria")
+
+# Views de Reserva
+def criar_reserva(request: HttpRequest, id_livro:int):
+    if request.user.is_authenticated:
+        # 1. verificar se o usuario eh aluno professor ou funcionario
+            # i. Aluno Professor e Funcionario podem ambos fazer no maximo 10 reservas.
+        # 2. checar se eh possivel aquele usuario fazer mais alguma reserva
+        # 3. se sim, fazer a reserva para o usuario e redirecionar para o template de livros
+        # 4. se nao, retornar uma mensagem de erro
+        # TODO: FINALIZAR OS TESTES DESSA VIEW
+        if user_is_aluno(request.user):
+            aluno = Aluno.objects.get(usuario=request.user)
+            if aluno.reservas < MAX_RESERVAS_POR_USUARIO[0][1]:
+                livro = Livro.objects.get(id=id_livro) # type: ignore
+                Reserva.objects.create(
+                    usuario=request.user,
+                    livro=livro,
+                    data_reserva=date.today(), 
+                    ativo=True
+                )
+                return HttpResponse("Reserva Realizada com Sucesso.")
+            else:
+                return HttpResponse("Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.")
+
+        elif user_is_professor(request.user):
+            professor = Professor.objects.get(usuario=request.user)
+            if professor.reservas < MAX_RESERVAS_POR_USUARIO[1][1]:
+                livro = Livro.objects.get(id=id_livro) # type: ignore
+                Reserva.objects.create(
+                    usuario=request.user,
+                    livro=livro,
+                    data_reserva=date.today(), 
+                    ativo=True
+                )
+                return HttpResponse("Reserva Realizada com Sucesso.")
+            else:
+                return HttpResponse("Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.")
+        
+        elif user_is_funcionario(request.user):
+            funcionario = Funcionario.objects.get(usuario=request.user)
+            if funcionario.reservas < MAX_RESERVAS_POR_USUARIO[2][1]:
+                livro = Livro.objects.get(id=id_livro) # type: ignore
+                Reserva.objects.create(
+                    usuario=request.user,
+                    livro=livro,
+                    data_reserva=date.today(), 
+                    ativo=True
+                )
+                return HttpResponse("Reserva Realizada com Sucesso.")
+            else:
+                return HttpResponse("Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.")
+    else:
+        # Retorna mensagem de erro
+        return HttpResponse("Erro! Usuário não autenticado.")
+
+def listar_reservas(request:HttpRequest):
+    reservas = Reserva.objects.filter(usuario=request.user).exists()
+    if reservas:
+        reservas = Reserva.objects.filter(usuario=request.user)
+        template_name = "livro/listar_reservas.html"
+        return render(request, template_name=template_name, context={'reservas':reservas})
+    else:
+        return HttpResponse('O Usuário ainda não fez nenhuma reserva.')
+
+def ler_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
+    reserva = Reserva.objects.filter(id=id_reserva).exists()
+    if reserva:
+        # TODO: Logica implementada, falta criar o template
+        template_name = ""
+        reserva = Reserva.objects.get(id=id_reserva)
+        return render(request, template_name=template_name, context={})
+    else:
+        return HttpResponse("Reserva não encontrada.")
+
+def atualizar_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
+    # Nao deve ser usada ja que a logica de cada reserva impossibilita que os 
+    # dados sejam alterados
+    return HttpResponse('View de atualizar reserva')
+
+def deletar_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
+    reserva = Reserva.objects.filter(id=id_reserva).exists()
+    if reserva:
+        # TODO: Logica implementada, falta criar o template
+        reserva = Reserva.objects.get(id=id_reserva)
+        reserva.delete()
+        return HttpResponse("Reserva deletada com sucesso.")
+    else:
+        return HttpResponse("Reserva não encontrada.")
+
+# Views de Emprestimo
+def criar_emprestimo(request: HttpRequest, id_livro:int, id_usuario:int):
+    usuario = request.user  # O usuário deve ser um funcionario. Ele pode emprestar livros 
+                            # para outros funcionarios, para si mesmo e para alunos e professores
+    if usuario.is_authenticated and user_is_funcionario(usuario):
+        pass
+    else:
+        return HttpResponse('O usuario nao esta autenticado ou nao eh um funcionario.')
+
+def criar_emprestimo_formulario(request: HttpRequest):
+    if request.method == "GET":
+        formulario = EmprestimoForm()
+        return render(request, template_name='livro/fazer_emprestimo.html', context={'form':formulario})
+    if request.method == "POST":
+        pass
+
+def listar_emprestimos(request: HttpRequest):
+    emprestimos = Emprestimo.objects.filter(usuario=request.user).exists()
+    if emprestimos:
+        template_name = "livro/listar_emprestimos.html"
+        emprestimos = Emprestimo.objects.filter(usuario=request.user)
+        return render(request, template_name=template_name, context={'emprestimos':emprestimos})
+    else:
+        return HttpResponse("O Usuário ainda não tem emprestimos ativos.")
+
+def ler_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpResponse:
+    return HttpResponse('Views de ler emprestimo')
+
+def atualizar_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpResponse:
+    return HttpResponse('View de atualizar emprestimo')
+
+def deletar_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpResponse:
+    return HttpResponse('View de deletar emprestimo')
+>>>>>>> Stashed changes
