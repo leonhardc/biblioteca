@@ -1,21 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 from django.core.paginator import Paginator
+# from django.contrib.auth.decorators import login_required
 from .models import Livro
 from datetime import date
 from utils.utils import *
 from django.db.models import Q
 
-MAX_RESERVAS_POR_USUARIO = (
-    ('aluno', 10),
-    ('professor', 10),
-    ('funcionario', 10),
-)
-MAX_EMPRESTIMOS_POR_USUARIO = (
-    ('aluno', 10),
-    ('professor', 10),
-    ('funcionario', 10),
-)
 # Método de Listar Livros, Autores e Categorias
 def listar_livros(request: HttpRequest) -> HttpResponse:
     template_name = "livro/livros.html"

@@ -15,12 +15,12 @@
     </header>
     <main>
         <h2>Novo Empréstimo</h2>
-        <form method="POST">
+        <form method="POST" action="{% url 'livro:novo_emprestimo' %}">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Salvar</button>
         </form>
     </main>
+    <!-- TODO: Fazer um script para substituir automaticamente a data de devolucao -->
 </body>
-
 </html>

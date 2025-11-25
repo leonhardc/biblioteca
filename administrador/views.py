@@ -11,7 +11,7 @@ from livro.forms import FormularioLivro, FormularioAutor, FormularioCategoria, F
 from curso.forms import FormularioCurso
 from curso.models import Curso
 from utils.utils import *
-from utils.formularios.utils_formularios import *
+from utils.formularios.utils_forms import *
 
 # Views de administrador
 

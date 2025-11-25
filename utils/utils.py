@@ -140,7 +140,6 @@ def salvar_emprestimo(request:HttpRequest, formulario:FormularioCriarEmprestimo,
 
 
 def pegar_informacoes_aluno(aluno:Aluno) -> dict[str, Aluno|Reserva|Emprestimo]:
-    # TODO: Implementar essa função
     reservas = Reserva.objects.filter(usuario=aluno.usuario) # type: ignore
     emprestimos = Emprestimo.objects.filter(usuario=aluno.usuario) # type: ignore
     return {
@@ -151,7 +150,6 @@ def pegar_informacoes_aluno(aluno:Aluno) -> dict[str, Aluno|Reserva|Emprestimo]:
 
 
 def pegar_informacoes_professor(professor:Professor) -> dict[str, Professor|Reserva|Emprestimo]: # type: ignore
-    # TODO: Implementar essa função
     reservas = Reserva.objects.filter(usuario=professor.usuario) # type: ignore
     emprestimos = Emprestimo.objects.filter(usuario=professor.usuario) # type: ignore
     return {
@@ -163,7 +161,6 @@ def pegar_informacoes_professor(professor:Professor) -> dict[str, Professor|Rese
 
 
 def pegar_informacoes_funcionario(funcionario:Funcionario) ->  dict[str, Funcionario|Reserva|Emprestimo]: # type: ignore
-    # TODO: Implementar essa função
     reservas = Reserva.objects.filter(usuario=funcionario.usuario) # type: ignore
     emprestimos = Emprestimo.objects.filter(usuario=funcionario.usuario) # type: ignore
     return {
