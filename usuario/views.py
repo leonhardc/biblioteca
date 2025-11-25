@@ -27,7 +27,7 @@ def index(request:HttpRequest) -> HttpResponse:
         )
     messages.add_message(request, messages.ERROR, "Operação inválida. O Usuário não está logado.")
     url_anterior = request.META.get('HTTP_REFERER')
-    return redirect(url_anterior)
+    return redirect(url_anterior) # type: ignore
 
 def entrar(request:HttpRequest):
     template = 'usuario/entrar.html'
@@ -96,7 +96,7 @@ def listar_alunos(request:HttpRequest):
         "O usuario não está autenticado"
     )
     url_anterior = request.META.get('HTTP_REFERER')
-    return redirect(url_anterior)
+    return redirect(url_anterior) # type: ignore
 
 def dashaboard_aluno(request:HttpRequest):
     if request.method == "GET" and request.user.is_authenticated:
@@ -111,7 +111,7 @@ def dashaboard_aluno(request:HttpRequest):
         'Operação inválida. O usuário não está logado.'
     )
     url_anterior = request.META.get('HTTP_REFERER')
-    return redirect(url_anterior)
+    return redirect(url_anterior) # type: ignore
 
 def criar_aluno(request:HttpRequest):
     if request.method == 'GET' and request.user.is_authenticated:
@@ -125,7 +125,7 @@ def criar_aluno(request:HttpRequest):
             'Operação inválida. O usuário não está logado.'
         )
         url_anterior = request.META.get('HTTP_REFERER')
-        return redirect(url_anterior)
+        return redirect(url_anterior) # type: ignore
     if request.method == 'POST':
             # TODO: Implementar a logica de criar aluno na base de dados
             pass
@@ -141,21 +141,21 @@ def ler_aluno(request:HttpRequest, uid:int):
             else: 
                 url_anterior = request.META.get('HTTP_REFERER')
                 messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
-                return redirect(url_anterior)
+                return redirect(url_anterior) # type: ignore
         messages.add_message(
             request,
             messages.ERROR,
             'Operação inválida. O usuário logado não tem permissão para fazer esta operação.'
         )   
         url_anterior = request.META.get('HTTP_REFERER')
-        return redirect(url_anterior)    
+        return redirect(url_anterior)     # type: ignore
     messages.add_message(
         request,
         messages.ERROR,
         'Operação inválida. O usuário não está logado, ou não tem permissões de administrador.'
     )
     url_anterior = request.META.get('HTTP_REFERER')
-    return redirect(url_anterior)
+    return redirect(url_anterior) # type: ignore
 
 def atualizar_aluno(request:HttpRequest, uid:int):
     # TODO: Essa view so pode ser acessada por funcionarios, administradores e pelo aluno
@@ -173,11 +173,11 @@ def atualizar_aluno(request:HttpRequest, uid:int):
                 else:
                     messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
                     url_anterior = request.META.get('HTTP_REFERER')
-                    return redirect(url_anterior)
+                    return redirect(url_anterior) # type: ignore
             else: 
                 messages.add_message(request, messages.ERROR, 'O Usuário logado não tem permissão para fazer essa operação')
                 url_anterior = request.META.get('HTTP_REFERER')
-                return redirect(url_anterior)
+                return redirect(url_anterior) # type: ignore
         else: 
             messages.add_message(
                 request,
@@ -185,7 +185,7 @@ def atualizar_aluno(request:HttpRequest, uid:int):
                 'Operação inválida. O usuário não está logado, ou não tem permissões de administrador.'
             )
             url_anterior = request.META.get('HTTP_REFERER')
-            return redirect(url_anterior)
+            return redirect(url_anterior) # type: ignore
     if request.method == "POST":
         # TODO: Salvar os dados do aluno no banco de dados
         pass
@@ -198,7 +198,7 @@ def deletar_aluno(request:HttpRequest, uid:int):
     else: 
         url_anterior = request.META.get('HTTP_REFERER')
         messages.add_message(request, messages.ERROR, 'Aluno não encontrado')
-        return redirect(url_anterior)
+        return redirect(url_anterior) # type: ignore
 
 def detalhes_aluno(request:HttpRequest, uid:int):
     if request.method == 'GET' and request.user.is_authenticated:
@@ -215,11 +215,11 @@ def detalhes_aluno(request:HttpRequest, uid:int):
         else: 
             url_anterior = request.META.get('HTTP_REFERER')
             messages.add_message(request, messages.ERROR, 'Usuario não tem permissão para acessar essa pagina')
-            return redirect(url_anterior)
+            return redirect(url_anterior) # type: ignore
     else:
         url_anterior = request.META.get('HTTP_REFERER')
         messages.add_message(request, messages.ERROR, 'Usuario não autenticado')
-        return redirect(url_anterior)
+        return redirect(url_anterior) # type: ignore
 
 
 # CRUD de Professor
@@ -244,11 +244,11 @@ def ler_professor(request:HttpRequest, uid:int):
         else:
             messages.add_message(request, messages.ERROR, 'O usuário solicitado nao existe na base de dados')
             url_anterior = request.META.get('HTTP_REFERER')
-            return redirect(url_anterior)
+            return redirect(url_anterior) # pyright: ignore[reportArgumentType]
     else:
         messages.add_message(request, messages.ERROR, 'O usuário nao esta logado.')
         url_anterior = request.META.get('HTTP_REFERER')
-        return redirect(url_anterior)
+        return redirect(url_anterior) # type: ignore
 
 def atualizar_professor(request:HttpRequest, uid:int):
     pass
@@ -261,15 +261,15 @@ def deletar_professor(request:HttpRequest, uid:int):
             professor.delete()
             messages.add_message(request, messages.SUCCESS, 'Professor deletado com sucesso.')
             url_anterior = request.META.get('HTTP_REFERER')
-            return redirect(url_anterior)
+            return redirect(url_anterior) # type: ignore
         else: 
             messages.add_message(request, messages.ERROR, 'O usuario solicitado não existe na base de dados.')
             url_anterior = request.META.get('HTTP_REFERER')
-            return redirect(url_anterior)
+            return redirect(url_anterior) # type: ignore
     else:
         messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
         url_anterior = request.META.get('HTTP_REFERER')
-        return redirect(url_anterior)
+        return redirect(url_anterior) # type: ignore
 
 def detalhes_professor(request:HttpRequest, uid:int):
     if request.method=='GET':
@@ -282,16 +282,64 @@ def detalhes_professor(request:HttpRequest, uid:int):
 
 # CRUD de Funcionário
 def criar_funcionario(request:HttpRequest):
-    pass
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            # TODO: Implementar o template abaixo
+            template_name = 'ususario/funcionario/criar_funcionario.html'
+            formulario_funcionario = FormularioFuncionario()
+            return render(request, template_name, context={'form':formulario_funcionario})
+        if request.method == 'POST':
+            # TODO: Implementar a regra de criar funcionario
+            pass
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
 
 def ler_funcionario(request:HttpRequest, uid:int):
-    pass
+    if request.user.is_authenticated:
+        template_name = 'usuario/funcionario/detales_funcionario.html'
+        funcionario_existe = Funcionario.objects.filter(id=uid).exists()
+        if funcionario_existe:
+            funcionario = Funcionario.objects.get(id=uid)
+            return render(request, template_name, context={'funcionario':funcionario})
+        else:
+            messages.add_message(request, messages.ERROR, 'O usuário buscado nao existe na base de dados.')
+            url_anterior = request.META.get('HTTP_REFERER')
+            return redirect(url_anterior) # type: ignore
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
 
 def atualizar_funcionario(request:HttpRequest, uid:int):
-    pass
+    if request.user.is_authenticated:
+        template_name = 'usuario/funcionario/atualizar_funcionario.html'
+        if request.method == 'GET':
+            # TODO: Adicionar dados iniciais no formulario
+            formulario_funcionario = FormularioFuncionario()
+            return render(request, template_name, context={'form':formulario_funcionario})
+        if request.method == 'POST':
+            # TODO: Salvar os dados no banco de dados
+            pass
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
 
 def deletar_funcionario(request:HttpRequest, uid:int):
-    pass
+    if request.user.is_authenticated:
+        funcionario_existe = Funcionario.objects.filter(id=uid).exists()
+        if funcionario_existe:
+            funcionario = Funcionario.objects.get(id=uid)
+            funcionario.delete()
+            messages.add_message(request, messages.SUCCESS, 'Funcionario deletado com sucesso.')
+            url_anterior = request.META.get('HTTP_REFERER')
+            return redirect(url_anterior) # type: ignore
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
 
 def detalhes_funcionario(request:HttpRequest, uid:int):
     if request.method=='GET':
