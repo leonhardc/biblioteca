@@ -11,6 +11,7 @@ from usuario.forms import LoginForm, FormularioAluno
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from usuario.models import Aluno, Professor, Funcionario
+from curso.models import Curso
 from utils.utils import *
 from utils.formularios.utils_forms import informacoes_formulario_aluno
 
@@ -114,10 +115,66 @@ def dashaboard_aluno(request:HttpRequest):
     return redirect(url_anterior) # type: ignore
 
 def criar_aluno(request:HttpRequest):
-    if request.method == 'GET' and request.user.is_authenticated:
-        formulario_aluno = FormularioAluno()
-        template_name = 'formulario-cadastro-aluno.html'
-        return render(request, template_name, context={'form':formulario_aluno})
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            formulario_aluno = FormularioAluno()
+            template_name = 'formulario-cadastro-aluno.html'
+            return render(request, template_name, context={'form':formulario_aluno})
+        if request.method == 'POST':
+            formulario = FormularioAluno(request.POST)
+            # Dados de Usuario
+            nome = formulario.cleaned_data['nome']
+            sobrenome = formulario.cleaned_data['sobrenome']
+            email = formulario.cleaned_data['email']
+            usuario = formulario.cleaned_data['usuario']
+            cpf = formulario.cleaned_data['cpf']
+            # Dados de endereco
+            endereco_formatado = formatar_endereco(formulario)
+            # Dados de curso
+            matricula = formulario.cleaned_data['matricula']
+            curso = Curso.objects.get(id=formulario.cleaned_data['curso'])
+            ingresso = formulario.cleaned_data['ingresso']
+            conclusao_prevista = formulario.cleaned_data['conclusao_prevista']
+            # Passo 1: Criar o Usuario
+            # 1.1 - Checar se o usuario ja existe, se sim dar mensagem de erro
+            usuario_existe = User.objects.filter(username=usuario).exists()
+            if usuario_existe:
+                messages.add_message(request, messages.ERROR, 'Erro ao adicionar novo usuario. O username ja existe na base de dados.')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # type: ignore
+            # 1.2 - Criar Usuario com nome, sobrenome, username, e senha padrao 1234
+            else:
+                novo_usuario = User.objects.create_user(
+                    username=usuario,
+                    email=email,
+                    password='1234',
+                    first_name = nome,
+                    last_name=sobrenome
+                )
+            # Passo 2: Criar o Aluno
+            # 2.1 Criar Matricula e verificar se a matricula ja existe, sair do loop so quando a matricula ja estiver criada
+            matricula = ''
+            while True:
+                matricula = f'{random.randint(100000, 999999)}'
+                if not Aluno.objects.filter(matricula=matricula).exists():
+                    break        
+            # 2.2 Criar o Aluno na base de dados
+            novo_aluno = { # type: ignore
+                'usuario':novo_usuario,
+                'matricula':matricula,
+                'curso': curso,
+                'endereco': endereco_formatado,
+                'cpf': cpf,
+                'ingresso': ingresso,
+                'conclusao_prevista': conclusao_prevista,
+                'ativo': True,
+                'reservas': 0,
+                'reservas': 0,
+            }
+            Aluno.objects.create(**novo_aluno)
+            messages.add_message(request, messages.SUCCESS, 'Aluno adicionado com sucesso.')
+            url_anterior = request.META.get('HTTP_REFERER')
+            return redirect(url_anterior) # type: ignore
     else:
         messages.add_message(
             request,
@@ -126,9 +183,6 @@ def criar_aluno(request:HttpRequest):
         )
         url_anterior = request.META.get('HTTP_REFERER')
         return redirect(url_anterior) # type: ignore
-    if request.method == 'POST':
-            # TODO: Implementar a logica de criar aluno na base de dados
-            pass
 
 def ler_aluno(request:HttpRequest, uid:int):
     # TODO: Criar o template abaixo
