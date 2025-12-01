@@ -214,10 +214,10 @@ def ler_aluno(request:HttpRequest, uid:int):
 def atualizar_aluno(request:HttpRequest, uid:int):
     # TODO: Essa view so pode ser acessada por funcionarios, administradores e pelo aluno
     # TODO: Criar o template abaixo
-    template_name = 'usuario/aluno/atualizar_dados_aluno.html'
-    if request.method == "GET":
-        if request.user.is_authenticated:
-            if request.user.is_staff or user_is_funcionario(request.user):
+    if request.user.is_authenticated:
+        template_name = 'usuario/aluno/atualizar_dados_aluno.html'
+        if request.user.is_staff or user_is_funcionario(request.user):
+            if request.method == 'GET':
                 if Aluno.objects.filter(id=uid).exists():
                     aluno = Aluno.objects.get(id=uid)
                     endereco = separar_endereco(aluno.endereco) 
@@ -228,21 +228,34 @@ def atualizar_aluno(request:HttpRequest, uid:int):
                     messages.add_message(request, messages.ERROR, 'Aluno não encontrado.')
                     url_anterior = request.META.get('HTTP_REFERER')
                     return redirect(url_anterior) # type: ignore
-            else: 
-                messages.add_message(request, messages.ERROR, 'O Usuário logado não tem permissão para fazer essa operação')
+            if request.method == 'POST':
+                formulario = FormularioAluno(request.POST)
+                aluno = Aluno.objects.get(usuario=formulario.cleaned_data['usuario'])
+                # Dados de Usuario
+                aluno.usuario = formulario.cleaned_data['usuario']
+                aluno.nome = formulario.cleaned_data['nome'] # type: ignore
+                aluno.sobrenome = formulario.cleaned_data['sobrenome'] # type: ignore
+                aluno.email = formulario.cleaned_data['email'] # type: ignore
+                aluno.cpf = formulario.cleaned_data['cpf']
+                # Dados de endereco
+                aluno.endereco_formatado = formatar_endereco(formulario) # type: ignore
+                # Dados de curso
+                aluno.matricula = formulario.cleaned_data['matricula']
+                aluno.curso = Curso.objects.get(id=formulario.cleaned_data['curso'])
+                aluno.ingresso = formulario.cleaned_data['ingresso']
+                aluno.conclusao_prevista = formulario.cleaned_data['conclusao_prevista']
+                aluno.save()
+                messages.add_message(request,messages.SUCCESS,'Os dados do aluno foram salvos com sucesso.')
                 url_anterior = request.META.get('HTTP_REFERER')
                 return redirect(url_anterior) # type: ignore
-        else: 
-            messages.add_message(
-                request,
-                messages.ERROR,
-                'Operação inválida. O usuário não está logado, ou não tem permissões de administrador.'
-            )
+        else:
+            messages.add_message(request,messages.ERROR,'Operação inválida. O usuário nao é administrador ou funcionario.')
             url_anterior = request.META.get('HTTP_REFERER')
             return redirect(url_anterior) # type: ignore
-    if request.method == "POST":
-        # TODO: Salvar os dados do aluno no banco de dados
-        pass
+    else:
+        messages.add_message(request,messages.ERROR,'Operação inválida. O usuário nao esta autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
 
 def deletar_aluno(request:HttpRequest, uid:int):
     # TODO: Somente acessivel pelo usuario administrador
