@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
-    <title>Aluno | Listar reservas</title>
+    <title>Aluno | Listar Emprestimos</title>
     <style>
         .container-reservas {
             width: 100%;
@@ -45,35 +45,41 @@
     <header>
         {% include 'usuario/aluno/parciais/_nav.html' %}
     </header>
-    <div class="container-reservas">
-        <div class="reservas">
-            <h3 class="roboto-normal" style="font-weight: bolder;">Minhas Reservas</h3>
-            <table class="roboto-normal">
-                <thead>
-                    <tr>
-                        <th>Livro</th>
-                        <th>Data Emprestimo</th>
-                        <th>Data Devolução</th>
-                        <th>Ativo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for emprestimo in emprestimos %}
-                    <tr>
-                        <td>
-                            <span>{{emprestimo.livro}}</span>
-                        </td>
-                        <td>
-                            <span>{{emprestimo.data_emprestimo}}</span>
-                        </td>
-                        <td>{{emprestimo.data_devolucao}}</td>
-                        <td>{{emprestimo.ativo}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+    <main>
+        {% include 'livro/parciais/_messages.html' %}
+        {% if emprestimos %}
+        <div class="container-reservas">
+            <div class="reservas">
+                <h3 class="roboto-normal" style="font-weight: bolder;">Meus Emprestimos</h3>
+                <table class="roboto-normal">
+                    <thead>
+                        <tr>
+                            <th>Livro</th>
+                            <th>Data Emprestimo</th>
+                            <th>Data Devolução</th>
+                            <th>Ativo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for emprestimo in emprestimos %}
+                        <tr>
+                            <td>
+                                <span>{{emprestimo.livro}}</span>
+                            </td>
+                            <td>
+                                <span>{{emprestimo.data_emprestimo}}</span>
+                            </td>
+                            <td>{{emprestimo.data_devolucao}}</td>
+                            <td>{{emprestimo.ativo}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+        {% endif %}
+    </main>
 </body>
 
 </html>
