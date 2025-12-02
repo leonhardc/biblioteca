@@ -181,7 +181,7 @@ def deletar_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
 
 # Views de Emprestimo
 
-def criar_emprestimo(request: HttpRequest, id_livro:int, id_usuario:int) -> HttpResponse:
+def criar_emprestimo(request: HttpRequest, id_livro:int, id_usuario:int):
     usuario = request.user  # O usuário deve ser um funcionario. Ele pode emprestar livros 
                             # para outros funcionarios, para si mesmo e para alunos e professores
     if usuario.is_authenticated and user_is_funcionario(usuario):
@@ -190,8 +190,20 @@ def criar_emprestimo(request: HttpRequest, id_livro:int, id_usuario:int) -> Http
         pass
 
 
-def listar_emprestimos(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("View de listar emprestimos")
+def listar_emprestimos(request: HttpRequest):
+    if request.user.is_authenticated:
+        emprestimos_existem = Emprestimo.objects.filter(usuario=request.user, ativo=True).exists()
+        template_name = 'livro/listar_emprestimos.html'
+        if emprestimos_existem:
+            emprestimos = Emprestimo.objects.filter(usuario=request.user, ativo=True)
+            return render(request, template_name, context={'emprestimos': emprestimos})
+        else:
+            messages.add_message(request, messages.ERROR, 'Não existem emprestimos para este usuário.')
+            return render(request, template_name, context={'emprestimo':True})
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior)
 
 def ler_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpResponse:
     return HttpResponse('Views de ler emprestimo')
