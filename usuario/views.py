@@ -14,6 +14,8 @@ from usuario.models import Aluno, Professor, Funcionario
 from curso.models import Curso
 from utils.utils import *
 from utils.formularios.utils_forms import informacoes_formulario_aluno
+from django.core.paginator import Paginator
+from .constants import *
 
 # Views de controle de usuario
 def index(request:HttpRequest) -> HttpResponse:
@@ -84,11 +86,15 @@ def sair(request:HttpRequest):
 def listar_alunos(request:HttpRequest):
     if request.user.is_authenticated:
         template_name = 'usuario/aluno/listar_alunos.html'
-        return render(
+        lista_de_alunos = Aluno.objects.all()
+        paginator = Paginator(lista_de_alunos, 20)  
+        numero_da_pagina = request.GET.get("page")
+        alunos = paginator.get_page(numero_da_pagina)
+        return render(  
             request, 
             template_name, 
             context={
-                'alunos':Aluno.objects.all()
+                'alunos':alunos
                 }
             )
     messages.add_message(
@@ -184,7 +190,7 @@ def criar_aluno(request:HttpRequest):
         url_anterior = request.META.get('HTTP_REFERER')
         return redirect(url_anterior) # type: ignore
 
-def ler_aluno(request:HttpRequest, uid:int):
+def ler_aluno_administrador(request:HttpRequest, uid:int):
     # TODO: Criar o template abaixo
     if request.user.is_authenticated:
         if request.user.is_staff or user_is_funcionario(request.user):
@@ -203,13 +209,30 @@ def ler_aluno(request:HttpRequest, uid:int):
         )   
         url_anterior = request.META.get('HTTP_REFERER')
         return redirect(url_anterior)     # type: ignore
-    messages.add_message(
-        request,
-        messages.ERROR,
-        'Operação inválida. O usuário não está logado, ou não tem permissões de administrador.'
-    )
-    url_anterior = request.META.get('HTTP_REFERER')
-    return redirect(url_anterior) # type: ignore
+    else:
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'Operação inválida. O usuário não está logado, ou não tem permissões de administrador.'
+        )
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
+
+def ler_aluno(request:HttpRequest):
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            template_name = 'usuario/aluno/ler_aluno.html'
+            aluno = Aluno.objects.get(usuario=request.user)
+            return render(request, template_name, context={'aluno':aluno, 'conta': True})
+        else:
+            messages.add_message(request, messages.ERROR, OPERACAO_INVALIDA)
+            url_anterior = request.META.get('HTTP_REFERER')
+            return redirect(url_anterior) # type: ignore
+
+    else:
+        messages.add_message(request, messages.ERROR, USUARIO_NAO_AUTENTICADO)
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
 
 def atualizar_aluno(request:HttpRequest, uid:int):
     # TODO: Essa view so pode ser acessada por funcionarios, administradores e pelo aluno
@@ -346,6 +369,8 @@ def detalhes_professor(request:HttpRequest, uid:int):
         contexto['professor'] = professor
         return render(request, template_name, context=contexto) # type: ignore
 
+def listar_todas_as_reservas(request:HttpRequest):
+    pass
 
 # CRUD de Funcionário
 def criar_funcionario(request:HttpRequest):
