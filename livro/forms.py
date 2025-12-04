@@ -1,12 +1,9 @@
 from django import forms
-# <<<<<<< Updated upstream
 from livro.models import Categoria
 from livro.constants import NACIONALIDADES
-# from django.core.exceptions import ValidationError 
 from livro.models import Categoria
 from livro.models import Autor
 from livro.models import Livro
-from django.contrib.auth.models import User
 
 def get_categorias() -> tuple[tuple[int, str]]:
     try:
@@ -66,7 +63,7 @@ class FormularioLivro(forms.Form):
         categoria_id = self.cleaned_data['categoria']
         categoria = Categoria.objects.get(id=categoria_id)
         if not categoria:
-            raise ValidationError('Categoria não existe na base de dados.')
+            raise forms.ValidationError('Categoria não existe na base de dados.')
         return categoria
 
 class FormularioAutor(forms.Form):
