@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aluno|Listar Alunos</title>
+    <style>
+        .container {
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        table thead tr th {
+            text-align: start;
+            padding: 1px 10px;
+            border: 1px solid grey;
+        }
+    </style>
+</head>
+
+<body>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {{ message }}
+            </li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+    <h2>Listar Alunos</h2>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome Completo</th>
+                    <th>Matricula</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in alunos %}
+                <tr>
+                    <td>
+                        <a href="{% url 'usuario:ler-aluno' aluno.id %}">{{aluno.id}}</a>
+                    </td>
+                    <td>{{aluno.usuario.first_name}} {{aluno.usuario.last_name}}</td>
+                    <td>{{aluno.matricula}}</td>
+                    <td>{{aluno.usuario.email}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination">
+            <span class="step-links">
+                {% if alunos.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ alunos.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ alunos.number }} of {{ alunos.paginator.num_pages }}.
+                </span>
+
+                {% if alunos.has_next %}
+                <a href="?page={{ alunos.next_page_number }}">next</a>
+                <a href="?page={{ alunos.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</body>
+
+</html>
