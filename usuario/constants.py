@@ -80,3 +80,6 @@ NUM_MAX_DIAS_EMPRESTIMOS = {
     'professore': 30,
     'funcionario': 21
 }
+
+USUARIO_NAO_AUTENTICADO = 'O usuario nao esta autenticado.'
+OPERACAO_INVALIDA = 'Operação Inválida.'

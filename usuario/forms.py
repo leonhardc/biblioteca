@@ -30,7 +30,7 @@ class FormularioAluno(forms.Form):
     cep = forms.CharField(label='CEP',max_length=8,widget=forms.TextInput(attrs={'placeholder':'Digite o CEP'}))
     complemento = forms.CharField(label='Complemento',max_length=200,widget=forms.TextInput(attrs={'class':'form-control' , 'placeholder':''}))
     # Curso
-    matricula = forms.CharField(label='Matricula', max_length=6,widget=forms.TextInput(attrs={'placeholder':'Digite a matricula do aluno', 'disabled':False}))
+    # matricula = forms.CharField(label='Matricula', max_length=6,widget=forms.TextInput(attrs={'placeholder':'Digite a matricula do aluno', 'disabled':False}))
     curso = forms.ChoiceField(label='Curso',choices=OPCOES_CURSOS, widget=forms.Select(attrs={}))
     ingresso = forms.DateField(label="Data de Ingresso")
     conclusao_prevista = forms.DateField(label="Data de Conclusão")
