@@ -21,11 +21,17 @@ from .constants import *
 def index(request:HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         template = 'usuario/index.html'
+        context_info = {
+            'num_livros': len(Livro.objects.all()),
+            'num_usuarios': len(User.objects.all()),
+        }
         return render(
             request,
             template,
             context={
-                'user':request.user
+                'user':request.user,
+                "info":context_info
+                
             }
         )
     messages.add_message(request, messages.ERROR, "Operação inválida. O Usuário não está logado.")

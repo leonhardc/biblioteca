@@ -1,128 +1,294 @@
-<!DOCTYPE html>
 {% load static %}
-<html lang="pt_BR">
-
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca|Início</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Carme&family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --cor-de-borda: #343a4050;
-            --background-color: #4188e4;
-            --background-color-active: #2c62a8;
-        }
+    <title>Biblioteca Acadêmica - Scholar Shelf</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=book,person,search,star" />
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
 
-        * {
-            padding: 0;
-            margin: 0;
-        }
-
-        body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            /* background-color: #CAEFFF; */
-        }
-
-        main {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-        }
-
-        header {
-            width: 100%;
-            height: fit-content;
-        }
-
-        header nav {
-            z-index: 1;
-            width: 100%;
-            display: flex;
-            flex-direction: row-reverse;
-            padding: 10px 0px;
-        }
-
-        header nav ul {
-            list-style: None;
-            display: flex;
-            flex-direction: row;
-            margin-right: 20px;
-        }
-
-        header nav ul li {
-            margin-left: 10px;
-        }
-
-        header nav ul li a {
-            text-decoration: None;
-            border: 1px solid var(--cor-de-borda);
-            border-radius: 2px;
-            padding: 5px 10px;
-            background-color: var(--background-color);
-            color: #fff;
-            transition: background-color 200ms ease-in-out;
-        }
-
-        header nav ul li a:active {
-            background-color: var(--background-color-active);
-        }
-
-        .img {
-            position: relative;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            /* background-color: #CAEFFF; */
-        }
-
-        .img img {
-            width: 90%;
-            z-index: 0;
-        }
-
-        .img span {
-            position: absolute;
-            top: 20%;
-            left: 37%;
-            color: var(--background-color);
-            font-size: 30px;
-        }
-
-        .roboto-normal {
-            font-family: "Roboto", sans-serif;
-            font-optical-sizing: auto;
-            font-weight: 400;
-            font-style: normal;
-        }
-    </style>
 </head>
 
 <body>
-    <header class="roboto-normal">
-        <nav>
-            <ul>
-                <li><a href="#">Cadastre-se</a></li>
-                <li><a href="{% url 'usuario:entrar' %}">Entrar</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main style="align-items: center">
-        <div class="img roboto-normal">
-            <span>Minha Biblioteca Academica</span>
-            <img src="{% static 'usuario/img/6607.jpg' %}" alt="">
+    <!-- Header -->
+    <header class="header-backdrop border-bottom">
+        <div class="container-fluid">
+            <nav class="navbar">
+                <!-- Logo -->
+                <a href="/" class="navbar-brand">
+                    <div class="logo-box">
+                        <span class="material-symbols-outlined">
+                            book
+                        </span>
+                    </div>
+                    <div class="logo-text d-none d-sm-block">
+                        <h1 class="font-display">Biblioteca</h1>
+                        <p class="small text-muted">Acadêmica</p>
+                    </div>
+                </a>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="navbar-toggler" id="mobile-menu-btn" type="button">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+
+                <!-- Navigation Menu -->
+                <div class="navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#acervo">Acervo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#categorias">Categorias</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#novidades">Novidades</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sobre">Sobre</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- User Actions -->
+                <div class="navbar-actions d-none d-md-flex">
+                    <button class="btn btn-link" id="search-btn">
+                        <!-- <span class="material-symbols-outlined">search</span> -->
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm">
+                        <span class="material-symbols-outlined">person</span>
+                        Entrar
+                    </button>
+                </div>
+            </nav>
         </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="hero-background"></div>
+            <div class="container-fluid position-relative" style="z-index: 10; padding-top: 8rem;">
+                <div class="row align-items-center" style="min-height: 90vh;">
+                    <div class="col-lg-6 d-flex flex-column justify-content-center">
+                        <div class="hero-badge">
+                            <span class="pulse-dot"></span>
+                            Acervo atualizado em 2024
+                        </div>
+                        <h1 class="font-display hero-title">
+                            Bem-vindo à Biblioteca Acadêmica
+                        </h1>
+                        <p class="hero-subtitle">
+                            Explore um acervo de mais de 50 mil títulos acadêmicos. Encontre os melhores livros nas
+                            áreas de tecnologia, medicina, direito, engenharia e muito mais.
+                        </p>
+                        <div class="hero-search">
+                            <input type="text" class="form-control form-control-lg"
+                                placeholder="Buscar livro, autor ou categoria...">
+                            <button class="btn btn-primary btn-lg">
+                                <span class="material-symbols-outlined">search</span>
+                            </button>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">{{info.num_livros}}</div>
+                                <div class="stat-label">Livros</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{info.num_usuarios}}</div>
+                                <div class="stat-label">Leitores</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">45+</div>
+                                <div class="stat-label">Anos de história</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-6 d-none d-lg-flex justify-content-center">
+                        <div class="hero-illustration"></div>
+                    </div> -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Books Section -->
+        <section id="acervo" class="section-featured">
+            <div class="container-fluid py-5">
+                <div class="section-header">
+                    <div>
+                        <span class="section-label">Destaques</span>
+                        <h2 class="font-display section-title">Livros em Destaque</h2>
+                        <p class="section-subtitle">Os títulos mais procurados e bem avaliados do nosso acervo
+                            acadêmico</p>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-view-all">
+                        Ver todo acervo
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <!-- <span class="material-symbols-outlined">
+                            arrow_forward
+                        </span> -->
+                    </button>
+                </div>
+
+                <!-- Books Grid -->
+                <div class="books-grid" id="featured-books">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="categorias" class="section-categories">
+            <div class="container-fluid py-5">
+                <div class="section-header text-center">
+                    <div style="width: 100%;">
+                        <span class="section-label">Explore por área</span>
+                        <h2 class="font-display section-title">Categorias Acadêmicas</h2>
+                        <p class="section-subtitle" style="margin: 1rem auto 0;">Navegue pelo nosso acervo organizado
+                            por áreas do conhecimento</p>
+                    </div>
+                </div>
+
+                <!-- Categories Grid -->
+                <div class="categories-grid" id="categories">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- New Arrivals Section -->
+        <section id="novidades" class="section-arrivals">
+            <div class="container-fluid py-5">
+                <div class="row align-items-center gap-5">
+                    <div class="col-lg-6">
+                        <span class="section-label">Recém chegados</span>
+                        <h2 class="font-display section-title">Novidades no Acervo</h2>
+                        <p class="section-subtitle">
+                            Confira os títulos mais recentes adicionados à nossa biblioteca.
+                            Atualizamos nosso acervo semanalmente com as publicações mais relevantes.
+                        </p>
+
+                        <div class="new-books-list" id="new-books">
+                            <!-- Generated by JavaScript -->
+                        </div>
+
+                        <button class="btn btn-primary btn-lg mt-4">
+                            Explorar todas as novidades
+                            <!-- <span class="material-symbols-outlined">arrow_right</span> -->
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- <div class="col-lg-6 d-none d-lg-flex justify-content-center">
+                        <div class="arrivals-illustration"></div>
+                    </div> -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="sobre" class="footer-dark">
+            <div class="container-fluid py-5">
+                <div class="row g-5">
+                    <!-- Brand -->
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="footer-logo">
+                                <span class="material-symbols-outlined">book</span>
+                            </div>
+                            <div>
+                                <h3 class="font-display fw-semibold mb-0" style="font-size: 1.125rem;">Biblioteca</h3>
+                                <p class="small mb-0" style="color: rgba(249, 248, 245, 0.6);">Acadêmica</p>
+                            </div>
+                        </div>
+                        <p class="small lh-lg" style="color: rgba(249, 248, 245, 0.7);">
+                            Promovendo o acesso ao conhecimento e à pesquisa acadêmica desde 1979.
+                            Nossa missão é democratizar a educação.
+                        </p>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="col-6 col-md-6 col-lg-3">
+                        <h4 class="fw-semibold mb-3">Links Rápidos</h4>
+                        <ul class="list-unstyled d-flex flex-column gap-2">
+                            <li><a href="#" class="footer-link small">Acervo Digital</a></li>
+                            <li><a href="#" class="footer-link small">Reservas Online</a></li>
+                            <li><a href="#" class="footer-link small">Renovar Empréstimo</a></li>
+                            <li><a href="#" class="footer-link small">Minha Conta</a></li>
+                            <li><a href="#" class="footer-link small">Regulamento</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="col-6 col-md-6 col-lg-3">
+                        <h4 class="fw-semibold mb-3">Contato</h4>
+                        <ul class="list-unstyled d-flex flex-column gap-3">
+                            <li class="d-flex align-items-start gap-2 small" style="color: rgba(249, 248, 245, 0.7);">
+                                <!-- <span class="material-symbols-outlined" style="font-size: 18px; flex-shrink: 0;">
+                                    location_on
+                                </span> -->
+                                <span>Av. Universitária, 1000 - Campus Central</span>
+                            </li>
+                            <li class="d-flex align-items-center gap-2 small" style="color: rgba(249, 248, 245, 0.7);">
+                                <!-- <span class="material-symbols-outlined">phone</span> -->
+                                <span>(11) 3000-0000</span>
+                            </li>
+                            <li class="d-flex align-items-center gap-2 small" style="color: rgba(249, 248, 245, 0.7);">
+                                <!-- <span class="material-symbols-outlined">mail</span> -->
+                                <span>biblioteca@universidade.edu.br</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Hours -->
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <h4 class="fw-semibold mb-3">Horário de Funcionamento</h4>
+                        <ul class="list-unstyled d-flex flex-column gap-2 small"
+                            style="color: rgba(249, 248, 245, 0.7);">
+                            <li class="d-flex justify-content-between">
+                                <span>Segunda - Sexta</span>
+                                <span>8h - 20h</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>Sábado</span>
+                                <span>9h - 17h</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span>Domingo</span>
+                                <span>Fechado</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div
+                    class="border-top mt-5 pt-5 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+                    <p class="small mb-0" style="color: rgba(249, 248, 245, 0.5);">
+                        © <span id="year"></span> Biblioteca Acadêmica. Todos os direitos reservados.
+                    </p>
+                    <!-- <div class="d-flex gap-3">
+                        <a href="#" class="footer-social">
+                            <span class="material-symbols-outlined">facebook</span>
+                        </a>
+                        <a href="#" class="footer-social">
+                            <span class="material-symbols-outlined">instagram</span>
+                        </a>
+                        <a href="#" class="footer-social">
+                            <span class="material-symbols-outlined">twitter</span>
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+        </footer>
     </main>
+
+    <script src="{% static 'index.js' %}"></script>
 </body>
 
 </html>
