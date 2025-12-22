@@ -19,24 +19,24 @@ from .constants import *
 
 # Views de controle de usuario
 def index(request:HttpRequest) -> HttpResponse:
-    if request.user.is_authenticated:
-        template = 'usuario/index.html'
-        context_info = {
-            'num_livros': len(Livro.objects.all()),
-            'num_usuarios': len(User.objects.all()),
+    # if request.user.is_authenticated:
+    template = 'usuario/index.html'
+    context_info = {
+        'num_livros': len(Livro.objects.all()),
+        'num_usuarios': len(User.objects.all()),
+    }
+    return render(
+        request,
+        template,
+        context={
+            'user':request.user,
+            "info":context_info
+            
         }
-        return render(
-            request,
-            template,
-            context={
-                'user':request.user,
-                "info":context_info
-                
-            }
-        )
-    messages.add_message(request, messages.ERROR, "Operação inválida. O Usuário não está logado.")
-    url_anterior = request.META.get('HTTP_REFERER')
-    return redirect(url_anterior) # type: ignore
+    )
+    # messages.add_message(request, messages.ERROR, "Operação inválida. O Usuário não está logado.")
+    # url_anterior = request.META.get('HTTP_REFERER')
+    # return redirect(url_anterior) # type: ignore
 
 def entrar(request:HttpRequest):
     template = 'usuario/entrar.html'
@@ -47,6 +47,26 @@ def entrar(request:HttpRequest):
             template_name=template, 
             context={'form':formulario}
             )
+
+
+def pagina_inicial_aluno(request:HttpRequest, uid:int):
+    template_name='usuario/aluno/dashboard_aluno.html'
+    usuario = User.objects.get(id=uid)
+    messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
+    return render(request, template_name=template_name)
+
+def pagina_inicial_professor(request:HttpRequest, uid:int):
+    template_name='usuario/professor/dashboard_professor.html'
+    usuario = User.objects.get(id=uid)
+    messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
+    return render(request, template_name=template_name)
+
+def pagina_inicial_funcionario(request:HttpRequest, uid:int):
+    template_name='usuario/funcionario/dashboard_funcionario.html'
+    usuario = User.objects.get(id=uid)
+    messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
+    return render(request, template_name=template_name)
+
 
 def autenticar(request:HttpRequest):
     # Faz a autenticação de usuário
@@ -62,17 +82,11 @@ def autenticar(request:HttpRequest):
                 return redirect('usuario:entrar')
             login(request, usuario)
             if user_is_aluno(usuario):
-                template_name='usuario/aluno/dashboard_aluno.html'
-                messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-                return render(request, template_name=template_name)
+                return redirect('usuario:pagina_inicial_aluno', uid=usuario.id)
             elif user_is_professor(usuario):
-                template_name='usuario/professor/dashboard_professor.html'
-                messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-                return render(request, template_name=template_name)
+                return redirect('usuario:pagina_inicial_professor', uid=usuario.id)
             elif user_is_funcionario(usuario):
-                template_name='usuario/funcionario/dashboard_funcionario.html'
-                messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-                return render(request, template_name=template_name)
+                return redirect('usuario:pagina_inicial_funcionario', uid=usuario.id)
             else: 
                 messages.add_message(request, messages.INFO, 'Usuario ou senhas inválidos')
                 return redirect('usuario:entrar')
