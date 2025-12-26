@@ -50,7 +50,11 @@
                         </div>
                         <div class="stat-content">
                             <h3 class="stat-value">{{ aluno.emprestimos|default:0 }}</h3>
+                            {% if aluno.emprestimos == 1 %}
+                            <p class="stat-label">Empréstimo Ativo</p>
+                            {% else %}
                             <p class="stat-label">Empréstimos Ativos</p>
+                            {% endif %}
                             <a href="{% url 'livro:listar_emprestimos' %}" class="stat-link">
                                 Ver todos <i class="fa-solid fa-arrow-right"></i>
                             </a>
@@ -63,7 +67,11 @@
                         </div>
                         <div class="stat-content">
                             <h3 class="stat-value">{{ aluno.reservas|default:0 }}</h3>
+                            {% if aluno.reservas == 1 %}
+                            <p class="stat-label">Reserva Pendente</p>
+                            {% else %}
                             <p class="stat-label">Reservas Pendentes</p>
+                            {% endif %}
                             <a href="{% url 'livro:listar_reservas' %}" class="stat-link">
                                 Ver todas <i class="fa-solid fa-arrow-right"></i>
                             </a>
@@ -75,7 +83,7 @@
                             <i class="fa-solid fa-clock"></i>
                         </div>
                         <div class="stat-content">
-                            <h3 class="stat-value">0</h3>
+                            <h3 class="stat-value">{{ aluno.emprestimos_pendentes|default:0 }}</h3>
                             <p class="stat-label">Devoluções Pendentes</p>
                             <a href="{% url 'livro:listar_emprestimos' %}" class="stat-link">
                                 Gerenciar <i class="fa-solid fa-arrow-right"></i>

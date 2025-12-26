@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <nav class="navbar">
             <!-- Logo -->
-            <a href="{% url 'usuario:dashboard_aluno' %}" class="navbar-brand">
+            <a href="{% url 'usuario:pagina_inicial_aluno' uid=user.id %}" class="navbar-brand">
                 <div class="logo-box">
                     <i class="fa-solid fa-book"></i>
                 </div>
@@ -24,7 +24,7 @@
             <div class="navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link {% if dashboard %}active{% endif %}" href="{% url 'usuario:dashboard_aluno' %}">
+                        <a class="nav-link {% if dashboard %}active{% endif %}" href="{% url 'usuario:pagina_inicial_aluno' uid=user.id %}">
                             <i class="fa-solid fa-house"></i>
                             <span>Dashboard</span>
                         </a>

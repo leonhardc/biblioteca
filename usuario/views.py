@@ -16,6 +16,7 @@ from utils.utils import *
 from utils.formularios.utils_forms import informacoes_formulario_aluno
 from django.core.paginator import Paginator
 from .constants import *
+import datetime
 
 # Views de controle de usuario
 def index(request:HttpRequest) -> HttpResponse:
@@ -49,11 +50,30 @@ def entrar(request:HttpRequest):
             )
 
 
+def get_reservas_ativas_usuario(usuario:User):
+    return Reserva.objects.filter(usuario=usuario, ativo=True)
+
+def get_emprestimos_ativos_usuario(usuario:User):
+    return Emprestimo.objects.filter(usuario=usuario, ativo=True)
+
+def get_emprestimos_pendentes_usuario(usuario:User):
+    return Emprestimo.objects.filter(usuario=usuario, ativo=True, pendente=True)
+
+def calcula_emprestimos_pendentes_de_usuario(usuario_id):
+    emprestimos = Emprestimo.objects.filter(usuario__id=usuario_id, ativo=True)
+    for emprestimo in emprestimos:
+        if emprestimo.data_devolucao < datetime.date.today():
+            emprestimo.pendente = True
+            emprestimo.save()
+
 def pagina_inicial_aluno(request:HttpRequest, uid:int):
     template_name='usuario/aluno/dashboard_aluno.html'
     usuario = User.objects.get(id=uid)
-    messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-    return render(request, template_name=template_name)
+    cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
+    cont_reservas = len(get_reservas_ativas_usuario(usuario))
+    cont_emprestimos_pendentes = len(get_emprestimos_pendentes_usuario(usuario))
+    # messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
+    return render(request, template_name=template_name, context={'aluno':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas, 'emprestimos_pendentes':cont_emprestimos_pendentes}})
 
 def pagina_inicial_professor(request:HttpRequest, uid:int):
     template_name='usuario/professor/dashboard_professor.html'
@@ -80,7 +100,9 @@ def autenticar(request:HttpRequest):
             if usuario is None:
                 messages.error(request, 'Usuário não autorizado.')
                 return redirect('usuario:entrar')
+            # Operacoes feitas logo apos o login
             login(request, usuario)
+            calcula_emprestimos_pendentes_de_usuario(usuario.id)
             if user_is_aluno(usuario):
                 return redirect('usuario:pagina_inicial_aluno', uid=usuario.id)
             elif user_is_professor(usuario):
