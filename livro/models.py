@@ -64,6 +64,7 @@ class Emprestimo(models.Model):
     usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE, verbose_name='Usuário')        # type: ignore
     livro = models.ForeignKey(Livro, blank=False, null=False,on_delete=models.CASCADE, verbose_name='Livro')            # type: ignore
     data_emprestimo = models.DateField(default=timezone.now, blank=False, null=False, verbose_name='Data da Reserva')   # type: ignore
+    pendente = models.BooleanField(default=False, verbose_name="Empréstimo Pendente") # type: ignore
     ativo = models.BooleanField(default=True, verbose_name="Emprestimo Ativo") # type: ignore
     # TODO: Implementar a regra de devolução
     # * Um ALUNO pode pedir emprestado até 3 livros emprestados por até 15 dias cada.
