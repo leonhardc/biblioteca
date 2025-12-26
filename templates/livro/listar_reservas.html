@@ -1,79 +1,187 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Reservas - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
     <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
-    <title>Aluno | Listar reservas</title>
-    <style>
-        .container-reservas {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-        }
-
-        .reservas {
-            margin-top: 20px;
-        }
-
-        table {
-            margin-top: 10px;
-        }
-
-        table thead tr {
-            background-color: #343A40;
-            color: #fff;
-
-        }
-
-        table thead tr th {
-            text-align: start;
-            border-radius: 2px;
-        }
-
-        table thead tr th,
-        table tbody tr td {
-            padding: 5px 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'livro/css/styles-reservas.css' %}">
 </head>
 
 <body>
     <header>
         {% include 'usuario/aluno/parciais/_nav.html' %}
     </header>
-    <div class="container-reservas">
-        <div class="reservas">
-            <h3 class="roboto-normal" style="font-weight: bolder;">Minhas Reservas</h3>
-            <table class="roboto-normal">
-                <thead>
-                    <tr>
-                        <th>Livro</th>
-                        <th>Data</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for reserva in reservas %}
-                    <tr>
-                        <td>
-                            <span>{{reserva.livro}}</span>
-                        </td>
-                        <td>
-                            <span>{{reserva.data_reserva}}</span>
-                        </td>
-                        <td><a href="#">Detalhes</a></td>
-                        <td><a href="{% url 'livro:deletar_reserva' reserva.id %}">Excluir</a></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+    <main class="reservations-page">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:dashboard_aluno' %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Minhas Reservas</span>
+                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-bookmark"></i>
+                        Minhas Reservas
+                    </h1>
+                    <p class="page-subtitle">
+                        Gerencie suas reservas de livros. Acompanhe os títulos que você reservou e aguarda disponibilidade.
+                    </p>
+                </div>
+            </section>
+
+            {% if reservas %}
+                <!-- Stats Section -->
+                <section class="reservations-stats">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon warning">
+                                <i class="fa-solid fa-bookmark"></i>
+                            </div>
+                            <span class="stat-label">Total de Reservas</span>
+                        </div>
+                        <div class="stat-value">{{ reservas|length }}</div>
+                    </div>
+                </section>
+
+                <!-- Reservations List Section -->
+                <section class="reservations-section">
+                    <div class="reservations-list">
+                        {% for reserva in reservas %}
+                            <div class="reservation-card">
+                                <div class="reservation-card-header">
+                                    <div class="reservation-icon">
+                                        <i class="fa-solid fa-bookmark"></i>
+                                    </div>
+                                    <div>
+                                        <span class="reservation-status">
+                                            <i class="fa-solid fa-clock"></i>
+                                            Aguardando
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="reservation-card-body">
+                                    <h3 class="reservation-book-title">
+                                        {{ reserva.livro.titulo }}
+                                    </h3>
+
+                                    <div class="reservation-meta">
+                                        <div class="reservation-meta-item">
+                                            <i class="fa-solid fa-calendar-plus"></i>
+                                            <span class="reservation-meta-label">Data Reserva:</span>
+                                            <span class="reservation-meta-value reservation-date-highlight">
+                                                {{ reserva.data_reserva|date:"d/m/Y" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="reservation-meta-item">
+                                            <i class="fa-solid fa-barcode"></i>
+                                            <span class="reservation-meta-label">ISBN:</span>
+                                            <span class="reservation-meta-value">{{ reserva.livro.isbn }}</span>
+                                        </div>
+
+                                        {% if reserva.livro.autores.all %}
+                                            <div class="reservation-meta-item">
+                                                <i class="fa-solid fa-user"></i>
+                                                <span class="reservation-meta-label">Autor(es):</span>
+                                                <span class="reservation-meta-value">
+                                                    {% for autor in reserva.livro.autores.all %}
+                                                        {{ autor.nome }} {{ autor.sobrenome }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="reservation-meta-item">
+                                            <i class="fa-solid fa-info-circle"></i>
+                                            <span class="reservation-meta-label">Status:</span>
+                                            <span class="reservation-meta-value">Em fila de espera</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="reservation-card-footer">
+                                    <a href="{% url 'livro:detalhar_livro' reserva.livro.id %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fa-solid fa-eye"></i>
+                                        Ver Detalhes
+                                    </a>
+                                    <a href="{% url 'livro:deletar_reserva' reserva.id %}" class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Tem certeza que deseja cancelar esta reserva?');">
+                                        <i class="fa-solid fa-trash"></i>
+                                        Cancelar Reserva
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+            {% else %}
+                <!-- Empty State -->
+                <section class="reservations-section">
+                    <div class="empty-state-reservations">
+                        <div class="empty-state-reservations-icon">
+                            <i class="fa-solid fa-bookmark"></i>
+                        </div>
+                        <h2 class="font-display empty-state-reservations-title">
+                            Nenhuma Reserva Encontrada
+                        </h2>
+                        <p class="empty-state-reservations-text">
+                            Você ainda não possui reservas ativas. Quando um livro estiver indisponível, você poderá reservá-lo para ser notificado quando houver disponibilidade.
+                        </p>
+                        <a href="{% url 'livro:listar_livros' %}" class="btn btn-primary">
+                            <i class="fa-solid fa-book"></i>
+                            Explorar Acervo
+                        </a>
+                    </div>
+                </section>
+            {% endif %}
         </div>
-    </div>
+    </main>
+
+    <script>
+    // Mobile menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
 </body>
 
 </html>

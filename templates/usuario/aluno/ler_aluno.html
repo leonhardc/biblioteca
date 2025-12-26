@@ -1,131 +1,210 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 
 <head>
-    {% include 'usuario/aluno/parciais/_head.html' %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/perfil-aluno.css' %}">
 </head>
-
 
 <body>
     <header>
-        {% include 'usuario/funcionario/parciais/_nav.html' %}
+        {% include 'usuario/aluno/parciais/_nav.html' %}
     </header>
-    <main>
-        <style>
-            .container {
-                margin-top: 20px;
-                /* border: 1px solid grey; */
-                display: flex;
-                flex-direction: row;
-                width: 80%;
-            }
 
-            .container .menu-esquerdo {
-                width: 30%;
-                /* border-right: 1px solid grey; */
-            }
-
-            .container .menu-esquerdo ul {
-                list-style: none;
-            }
-
-            .container .menu-esquerdo ul li {
-                width: 100%;
-            }
-
-            .link {
-                width: max-content;
-                text-decoration: None;
-                color: grey;
-                transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
-            }
-
-            .link:hover {
-                background-color: grey;
-                color: white;
-            }
-
-            .container .informacoes {
-                width: 70%;
-            }
-
-            .informacoes-pessoais,
-            .informacoes-curso {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                margin-bottom: 20px;
-            }
-
-            .informacoes-pessoais,
-            .informacoes-curso,
-            .endereco {
-                margin-top: 10px;
-            }
-
-            .informacao {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .informacao .label {
-                font-size: 12px;
-                color: grey;
-                user-select: none;
-            }
-        </style>
-        {% if aluno %}
-        <div class="container roboto-normal">
-            <div class="menu-esquerdo">
-                <ul>
-                    <li><a class="link" href="#">Informacoes Pessoais</a></li>
-                    <li><a class="link" href="#">Sair</a></li>
-                </ul>
-            </div>
-            <div class="informacoes">
-                <h3>Informações Pessoais</h3>
-                <div class="informacoes-pessoais">
-                    <div class="informacao">
-                        <span class="label">Nome:</span>
-                        <span>{{aluno.usuario.first_name}} {{aluno.usuario.last_name}}</span>
+    <main class="profile-page">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:dashboard_aluno' %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Meu Perfil</span>
                     </div>
-                    <div class="informacao">
-                        <span class="label">Email:</span>
-                        <span>{{aluno.usuario.email}}</span>
-                    </div>
-                    <div class="informacao">
-                        <span class="label">CPF:</span>
-                        <span>{{aluno.cpf}}</span>
-                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-user-circle"></i>
+                        Meu Perfil
+                    </h1>
+                    <p class="page-subtitle">
+                        Visualize e gerencie suas informações pessoais e acadêmicas.
+                    </p>
                 </div>
-                <h3>Informacoes do Curso</h3>
-                <div class="informacoes-curso">
-                    <div class="informacao">
-                        <span class="label">Curso:</span>
-                        <span>{{aluno.curso}}</span>
+            </section>
+
+            {% if aluno %}
+                <!-- Profile Section -->
+                <section class="profile-section">
+                    <div class="profile-container">
+                        <!-- Sidebar -->
+                        <aside class="profile-sidebar">
+                            <div class="profile-card">
+                                <div class="profile-avatar">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <h2 class="profile-name">{{ aluno.usuario.first_name }} {{ aluno.usuario.last_name }}</h2>
+                                <span class="profile-role">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    Estudante
+                                </span>
+                            </div>
+
+                            <nav class="profile-menu">
+                                <a href="{% url 'usuario:ler-aluno' %}" class="profile-menu-item active">
+                                    <i class="fa-solid fa-user"></i>
+                                    Informações Pessoais
+                                </a>
+                                <a href="#" class="profile-menu-item">
+                                    <i class="fa-solid fa-gear"></i>
+                                    Configurações
+                                </a>
+                                <a href="{% url 'usuario:sair' %}" class="profile-menu-item danger">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                    Sair
+                                </a>
+                            </nav>
+                        </aside>
+
+                        <!-- Content -->
+                        <div class="profile-content">
+                            <!-- Personal Information -->
+                            <div class="info-section">
+                                <div class="info-section-header">
+                                    <div class="info-section-icon">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <h3 class="info-section-title">Informações Pessoais</h3>
+                                </div>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Nome Completo
+                                        </label>
+                                        <div class="info-value">{{ aluno.usuario.first_name }} {{ aluno.usuario.last_name }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Email
+                                        </label>
+                                        <div class="info-value">{{ aluno.usuario.email }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            CPF
+                                        </label>
+                                        <div class="info-value">{{ aluno.cpf }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Academic Information -->
+                            <div class="info-section">
+                                <div class="info-section-header">
+                                    <div class="info-section-icon">
+                                        <i class="fa-solid fa-graduation-cap"></i>
+                                    </div>
+                                    <h3 class="info-section-title">Informações Acadêmicas</h3>
+                                </div>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Curso
+                                        </label>
+                                        <div class="info-value">{{ aluno.curso }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Data de Ingresso
+                                        </label>
+                                        <div class="info-value">{{ aluno.ingresso|date:"d/m/Y" }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Conclusão Prevista
+                                        </label>
+                                        <div class="info-value">{{ aluno.conclusao_prevista|date:"d/m/Y" }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Address Information -->
+                            <div class="info-section">
+                                <div class="info-section-header">
+                                    <div class="info-section-icon">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                    </div>
+                                    <h3 class="info-section-title">Endereço</h3>
+                                </div>
+                                <div class="info-grid">
+                                    <div class="info-item" style="grid-column: 1 / -1;">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Endereço Completo
+                                        </label>
+                                        <div class="info-value">{{ aluno.endereco }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="profile-actions">
+                                    <a href="#" class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-pen"></i>
+                                        Editar Informações
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="informacao">
-                        <span class="label">Inicio:</span>
-                        <span>{{aluno.ingresso}}</span>
-                    </div>
-                    <div class="informacao">
-                        <span class="label">Conclusão Prevista:</span>
-                        <span>{{aluno.conclusao_prevista}}</span>
-                    </div>
-                </div>
-                <h3>Endereço</h3>
-                <div class="endereco">
-                    <div class="informacao">
-                        <!-- <span>Endereço:</span> -->
-                        <span>{{aluno.endereco}}</span>
-                    </div>
-                </div>
-            </div>
+                </section>
+            {% endif %}
         </div>
-        {% endif %}
     </main>
+
+    <script>
+    // Mobile menu toggle and user dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
 </body>
 
 </html>

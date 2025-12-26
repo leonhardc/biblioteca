@@ -1,138 +1,547 @@
-:root {
-    --cor-do-text: #fff;
-    --cor-de-fundo-header: #343a40;
-    --cor-de-fundo-hover: #343a4050;
-    --padding-padrao-botao: 4px 8px;
+/* ============================================
+   BOOKS PAGE - SPECIFIC STYLES ONLY
+   Extends index.html design without overriding navbar
+   ============================================ */
+
+/* Page Header */
+.page-header {
+    margin-bottom: 2.5rem;
+    padding-top: 2rem;
 }
 
-* {
-    padding: 0;
+.page-header-content {
+    max-width: 100%;
+}
+
+.page-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    line-height: 1.2;
+}
+
+.page-title i {
+    font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+    color: var(--primary);
+}
+
+.page-subtitle {
+    font-size: 1.0625rem;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 700px;
     margin: 0;
 }
 
-body {
-    width: 100%;
-    height: 100%;
-}
-
-header nav {
-    width: 100%;
-    height: 50px;
-    background-color: #343a40;
-    color: #fff;
-    display: flex;
-    flex-direction: row;
+/* Page Breadcrumb */
+.page-breadcrumb {
+    display: inline-flex;
     align-items: center;
-    justify-content: left;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 0.875rem;
 }
 
-header span {
-    margin: 0 20px;
-}
-
-header ul {
-    list-style: None;
-    display: flex;
-    flex-direction: row;
-    font-size: 14px;
-}
-
-header ul li {
-    margin-right: 10px;
-}
-
-header ul li a {
+.page-breadcrumb a {
+    color: var(--primary);
     text-decoration: none;
-    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
-main {
-    width: 100%;
-    height: 100%;
+.page-breadcrumb a:hover {
+    color: var(--secondary);
+}
+
+.page-breadcrumb i.fa-chevron-right {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.page-breadcrumb span {
+    color: var(--muted);
+    font-weight: 500;
+}
+
+/* Search Section */
+.search-section {
+    margin-bottom: 2.5rem;
+}
+
+.search-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+}
+
+.search-form {
     display: flex;
-    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 100%;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 18px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.875rem 3rem 0.875rem 3.25rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.0625rem;
+    font-family: var(--font-body);
+    background-color: var(--card-bg);
+    color: var(--body-color);
+    transition: all 0.2s ease;
+    border: 1.5px solid var(--border-color);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(212, 167, 52, 0.15);
+    background-color: white;
+}
+
+.search-input::placeholder {
+    color: var(--muted);
+}
+
+.clear-search {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    text-decoration: none;
+    width: 28px;
+    height: 28px;
+    display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    z-index: 2;
 }
 
-main #tabela-livros #formulario-pesquisa {
-    width: 100%;
-    margin: 10px 0px;
+.clear-search:hover {
+    background: rgba(212, 167, 52, 0.1);
+    color: var(--secondary);
+}
+
+.btn-search {
+    padding: 0.875rem 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    background-color: var(--secondary);
+    border: none;
+    color: var(--body-color);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-search:hover {
+    background-color: #c49a2e;
+    transform: translateY(-2px);
+    box-shadow: var(--gold-glow);
+}
+
+.search-results-info {
+    margin-top: 1.5rem;
+    padding: 0.875rem 1.25rem;
+    background: rgba(30, 58, 95, 0.04);
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+    font-size: 0.9375rem;
     display: flex;
-    flex-direction: row-reverse;
+    align-items: center;
+    gap: 0.625rem;
 }
 
-main #formulario-pesquisa form {
-    width: fit-content;
+.search-results-info i {
+    color: var(--primary);
+    font-size: 16px;
 }
 
-main #formulario-pesquisa form input {
-    padding: var(--padding-padrao-botao);
+/* Books Grid */
+.books-section {
+    margin-bottom: 3rem;
 }
 
-main #tabela-livros {
-    margin-top: 20px;
-    width: 80%;
+.books-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Book Card */
+.books-page .book-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
+    box-shadow: var(--card-shadow);
+    opacity: 1 !important;
+    animation: none !important;
+}
+
+.books-page .book-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: var(--primary);
+}
+
+.book-card-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(30, 58, 95, 0.03) 0%, rgba(212, 167, 52, 0.03) 100%);
 }
 
-main #tabela-livros table {
-    width: 100%;
-    font-size: 14px;
+.book-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--primary) 0%, #2d4a6f 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 26px;
+    box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
 }
 
-main #tabela-livros table thead tr th {
-    background-color: var(--cor-de-fundo-header);
-    color: var(--cor-do-text);
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
-main #tabela-livros table thead tr th:nth-child(1) {
-    border-top-left-radius: 5px;
+.badge-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
 }
 
-main #tabela-livros table thead tr th:nth-last-child(1) {
-    border-top-right-radius: 5px;
+.badge-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
 }
 
-main #tabela-livros table tbody tr:hover {
-    background-color: var(--cor-de-fundo-hover);
-    transition: background-color 200ms ease-in-out;
+.book-card-body {
+    padding: 1.5rem;
+    flex: 1;
 }
 
-main #tabela-livros table tbody tr td {
-    text-align: start;
+.book-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1.25rem 0;
+    line-height: 1.4;
 }
 
-main #tabela-livros table thead tr th,
-main #tabela-livros table tbody tr td {
-    padding: 5px 20px;
-}
-
-.roboto-normal {
-    font-family: "Roboto", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-}
-
-.roboto-bold {
-    font-family: "Roboto", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: bold;
-}
-
-.ativo {
-    color: #738597;
-}
-
-.pagination {
-    margin: 20px 0px;
-}
-
-.pagination a {
+.book-title a {
+    color: var(--body-color);
     text-decoration: none;
-    border-radius: 2px;
-    border: 1px solid var(--cor-de-fundo-header);
-    padding: var(--padding-padrao-botao);
+    transition: color 0.2s ease;
+}
+
+.book-title a:hover {
+    color: var(--primary);
+}
+
+.book-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.book-meta-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+.book-meta-item i {
+    font-size: 14px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.book-authors {
+    flex: 1;
+    line-height: 1.5;
+}
+
+.book-card-footer {
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    background: rgba(30, 58, 95, 0.02);
+}
+
+.btn-sm {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+}
+
+.btn-secondary {
+    background: var(--muted);
+    color: white;
+    border: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Pagination */
+.pagination-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--card-bg);
+    padding: 1rem 1.25rem;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+}
+
+.pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    color: var(--body-color);
+    text-decoration: none;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-family: var(--font-body);
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.pagination-btn i {
+    font-size: 12px;
+}
+
+.pagination-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    font-size: 0.9375rem;
+}
+
+.pagination-current {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.pagination-separator {
+    color: var(--muted);
+}
+
+.pagination-total {
+    font-weight: 600;
+    color: var(--body-color);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+.empty-state-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, rgba(30, 58, 95, 0.08) 0%, rgba(212, 167, 52, 0.08) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+}
+
+.empty-state-icon i {
+    font-size: 48px;
+    color: var(--primary);
+}
+
+.empty-state-title {
+    font-size: 2rem;
+    color: var(--body-color);
+    margin-bottom: 1rem;
+}
+
+.empty-state-text {
+    font-size: 1.125rem;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Removed animation from .book-card to fix disappearing issue */
+
+/* Responsive */
+@media (max-width: 768px) {
+    .books-list {
+        grid-template-columns: 1fr;
+    }
+
+    .search-card {
+        padding: 1.5rem;
+    }
+
+    .search-form {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+    }
+
+    .search-input {
+        font-size: 1rem;
+    }
+
+    .btn-search {
+        width: 100%;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .book-card-footer {
+        flex-direction: column;
+    }
+
+    .book-card-footer .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .pagination-btn span {
+        display: none;
+    }
+
+    .pagination-info {
+        padding: 0 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .page-breadcrumb {
+        font-size: 0.8125rem;
+    }
+
+    .pagination-btn-first,
+    .pagination-btn-last {
+        display: none;
+    }
 }

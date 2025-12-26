@@ -1,125 +1,191 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livro | Detalhar Livro</title>
-    <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
+    <title>{{ livro.titulo }} - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'livro/css/styles-detalhar.css' %}">
 </head>
 
 <body>
     <header>
         {% include 'usuario/aluno/parciais/_nav.html' %}
     </header>
-    <main>
-        <style>
-            .container-livro {
-                width: 100%;
-            }
 
-            .titulo {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .titulo span:nth-child(1) {
-                font-size: large;
-                font-weight: bold;
-            }
-
-            .titulo span:nth-child(2) {
-                font-size: small;
-            }
-
-            .autores span {
-                font-size: small;
-                border: 1px solid #343A40;
-                border-radius: 2px;
-                padding: 2px 4px;
-            }
-
-            .resumo p {
-                width: 60%;
-                font-size: small;
-                text-align: justify;
-            }
-
-            .outras-informacoes {
-                max-width: 60%;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-            }
-
-            .titulo,
-            .autores,
-            .resumo p,
-            .outras-informacoes {
-                margin: 10px 25px;
-                color: #343A40;
-            }
-
-            .informacoes-editora,
-            .copias {
-                font-size: small;
-            }
-
-            .botoes {
-                max-width: 60%;
-                display: flex;
-                flex-direction: row;
-                justify-content: end;
-                margin: 0px 25px;
-            }
-
-            .botoes a {
-                text-decoration: None;
-                color: #343A40;
-                border: 1px solid #343A40;
-                border-radius: 2px;
-                margin-left: 10px;
-                font-size: small;
-                padding: 2px 4px;
-                transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
-            }
-
-            .botoes a:hover {
-                background-color: #343A40;
-                color: #fff;
-            }
-        </style>
-        <div class="container-livro">
-            <div class="titulo">
-                <span>{{livro.titulo}}</span>
-                <span>{{livro.subtitulo}}</span>
-            </div>
-            <div class="autores">
-                {% for autor in livro.autores.all %}
-                <span>{{autor.nome}} {{autor.sobrenome}}</span>
-                {%endfor%}
-            </div>
-            <div class="resumo">
-                <p>
-                    {{livro.resumo}}
-                </p>
-            </div>
-            <div class="outras-informacoes">
-                <div class="informacoes-editora">
-                    <span>{{livro.editora}}</span>
-                    <span>{{livro.lancamento|date:'Y'}}</span>
+    <main class="book-detail-page">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:dashboard_aluno' %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <a href="{% url 'livro:listar_livros' %}">
+                            <i class="fa-solid fa-book-open"></i> Livros
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Detalhes do Livro</span>
+                    </div>
                 </div>
-                <div class="copias">
-                    <span>Cópias: {{livro.copias}}</span>
+            </section>
+
+            <!-- Book Detail Section -->
+            <section class="book-detail-section">
+                <div class="book-detail-card">
+                    <!-- Book Header -->
+                    <div class="book-detail-header">
+                        <div class="book-header-top">
+                            <div class="book-icon-large">
+                                <i class="fa-solid fa-book-open"></i>
+                            </div>
+                            <div class="book-header-content">
+                                <h1 class="font-display book-detail-title">{{ livro.titulo }}</h1>
+                                {% if livro.subtitulo %}
+                                    <p class="book-detail-subtitle">{{ livro.subtitulo }}</p>
+                                {% endif %}
+                                
+                                {% if livro.autores.all %}
+                                    <div class="book-authors-list">
+                                        {% for autor in livro.autores.all %}
+                                            <span class="author-badge">
+                                                <i class="fa-solid fa-user"></i>
+                                                {{ autor.nome }} {{ autor.sobrenome }}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <div class="book-availability-badge {% if livro.copias > 0 %}available{% else %}unavailable{% endif %}">
+                                    {% if livro.copias > 0 %}
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        {{ livro.copias }} cópia{{ livro.copias|pluralize }} disponíve{{ livro.copias|pluralize:"l,is" }}
+                                    {% else %}
+                                        <i class="fa-solid fa-circle-xmark"></i>
+                                        Indisponível no momento
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book Body -->
+                    <div class="book-detail-body">
+                        <!-- Info Grid -->
+                        <div class="book-info-grid">
+                            <div class="book-info-card">
+                                <div class="book-info-label">
+                                    <i class="fa-solid fa-building"></i>
+                                    Editora
+                                </div>
+                                <div class="book-info-value">{{ livro.editora|default:"Não informado" }}</div>
+                            </div>
+
+                            <div class="book-info-card">
+                                <div class="book-info-label">
+                                    <i class="fa-solid fa-calendar"></i>
+                                    Ano de Publicação
+                                </div>
+                                <div class="book-info-value">{{ livro.lancamento|date:"Y"|default:"Não informado" }}</div>
+                            </div>
+
+                            <div class="book-info-card">
+                                <div class="book-info-label">
+                                    <i class="fa-solid fa-barcode"></i>
+                                    ISBN
+                                </div>
+                                <div class="book-info-value">{{ livro.isbn }}</div>
+                            </div>
+
+                            <div class="book-info-card">
+                                <div class="book-info-label">
+                                    <i class="fa-solid fa-copy"></i>
+                                    Exemplares
+                                </div>
+                                <div class="book-info-value">{{ livro.copias }} unidade{{ livro.copias|pluralize }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Summary -->
+                        {% if livro.resumo %}
+                            <div class="book-summary">
+                                <h2 class="summary-title">
+                                    <i class="fa-solid fa-align-left"></i>
+                                    Resumo
+                                </h2>
+                                <p class="summary-text">{{ livro.resumo }}</p>
+                            </div>
+                        {% else %}
+                            <div class="alert-info">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <span>Resumo não disponível para este livro.</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- Actions -->
+                        <div class="book-actions">
+                            <a href="{% url 'livro:listar_livros' %}" class="btn btn-back">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                Voltar ao Acervo
+                            </a>
+
+                            {% if livro.copias > 0 %}
+                                <a href="{% url 'livro:novo_emprestimo' %}" class="btn btn-primary">
+                                    <i class="fa-solid fa-book-bookmark"></i>
+                                    Fazer Empréstimo
+                                </a>
+                            {% else %}
+                                <a href="{% url 'livro:criar_reserva' livro.id %}" class="btn btn-outline-primary">
+                                    <i class="fa-solid fa-bookmark"></i>
+                                    Reservar Livro
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="botoes">
-                <a href="{% url 'livro:criar_reserva' livro.id %}">Reservar</a>
-                <a href="#">Alugar</a>
-            </div>
+            </section>
         </div>
     </main>
+
+    <script>
+    // Mobile menu toggle and user dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
 </body>
 
 </html>

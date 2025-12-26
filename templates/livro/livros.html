@@ -1,16 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Carme&family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <title>Pagina de Usuario - Aluno</title>
+    <title>Acervo - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
     <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
 </head>
 
@@ -19,61 +19,261 @@
         {% include 'usuario/aluno/parciais/_nav.html' %}
     </header>
 
-    <main>
-        <div id="tabela-livros">
-            <div id="formulario-pesquisa">
-                <!-- TODO: Pesquisa por Autor, Titulo e Subtitulo já implementada. O que falta agora é resolver o bug com a paginacao -->
-                <form action="{% url 'livro:listar_livros' %}" class="roboto-normal">
-                    <input type="text" placeholder="Titulo, Subtitulo, Autor" name="pesquisa" value="{{ termo_busca }}">
-                    <input type="submit" value="Pesquisar">
-                </form>
-            </div>
-            <table class="roboto-normal">
-                <thead>
-                    <tr>
-                        <th>ISBN</th>
-                        <th>Titulo</th>
-                        <th>Autor(es)</th>
-                        <th>Qt Cópias</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for livro in livros %}
-                    <tr>
-                        <td>{{livro.isbn}}</td>
-                        <td>
-                            <a href="{% url 'livro:detalhar_livro' livro.id %}">{{livro.titulo}}</a>
-                        </td>
-                        <td>
-                            {% for autor in livro.autores.all %}
-                            {{autor.nome}} {{autor.sobrenome}}.
-                            {% endfor %}
-                        </td>
-                        <td>{{livro.copias}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="pagination roboto-normal">
-                <span class="step-links">
-                    {% if livros.has_previous %}
-                    <a href="?pesquisa={{ termo_busca }}&page=1">&laquo; Primeira</a>
-                    <a href="?pesquisa={{ termo_busca }}&page={{ livros.previous_page_number }}">Anterior</a>
+    <main class="books-page">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <section class="page-header" style="margin-bottom: 20px;">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:dashboard_aluno' %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Acervo de Livros</span>
+                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-book-open"></i>
+                        Acervo de Livros
+                    </h1>
+                    <p class="page-subtitle">
+                        Explore nossa coleção com mais de 50 mil títulos acadêmicos. Use o filtro de busca para encontrar o que precisa.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-card">
+                    <form action="{% url 'livro:listar_livros' %}" method="GET" class="search-form">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input 
+                                type="text" 
+                                name="pesquisa" 
+                                placeholder="Buscar por título, subtítulo ou autor..." 
+                                value="{{ termo_busca }}"
+                                class="search-input"
+                                autocomplete="off"
+                            >
+                            {% if termo_busca %}
+                                <a href="{% url 'livro:listar_livros' %}" class="clear-search" title="Limpar busca">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-search">
+                            <i class="fa-solid fa-search"></i>
+                            <span>Pesquisar</span>
+                        </button>
+                    </form>
+
+                    {% if termo_busca %}
+                        <div class="search-results-info">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Exibindo resultados para "<strong>{{ termo_busca }}</strong>"
+                            {% if livros.paginator.count %}
+                                - {{ livros.paginator.count }} livro{{ livros.paginator.count|pluralize }}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <!-- Books List Section -->
+            <section class="books-section">
+                {% if livros %}
+                    <!-- Books Grid -->
+                    <div class="books-list">
+                        {% for livro in livros %}
+                            <div class="book-card">
+                                <div class="book-card-header">
+                                    <div class="book-icon">
+                                        <i class="fa-solid fa-book"></i>
+                                    </div>
+                                    <div class="book-availability">
+                                        {% if livro.copias > 0 %}
+                                            <span class="badge badge-success">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                                Disponível
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-danger">
+                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                Indisponível
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="book-card-body">
+                                    <h3 class="book-title">
+                                        <a href="{% url 'livro:detalhar_livro' livro.id %}">
+                                            {{ livro.titulo }}
+                                        </a>
+                                    </h3>
+
+                                    <div class="book-meta">
+                                        <div class="book-meta-item">
+                                            <i class="fa-solid fa-user"></i>
+                                            <span class="book-authors">
+                                                {% for autor in livro.autores.all %}
+                                                    {{ autor.nome }} {{ autor.sobrenome }}{% if not forloop.last %}, {% endif %}
+                                                {% empty %}
+                                                    Autor não informado
+                                                {% endfor %}
+                                            </span>
+                                        </div>
+
+                                        <div class="book-meta-item">
+                                            <i class="fa-solid fa-barcode"></i>
+                                            <span>ISBN: {{ livro.isbn }}</span>
+                                        </div>
+
+                                        <div class="book-meta-item">
+                                            <i class="fa-solid fa-copy"></i>
+                                            <span>{{ livro.copias }} cópia{{ livro.copias|pluralize }} disponíve{{ livro.copias|pluralize:"l,is" }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="book-card-footer">
+                                    <a href="{% url 'livro:detalhar_livro' livro.id %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fa-solid fa-eye"></i>
+                                        Ver Detalhes
+                                    </a>
+                                    {% if livro.copias > 0 %}
+                                        <a href="{% url 'livro:novo_emprestimo'%}" class="btn btn-primary btn-sm">
+                                            <i class="fa-solid fa-book-bookmark"></i>
+                                            Emprestar
+                                        </a>
+                                    {% else %}
+                                        <button class="btn btn-secondary btn-sm" disabled>
+                                            <i class="fa-solid fa-clock"></i>
+                                            Reservar
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if livros.paginator.num_pages > 1 %}
+                        <div class="pagination-section">
+                            <nav class="pagination-nav">
+                                {% if livros.has_previous %}
+                                    <a href="?pesquisa={{ termo_busca }}&page=1" class="pagination-btn pagination-btn-first">
+                                        <i class="fa-solid fa-angles-left"></i>
+                                        <span class="d-none d-sm-inline">Primeira</span>
+                                    </a>
+                                    <a href="?pesquisa={{ termo_busca }}&page={{ livros.previous_page_number }}" class="pagination-btn">
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                        <span class="d-none d-sm-inline">Anterior</span>
+                                    </a>
+                                {% else %}
+                                    <button class="pagination-btn pagination-btn-first" disabled>
+                                        <i class="fa-solid fa-angles-left"></i>
+                                        <span class="d-none d-sm-inline">Primeira</span>
+                                    </button>
+                                    <button class="pagination-btn" disabled>
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                        <span class="d-none d-sm-inline">Anterior</span>
+                                    </button>
+                                {% endif %}
+
+                                <div class="pagination-info">
+                                    <span class="pagination-current">Página {{ livros.number }}</span>
+                                    <span class="pagination-separator">de</span>
+                                    <span class="pagination-total">{{ livros.paginator.num_pages }}</span>
+                                </div>
+
+                                {% if livros.has_next %}
+                                    <a href="?pesquisa={{ termo_busca }}&page={{ livros.next_page_number }}" class="pagination-btn">
+                                        <span class="d-none d-sm-inline">Próxima</span>
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </a>
+                                    <a href="?pesquisa={{ termo_busca }}&page={{ livros.paginator.num_pages }}" class="pagination-btn pagination-btn-last">
+                                        <span class="d-none d-sm-inline">Última</span>
+                                        <i class="fa-solid fa-angles-right"></i>
+                                    </a>
+                                {% else %}
+                                    <button class="pagination-btn" disabled>
+                                        <span class="d-none d-sm-inline">Próxima</span>
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                    <button class="pagination-btn pagination-btn-last" disabled>
+                                        <span class="d-none d-sm-inline">Última</span>
+                                        <i class="fa-solid fa-angles-right"></i>
+                                    </button>
+                                {% endif %}
+                            </nav>
+                        </div>
                     {% endif %}
 
-                    <span class="current">
-                        Page {{ livros.number }} of {{ livros.paginator.num_pages }}.
-                    </span>
-
-                    {% if livros.has_next %}
-                    <a href="?pesquisa={{ termo_busca }}&page={{ livros.next_page_number }}">Proxima</a>
-                    <a href="?pesquisa={{ termo_busca }}&page={{ livros.paginator.num_pages }}">Ultima &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <h2 class="font-display empty-state-title">
+                            {% if termo_busca %}
+                                Nenhum livro encontrado
+                            {% else %}
+                                Nenhum livro disponível
+                            {% endif %}
+                        </h2>
+                        <p class="empty-state-text">
+                            {% if termo_busca %}
+                                Não encontramos resultados para "{{ termo_busca }}". Tente usar outros termos de busca.
+                            {% else %}
+                                O acervo está sendo atualizado. Por favor, volte mais tarde.
+                            {% endif %}
+                        </p>
+                        {% if termo_busca %}
+                            <a href="{% url 'livro:listar_livros' %}" class="btn btn-primary">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                Ver todos os livros
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </section>
         </div>
     </main>
-    <script src="./script.js"></script>
+
+    <script>
+    // Mobile menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
 </body>
 
 </html>

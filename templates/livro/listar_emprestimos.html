@@ -1,44 +1,17 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Empréstimos - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
     <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
-    <title>Aluno | Listar Emprestimos</title>
-    <style>
-        .container-reservas {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-        }
-
-        .reservas {
-            margin-top: 20px;
-        }
-
-        table {
-            margin-top: 10px;
-        }
-
-        table thead tr {
-            background-color: #343A40;
-            color: #fff;
-
-        }
-
-        table thead tr th {
-            text-align: start;
-            border-radius: 2px;
-        }
-
-        table thead tr th,
-        table tbody tr td {
-            padding: 5px 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'livro/css/styles-emprestimos.css' %}">
 </head>
 
 <body>
@@ -46,40 +19,220 @@
         {% include 'usuario/aluno/parciais/_nav.html' %}
     </header>
 
-    <main>
-        {% include 'livro/parciais/_messages.html' %}
-        {% if emprestimos %}
-        <div class="container-reservas">
-            <div class="reservas">
-                <h3 class="roboto-normal" style="font-weight: bolder;">Meus Emprestimos</h3>
-                <table class="roboto-normal">
-                    <thead>
-                        <tr>
-                            <th>Livro</th>
-                            <th>Data Emprestimo</th>
-                            <th>Data Devolução</th>
-                            <th>Ativo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+    <main class="loans-page">
+        <div class="container-fluid">
+            <!-- {% include 'livro/parciais/_messages.html' %} -->
+            
+            <!-- Page Header -->
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:dashboard_aluno' %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Meus Empréstimos</span>
+                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        Meus Empréstimos
+                    </h1>
+                    <p class="page-subtitle">
+                        Acompanhe todos os seus empréstimos ativos e o histórico de devoluções.
+                    </p>
+                </div>
+            </section>
+
+            {% if emprestimos %}
+                <!-- Stats Section -->
+                <section class="loans-stats">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon primary">
+                                <i class="fa-solid fa-book"></i>
+                            </div>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-value">{{ emprestimos|length }}</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon success">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <span class="stat-label">Ativos</span>
+                        </div>
+                        <div class="stat-value">
+                            {% with ativos=0 %}
+                                {% for emprestimo in emprestimos %}
+                                    {% if emprestimo.ativo %}
+                                        {% with ativos=ativos|add:1 %}{% endwith %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endwith %}
+                            <span id="ativos-count">-</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon danger">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <span class="stat-label">Devolvidos</span>
+                        </div>
+                        <div class="stat-value">
+                            <span id="devolvidos-count">-</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Loans List Section -->
+                <section class="loans-section">
+                    <div class="loans-list">
                         {% for emprestimo in emprestimos %}
-                        <tr>
-                            <td>
-                                <span>{{emprestimo.livro}}</span>
-                            </td>
-                            <td>
-                                <span>{{emprestimo.data_emprestimo}}</span>
-                            </td>
-                            <td>{{emprestimo.data_devolucao}}</td>
-                            <td>{{emprestimo.ativo}}</td>
-                        </tr>
+                            <div class="loan-card">
+                                <div class="loan-card-header">
+                                    <div class="loan-icon">
+                                        <i class="fa-solid fa-book-open"></i>
+                                    </div>
+                                    <div>
+                                        {% if emprestimo.ativo %}
+                                            <span class="loan-status active">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                                Ativo
+                                            </span>
+                                        {% else %}
+                                            <span class="loan-status inactive">
+                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                Devolvido
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="loan-card-body">
+                                    <h3 class="loan-book-title">
+                                        {{ emprestimo.livro.titulo }}
+                                    </h3>
+
+                                    <div class="loan-meta">
+                                        <div class="loan-meta-item">
+                                            <i class="fa-solid fa-calendar-plus"></i>
+                                            <span class="loan-meta-label">Data Empréstimo:</span>
+                                            <span class="loan-meta-value loan-date-highlight">
+                                                {{ emprestimo.data_emprestimo|date:"d/m/Y" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="loan-meta-item">
+                                            <i class="fa-solid fa-calendar-check"></i>
+                                            <span class="loan-meta-label">Data Devolução:</span>
+                                            <span class="loan-meta-value {% if emprestimo.ativo %}loan-date-highlight{% endif %}">
+                                                {{ emprestimo.data_devolucao|date:"d/m/Y" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="loan-meta-item">
+                                            <i class="fa-solid fa-barcode"></i>
+                                            <span class="loan-meta-label">ISBN:</span>
+                                            <span class="loan-meta-value">{{ emprestimo.livro.isbn }}</span>
+                                        </div>
+
+                                        {% if emprestimo.livro.autores.all %}
+                                            <div class="loan-meta-item">
+                                                <i class="fa-solid fa-user"></i>
+                                                <span class="loan-meta-label">Autor(es):</span>
+                                                <span class="loan-meta-value">
+                                                    {% for autor in emprestimo.livro.autores.all %}
+                                                        {{ autor.nome }} {{ autor.sobrenome }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    </div>
+                </section>
+
+            {% else %}
+                <!-- Empty State -->
+                <section class="loans-section">
+                    <div class="empty-state-loans">
+                        <div class="empty-state-loans-icon">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                        <h2 class="font-display empty-state-loans-title">
+                            Nenhum Empréstimo Encontrado
+                        </h2>
+                        <p class="empty-state-loans-text">
+                            Você ainda não possui empréstimos registrados. Explore nosso acervo e faça seu primeiro empréstimo!
+                        </p>
+                        <a href="{% url 'livro:listar_livros' %}" class="btn btn-primary">
+                            <i class="fa-solid fa-book"></i>
+                            Explorar Acervo
+                        </a>
+                    </div>
+                </section>
+            {% endif %}
         </div>
-        {% endif %}
     </main>
+
+    <script>
+    // Mobile menu toggle and stats calculation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Calculate stats
+        const loanCards = document.querySelectorAll('.loan-card');
+        let ativos = 0;
+        let devolvidos = 0;
+        
+        loanCards.forEach(card => {
+            const status = card.querySelector('.loan-status');
+            if (status && status.classList.contains('active')) {
+                ativos++;
+            } else if (status && status.classList.contains('inactive')) {
+                devolvidos++;
+            }
+        });
+        
+        const ativosCount = document.getElementById('ativos-count');
+        const devolvidosCount = document.getElementById('devolvidos-count');
+        
+        if (ativosCount) ativosCount.textContent = ativos;
+        if (devolvidosCount) devolvidosCount.textContent = devolvidos;
+
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
 </body>
 
 </html>
