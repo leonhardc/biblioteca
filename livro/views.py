@@ -110,7 +110,12 @@ def criar_reserva(request: HttpRequest, id_livro:int):
                     messages.add_message(request, messages.ERROR, 'Reserva já existente para este livro.')
                     pagina_anterior = request.META.get('HTTP_REFERER')
                     return redirect(pagina_anterior)
-                # Se a reserva nao existir, cria uma nova reserva
+                emprestimo_existe = Emprestimo.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
+                if emprestimo_existe:
+                    messages.add_message(request, messages.ERROR, 'Empréstimo já existente para este livro.')
+                    pagina_anterior = request.META.get('HTTP_REFERER')
+                    return redirect(pagina_anterior)
+                # Se a reserva ou o emprestimo nao existir, cria uma nova reserva
                 Reserva.objects.create(
                     usuario=request.user,
                     livro=livro,
@@ -120,7 +125,7 @@ def criar_reserva(request: HttpRequest, id_livro:int):
                 messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
                 return redirect('livro:listar_reservas')
             else:
-                messages.add_message(request, messages.SUCCESS, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+                messages.add_message(request, messages.ERROR, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
                 pagina_anterior = request.META.get('HTTP_REFERER')
                 return redirect(pagina_anterior)
 
@@ -133,7 +138,12 @@ def criar_reserva(request: HttpRequest, id_livro:int):
                     messages.add_message(request, messages.ERROR, 'Reserva já existente para este livro.')
                     pagina_anterior = request.META.get('HTTP_REFERER')
                     return redirect(pagina_anterior)
-                # Se a reserva nao existir, cria uma nova reserva
+                emprestimo_existe = Emprestimo.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
+                if emprestimo_existe:
+                    messages.add_message(request, messages.ERROR, 'Empréstimo já existente para este livro.')
+                    pagina_anterior = request.META.get('HTTP_REFERER')
+                    return redirect(pagina_anterior)
+                # Se a reserva ou o emprestimo nao existir, cria uma nova reserva
                 Reserva.objects.create(
                     usuario=request.user,
                     livro=livro,
@@ -143,7 +153,7 @@ def criar_reserva(request: HttpRequest, id_livro:int):
                 messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
                 return redirect('livro:listar_reservas')
             else:
-                messages.add_message(request, messages.SUCCESS, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+                messages.add_message(request, messages.ERROR, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
                 pagina_anterior = request.META.get('HTTP_REFERER')
                 return redirect(pagina_anterior)
 
@@ -156,7 +166,12 @@ def criar_reserva(request: HttpRequest, id_livro:int):
                     messages.add_message(request, messages.ERROR, 'Reserva já existente para este livro.')
                     pagina_anterior = request.META.get('HTTP_REFERER')
                     return redirect(pagina_anterior)
-                # Se a reserva nao existir, cria uma nova reserva
+                emprestimo_existe = Emprestimo.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
+                if emprestimo_existe:
+                    messages.add_message(request, messages.ERROR, 'Empréstimo já existente para este livro.')
+                    pagina_anterior = request.META.get('HTTP_REFERER')
+                    return redirect(pagina_anterior)
+                # Se a reserva ou o emprestimo nao existir, cria uma nova reserva
                 Reserva.objects.create(
                     usuario=request.user,
                     livro=livro,
@@ -166,7 +181,7 @@ def criar_reserva(request: HttpRequest, id_livro:int):
                 messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
                 return redirect('livro:listar_reservas')
             else:
-                messages.add_message(request, messages.SUCCESS, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+                messages.add_message(request, messages.ERROR, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
                 pagina_anterior = request.META.get('HTTP_REFERER')
                 return redirect(pagina_anterior)
     else:
@@ -201,12 +216,15 @@ def atualizar_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
 def deletar_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
     reserva = Reserva.objects.filter(id=id_reserva).exists()
     if reserva:
-        # TODO: Logica implementada, falta criar o template
         reserva = Reserva.objects.get(id=id_reserva)
         reserva.delete()
-        return HttpResponse("Reserva deletada com sucesso.")
+        messages.add_message(request, messages.SUCCESS, 'Reserva deletada com sucesso.')
+        pagina_anterior = request.META.get('HTTP_REFERER')
+        return redirect(pagina_anterior)
     else:
-        return HttpResponse("Reserva não encontrada.")
+        messages.add_message(request, messages.ERROR, 'Reserva não encontrada.')
+        pagina_anterior = request.META.get('HTTP_REFERER')
+        return redirect(pagina_anterior)
 
 # Views de Emprestimo
 
