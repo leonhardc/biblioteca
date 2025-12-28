@@ -164,3 +164,4 @@ cython_debug/
 
 # Diretórios adicionais
 /node_modules
+insert_usuarios.sql
