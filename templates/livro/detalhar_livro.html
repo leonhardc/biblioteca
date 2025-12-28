@@ -136,8 +136,11 @@
                                 <i class="fa-solid fa-arrow-left"></i>
                                 Voltar ao Acervo
                             </a>
-
-                            {% if livro.copias > 0 %}
+                            <a href="{% url 'livro:criar_reserva' livro.id %}" class="btn btn-outline-primary">
+                                    <i class="fa-solid fa-bookmark"></i>
+                                    Reservar Livro
+                            </a>
+                            <!-- {% if livro.copias > 0 %}
                                 <a href="{% url 'livro:novo_emprestimo' %}" class="btn btn-primary">
                                     <i class="fa-solid fa-book-bookmark"></i>
                                     Fazer Empréstimo
@@ -147,7 +150,7 @@
                                     <i class="fa-solid fa-bookmark"></i>
                                     Reservar Livro
                                 </a>
-                            {% endif %}
+                            {% endif %} -->
                         </div>
                     </div>
                 </div>
