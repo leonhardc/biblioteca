@@ -147,12 +147,13 @@ def criar_reserva(request: HttpRequest, id_livro:int):
 
 def listar_reservas(request:HttpRequest):
     reservas = Reserva.objects.filter(usuario=request.user).exists()
+    template_name = "livro/listar_reservas.html"
     if reservas:
         reservas = Reserva.objects.filter(usuario=request.user)
-        template_name = "livro/listar_reservas.html"
         return render(request, template_name=template_name, context={'reservas':reservas})
     else:
-        return HttpResponse('O Usuário ainda não fez nenhuma reserva.')
+        messages.add_message(request, messages.ERROR, 'Não existem reservas para este usuário.')
+        return render(request, template_name, context={'reserva':True})
 
 def ler_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
     reserva = Reserva.objects.filter(id=id_reserva).exists()
