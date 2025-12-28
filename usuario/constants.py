@@ -81,5 +81,11 @@ NUM_MAX_DIAS_EMPRESTIMOS = {
     'funcionario': 21
 }
 
+MAX_RESERVAS_POR_USUARIO = {
+    'aluno': 10,
+    'professor': 15,
+    'funcionario': 12,
+}
+
 USUARIO_NAO_AUTENTICADO = 'O usuario nao esta autenticado.'
 OPERACAO_INVALIDA = 'Operação Inválida.'

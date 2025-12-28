@@ -6,6 +6,7 @@ from .models import Livro
 from datetime import date
 from utils.utils import *
 from django.db.models import Q
+from usuario.constants import MAX_RESERVAS_POR_USUARIO
 
 # Método de Listar Livros, Autores e Categorias
 def listar_livros(request: HttpRequest) -> HttpResponse:
@@ -102,7 +103,7 @@ def criar_reserva(request: HttpRequest, id_livro:int):
         # TODO: FINALIZAR OS TESTES DESSA VIEW
         if user_is_aluno(request.user):
             aluno = Aluno.objects.get(usuario=request.user)
-            if aluno.reservas < MAX_RESERVAS_POR_USUARIO[0][1]:
+            if aluno.reservas < MAX_RESERVAS_POR_USUARIO['aluno']:
                 livro = Livro.objects.get(id=id_livro) # type: ignore
                 Reserva.objects.create(
                     usuario=request.user,
@@ -110,13 +111,16 @@ def criar_reserva(request: HttpRequest, id_livro:int):
                     data_reserva=date.today(), 
                     ativo=True
                 )
-                return HttpResponse("Reserva Realizada com Sucesso.")
+                messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
+                return redirect('livro:listar_reservas')
             else:
-                return HttpResponse("Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.")
+                messages.add_message(request, messages.SUCCESS, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
 
         elif user_is_professor(request.user):
             professor = Professor.objects.get(usuario=request.user)
-            if professor.reservas < MAX_RESERVAS_POR_USUARIO[1][1]:
+            if professor.reservas < MAX_RESERVAS_POR_USUARIO['professor']:
                 livro = Livro.objects.get(id=id_livro) # type: ignore
                 Reserva.objects.create(
                     usuario=request.user,
@@ -130,7 +134,7 @@ def criar_reserva(request: HttpRequest, id_livro:int):
         
         elif user_is_funcionario(request.user):
             funcionario = Funcionario.objects.get(usuario=request.user)
-            if funcionario.reservas < MAX_RESERVAS_POR_USUARIO[2][1]:
+            if funcionario.reservas < MAX_RESERVAS_POR_USUARIO['funcionario']:
                 livro = Livro.objects.get(id=id_livro) # type: ignore
                 Reserva.objects.create(
                     usuario=request.user,
