@@ -78,10 +78,22 @@ WSGI_APPLICATION = 'biblioteca.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = { # type: ignore
+# DATABASES = { # type: ignore
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# Supabase PostgreSQL Database
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'pCMnu*#p?NtKd7B',
+        'HOST': 'db.zhjzugkbjlqwmbvznuvf.supabase.co',
+        'PORT': '5432',
     }
 }
 # DATABASES = {
