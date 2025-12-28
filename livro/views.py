@@ -105,6 +105,12 @@ def criar_reserva(request: HttpRequest, id_livro:int):
             aluno = Aluno.objects.get(usuario=request.user)
             if aluno.reservas < MAX_RESERVAS_POR_USUARIO['aluno']:
                 livro = Livro.objects.get(id=id_livro) # type: ignore
+                reserva_existe = Reserva.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
+                if reserva_existe:
+                    messages.add_message(request, messages.ERROR, 'Reserva já existente para este livro.')
+                    pagina_anterior = request.META.get('HTTP_REFERER')
+                    return redirect(pagina_anterior)
+                # Se a reserva nao existir, cria uma nova reserva
                 Reserva.objects.create(
                     usuario=request.user,
                     livro=livro,
@@ -122,29 +128,47 @@ def criar_reserva(request: HttpRequest, id_livro:int):
             professor = Professor.objects.get(usuario=request.user)
             if professor.reservas < MAX_RESERVAS_POR_USUARIO['professor']:
                 livro = Livro.objects.get(id=id_livro) # type: ignore
+                reserva_existe = Reserva.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
+                if reserva_existe:
+                    messages.add_message(request, messages.ERROR, 'Reserva já existente para este livro.')
+                    pagina_anterior = request.META.get('HTTP_REFERER')
+                    return redirect(pagina_anterior)
+                # Se a reserva nao existir, cria uma nova reserva
                 Reserva.objects.create(
                     usuario=request.user,
                     livro=livro,
                     data_reserva=date.today(), 
                     ativo=True
                 )
-                return HttpResponse("Reserva Realizada com Sucesso.")
+                messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
+                return redirect('livro:listar_reservas')
             else:
-                return HttpResponse("Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.")
-        
+                messages.add_message(request, messages.SUCCESS, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+
         elif user_is_funcionario(request.user):
             funcionario = Funcionario.objects.get(usuario=request.user)
             if funcionario.reservas < MAX_RESERVAS_POR_USUARIO['funcionario']:
                 livro = Livro.objects.get(id=id_livro) # type: ignore
+                reserva_existe = Reserva.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
+                if reserva_existe:
+                    messages.add_message(request, messages.ERROR, 'Reserva já existente para este livro.')
+                    pagina_anterior = request.META.get('HTTP_REFERER')
+                    return redirect(pagina_anterior)
+                # Se a reserva nao existir, cria uma nova reserva
                 Reserva.objects.create(
                     usuario=request.user,
                     livro=livro,
                     data_reserva=date.today(), 
                     ativo=True
                 )
-                return HttpResponse("Reserva Realizada com Sucesso.")
+                messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
+                return redirect('livro:listar_reservas')
             else:
-                return HttpResponse("Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.")
+                messages.add_message(request, messages.SUCCESS, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
     else:
         # Retorna mensagem de erro
         return HttpResponse("Erro! Usuário não autenticado.")
