@@ -92,101 +92,80 @@ def atualizar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
 def deletar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
     return HttpResponse("View deletar Categoria")
 
+# Funcoes auxiliares para reservas de aluno, professor e funcionario
+# TODO: Mover as funcoes auxiliares para utils.py
+def reserva_existe(usuario, livro:Livro) -> bool:
+    return Reserva.objects.filter(usuario=usuario, livro=livro, ativo=True).exists()
+
+def emprestimo_existe(usuario, livro:Livro) -> bool:
+    return Emprestimo.objects.filter(usuario=usuario, livro=livro, ativo=True).exists()
+
+def retorna_pagina_anterior_com_erro(request:HttpRequest, mensagem_erro:str):
+    messages.add_message(request, messages.ERROR, mensagem_erro)
+    pagina_anterior = request.META.get('HTTP_REFERER')
+    return redirect(pagina_anterior)
+
+def cria_nova_reserva(request:HttpRequest, livro:Livro):
+    Reserva.objects.create(
+        usuario=request.user,
+        livro=livro,
+        data_reserva=date.today(), 
+        ativo=True
+    )
+    messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
+    return redirect('livro:listar_reservas')
+
+def criar_reserva_aluno(request:HttpRequest, id_livro:int):
+    aluno = Aluno.objects.get(usuario=request.user)
+    if aluno.reservas < MAX_RESERVAS_POR_USUARIO['aluno']:
+        livro = Livro.objects.get(id=id_livro) # type: ignore
+        if reserva_existe(request.user, livro):
+            retorna_pagina_anterior_com_erro(request, 'Reserva já existente para este livro.')
+        if emprestimo_existe(request.user, livro):
+            retorna_pagina_anterior_com_erro(request, 'Empréstimo já existente para este livro.')
+        # Se a reserva ou o emprestimo nao existir, cria uma nova reserva
+        cria_nova_reserva(request, livro)
+    else:
+        retorna_pagina_anterior_com_erro(request, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+
+def criar_reserva_professor(request:HttpRequest, id_livro:int):
+    professor = Professor.objects.get(usuario=request.user)
+    if professor.reservas < MAX_RESERVAS_POR_USUARIO['professor']:
+        livro = Livro.objects.get(id=id_livro) # type: ignore
+        if reserva_existe(request.user, livro):
+            retorna_pagina_anterior_com_erro(request, 'Reserva já existente para este livro.')
+        if emprestimo_existe(request.user, livro):
+            retorna_pagina_anterior_com_erro(request, 'Empréstimo já existente para este livro.')
+        # Se a reserva ou o emprestimo nao existir, cria uma nova reserva
+        cria_nova_reserva(request, livro)
+    else:
+        retorna_pagina_anterior_com_erro(request, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+
+def criar_reserva_funcionario(request:HttpRequest, id_livro:int):
+    funcionario = Funcionario.objects.get(usuario=request.user)
+    if funcionario.reservas < MAX_RESERVAS_POR_USUARIO['funcionario']:
+        livro = Livro.objects.get(id=id_livro) # type: ignore
+        if reserva_existe(request.user, livro):
+            retorna_pagina_anterior_com_erro(request, 'Reserva já existente para este livro.')
+        if emprestimo_existe(request.user, livro):
+            retorna_pagina_anterior_com_erro(request, 'Empréstimo já existente para este livro.')
+        # Se a reserva ou o emprestimo nao existir, cria uma nova reserva
+        cria_nova_reserva(request, livro)
+    else:
+        retorna_pagina_anterior_com_erro(request, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+
 # Views de Reserva
 def criar_reserva(request: HttpRequest, id_livro:int):
     if request.user.is_authenticated:
-        # 1. verificar se o usuario eh aluno professor ou funcionario
-            # i. Aluno Professor e Funcionario podem ambos fazer no maximo 10 reservas.
-        # 2. checar se eh possivel aquele usuario fazer mais alguma reserva
-        # 3. se sim, fazer a reserva para o usuario e redirecionar para o template de livros
-        # 4. se nao, retornar uma mensagem de erro
-        # TODO: FINALIZAR OS TESTES DESSA VIEW
         if user_is_aluno(request.user):
-            aluno = Aluno.objects.get(usuario=request.user)
-            if aluno.reservas < MAX_RESERVAS_POR_USUARIO['aluno']:
-                livro = Livro.objects.get(id=id_livro) # type: ignore
-                reserva_existe = Reserva.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
-                if reserva_existe:
-                    messages.add_message(request, messages.ERROR, 'Reserva já existente para este livro.')
-                    pagina_anterior = request.META.get('HTTP_REFERER')
-                    return redirect(pagina_anterior)
-                emprestimo_existe = Emprestimo.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
-                if emprestimo_existe:
-                    messages.add_message(request, messages.ERROR, 'Empréstimo já existente para este livro.')
-                    pagina_anterior = request.META.get('HTTP_REFERER')
-                    return redirect(pagina_anterior)
-                # Se a reserva ou o emprestimo nao existir, cria uma nova reserva
-                Reserva.objects.create(
-                    usuario=request.user,
-                    livro=livro,
-                    data_reserva=date.today(), 
-                    ativo=True
-                )
-                messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
-                return redirect('livro:listar_reservas')
-            else:
-                messages.add_message(request, messages.ERROR, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
-                pagina_anterior = request.META.get('HTTP_REFERER')
-                return redirect(pagina_anterior)
-
+            criar_reserva_aluno(request, id_livro)
         elif user_is_professor(request.user):
-            professor = Professor.objects.get(usuario=request.user)
-            if professor.reservas < MAX_RESERVAS_POR_USUARIO['professor']:
-                livro = Livro.objects.get(id=id_livro) # type: ignore
-                reserva_existe = Reserva.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
-                if reserva_existe:
-                    messages.add_message(request, messages.ERROR, 'Reserva já existente para este livro.')
-                    pagina_anterior = request.META.get('HTTP_REFERER')
-                    return redirect(pagina_anterior)
-                emprestimo_existe = Emprestimo.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
-                if emprestimo_existe:
-                    messages.add_message(request, messages.ERROR, 'Empréstimo já existente para este livro.')
-                    pagina_anterior = request.META.get('HTTP_REFERER')
-                    return redirect(pagina_anterior)
-                # Se a reserva ou o emprestimo nao existir, cria uma nova reserva
-                Reserva.objects.create(
-                    usuario=request.user,
-                    livro=livro,
-                    data_reserva=date.today(), 
-                    ativo=True
-                )
-                messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
-                return redirect('livro:listar_reservas')
-            else:
-                messages.add_message(request, messages.ERROR, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
-                pagina_anterior = request.META.get('HTTP_REFERER')
-                return redirect(pagina_anterior)
-
+            criar_reserva_professor(request, id_livro)
         elif user_is_funcionario(request.user):
-            funcionario = Funcionario.objects.get(usuario=request.user)
-            if funcionario.reservas < MAX_RESERVAS_POR_USUARIO['funcionario']:
-                livro = Livro.objects.get(id=id_livro) # type: ignore
-                reserva_existe = Reserva.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
-                if reserva_existe:
-                    messages.add_message(request, messages.ERROR, 'Reserva já existente para este livro.')
-                    pagina_anterior = request.META.get('HTTP_REFERER')
-                    return redirect(pagina_anterior)
-                emprestimo_existe = Emprestimo.objects.filter(usuario=request.user, livro=livro, ativo=True).exists()
-                if emprestimo_existe:
-                    messages.add_message(request, messages.ERROR, 'Empréstimo já existente para este livro.')
-                    pagina_anterior = request.META.get('HTTP_REFERER')
-                    return redirect(pagina_anterior)
-                # Se a reserva ou o emprestimo nao existir, cria uma nova reserva
-                Reserva.objects.create(
-                    usuario=request.user,
-                    livro=livro,
-                    data_reserva=date.today(), 
-                    ativo=True
-                )
-                messages.add_message(request, messages.SUCCESS, 'Reserva realizada com sucesso.')
-                return redirect('livro:listar_reservas')
-            else:
-                messages.add_message(request, messages.ERROR, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
-                pagina_anterior = request.META.get('HTTP_REFERER')
-                return redirect(pagina_anterior)
+            criar_reserva_funcionario(request, id_livro)
     else:
-        # Retorna mensagem de erro
-        return HttpResponse("Erro! Usuário não autenticado.")
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:login')
 
 def listar_reservas(request:HttpRequest):
     reservas = Reserva.objects.filter(usuario=request.user).exists()
