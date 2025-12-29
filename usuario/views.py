@@ -15,6 +15,7 @@ from curso.models import Curso
 from utils.utils import *
 from utils.formularios.utils_forms import informacoes_formulario_aluno
 from django.core.paginator import Paginator
+from utils.usuarios.utils import user_is_aluno, user_is_professor, user_is_funcionario
 from .constants import *
 import datetime
 
@@ -67,13 +68,17 @@ def calcula_emprestimos_pendentes_de_usuario(usuario_id):
             emprestimo.save()
 
 def pagina_inicial_aluno(request:HttpRequest, uid:int):
-    template_name='usuario/aluno/dashboard_aluno.html'
-    usuario = User.objects.get(id=uid)
-    cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
-    cont_reservas = len(get_reservas_ativas_usuario(usuario))
-    cont_emprestimos_pendentes = len(get_emprestimos_pendentes_usuario(usuario))
-    # messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-    return render(request, template_name=template_name, context={'aluno':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas, 'emprestimos_pendentes':cont_emprestimos_pendentes}})
+    if request.user.is_authenticated:
+        template_name='usuario/aluno/dashboard_aluno.html'
+        usuario = User.objects.get(id=uid)
+        cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
+        cont_reservas = len(get_reservas_ativas_usuario(usuario))
+        cont_emprestimos_pendentes = len(get_emprestimos_pendentes_usuario(usuario))
+        # messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
+        return render(request, template_name=template_name, context={'aluno':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas, 'emprestimos_pendentes':cont_emprestimos_pendentes}})
+    else:
+        messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
+        return redirect('usuario:entrar')
 
 def pagina_inicial_professor(request:HttpRequest, uid:int):
     template_name='usuario/professor/dashboard_professor.html'
