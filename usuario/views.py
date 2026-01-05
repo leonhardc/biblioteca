@@ -18,6 +18,7 @@ from django.core.paginator import Paginator
 from utils.usuarios.utils import user_is_aluno, user_is_professor, user_is_funcionario
 from .constants import *
 import datetime
+from utils.utils import gerar_matricula_aluno, gerar_matricula_professor, gerar_matricula_funcionario
 
 # Views de controle de usuario
 def index(request:HttpRequest) -> HttpResponse:
@@ -81,17 +82,24 @@ def pagina_inicial_aluno(request:HttpRequest, uid:int):
         return redirect('usuario:entrar')
 
 def pagina_inicial_professor(request:HttpRequest, uid:int):
-    template_name='usuario/professor/dashboard_professor.html'
-    usuario = User.objects.get(id=uid)
-    messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-    return render(request, template_name=template_name)
+    if request.user.is_authenticated:
+        template_name='usuario/professor/dashboard_professor.html'
+        usuario = User.objects.get(id=uid)
+        messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
+        return render(request, template_name=template_name)
+    else:
+        messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
+        return redirect('usuario:entrar')
 
 def pagina_inicial_funcionario(request:HttpRequest, uid:int):
-    template_name='usuario/funcionario/dashboard_funcionario.html'
-    usuario = User.objects.get(id=uid)
-    messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-    return render(request, template_name=template_name)
-
+    if request.user.is_authenticated:
+        template_name='usuario/funcionario/dashboard_funcionario.html'
+        usuario = User.objects.get(id=uid)
+        messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
+        return render(request, template_name=template_name)
+    else:
+        messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
+        return redirect('usuario:entrar')
 
 def autenticar(request:HttpRequest):
     # Faz a autenticação de usuário
@@ -361,14 +369,66 @@ def detalhes_aluno(request:HttpRequest, uid:int):
 
 # CRUD de Professor
 def criar_professor(request:HttpRequest):
-    if request.method == 'GET' and request.user.is_authenticated:
-        # TODO: Implementar o template abaixo
-        template_name = 'usuario/professor/criar_professor.html'
-        formulario_professor = FormularioProfessor()
-        return render(request, template_name, context={'form': formulario_professor})
-    if request.method == 'POST':
-        # TODO: Implementar a regra de POST da view
-        pass
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            template_name = 'usuario/professor/criar_professor.html'
+            formulario_professor = FormularioProfessor()
+            return render(request, template_name, context={'form': formulario_professor})
+        if request.method == 'POST':
+            formulario = FormularioProfessor(request.POST)
+            nome = formulario.cleaned_data['nome']
+            sobrenome = formulario.cleaned_data['sobrenome']
+            email = formulario.cleaned_data['email']
+            usuario = formulario.cleaned_data['usuario']
+            cpf = formulario.cleaned_data['cpf']
+            # matricula = formulario.cleaned_data['matricula']
+            curso = Curso.objects.get(id=formulario.cleaned_data['curso'])
+            regime = formulario.cleaned_data['regime']
+            contratacao = formulario.cleaned_data['contratacao']
+            # Passo 1: Criar o Usuario
+            # 1.1 - Checar se o usuario ja existe, se sim dar mensagem de erro
+            usuario_existe = User.objects.filter(username=usuario).exists()
+            if usuario_existe:
+                messages.add_message(request, messages.ERROR, 'Erro ao adicionar novo usuario. O username ja existe na base de dados.')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # type: ignore
+            # 1.2 - Criar Usuario com nome, sobrenome, username, e senha padrao 1234
+            try:
+                novo_usuario = User.objects.create_user(
+                    username=usuario,
+                    email=email,
+                    password='1234',
+                    first_name = nome,
+                    last_name=sobrenome
+                )
+            except Exception as e:
+                messages.add_message(request, messages.ERROR, f'Erro ao criar novo usuario. {e}')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # type: ignore
+            # Passo 2: Criar o Professor
+            # 2.1 Criar Matricula e verificar se a matricula ja existe, sair do loop so quando a matricula ja estiver criada
+            matricula = gerar_matricula_professor()
+            novo_professor = {
+                'usuario':novo_usuario,
+                'matricula':matricula,
+                'curso': curso,
+                'cpf': cpf,
+                'regime': regime,
+                'contratacao': contratacao,
+                'ativo': True,
+            }
+            try:
+                Professor.objects.create(**novo_professor)
+            except Exception as e:
+                messages.add_message(request, messages.ERROR, f'Erro ao criar novo professor. {e}')
+                url_anterior = request.META.get('HTTP_REFERER') 
+            messages.add_message(request, messages.SUCCESS, 'Professor adicionado com sucesso.')
+            url_anterior = request.META.get('HTTP_REFERER')
+            return redirect(url_anterior) # type: ignore
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuário não está autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
 
 def ler_professor(request:HttpRequest, uid:int):
     if request.method == 'GET' and request.user.is_authenticated:
