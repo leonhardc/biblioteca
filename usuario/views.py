@@ -13,7 +13,7 @@ from django.contrib import messages
 from usuario.models import Aluno, Professor, Funcionario
 from curso.models import Curso
 from utils.utils import *
-from utils.formularios.utils_forms import informacoes_formulario_aluno
+from utils.formularios.utils_forms import informacoes_formulario_aluno, informacoes_formulario_professor, informacoes_formulario_funcionario
 from django.core.paginator import Paginator
 from utils.usuarios.utils import user_is_aluno, user_is_professor, user_is_funcionario
 from .constants import *
@@ -448,7 +448,49 @@ def ler_professor(request:HttpRequest, uid:int):
         return redirect(url_anterior) # type: ignore
 
 def atualizar_professor(request:HttpRequest, uid:int):
-    pass
+    if request.user.is_authenticated:
+        if request.method == 'GET': 
+            professor_existe = Professor.objects.filter(id=uid).exists()
+            if professor_existe:
+                template_name = 'usuario/professor/atualizar_professor.html'
+                professor = Professor.objects.get(id=uid)
+                informacoes_professor = informacoes_formulario_professor(professor)
+                formulario_professor = FormularioProfessor(initial=informacoes_professor)
+                return render(request, template_name, context={'form': formulario_professor})
+            else: 
+                messages.add_message(request, messages.ERROR, 'O usuario solicitado nao existe na base de dados.')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # type: ignore
+        if request.method == 'POST':
+            formulario = FormularioProfessor(request.POST)
+            if formulario.is_valid():
+                professor = Professor.objects.get(id=uid)
+                # Dados de Usuario
+                professor.usuario.first_name = formulario.cleaned_data['nome']           # type: ignore
+                professor.usuario.last_name = formulario.cleaned_data['sobrenome']       # type: ignore
+                professor.usuario.email = formulario.cleaned_data['email']               # type: ignore
+                professor.usuario.username = formulario.cleaned_data['usuario']          # type: ignore
+                professor.usuario.save()
+                # Dados de Professor
+                professor.matricula = formulario.cleaned_data['matricula']               # type: ignore
+                professor.curso = Curso.objects.get(id=formulario.cleaned_data['curso']) # type: ignore
+                professor.cpf = formulario.cleaned_data['cpf']                           # type: ignore
+                professor.regime = formulario.cleaned_data['regime']                     # type: ignore
+                professor.contratacao = formulario.cleaned_data['contratacao']           # type: ignore
+                professor.save()
+                messages.add_message(request, messages.SUCCESS, 'Os dados do professor foram salvos com sucesso.')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # type: ignore
+            else:
+                messages.add_message(request, messages.ERROR, 'Formulario invalido.')
+                # url_anterior = request.META.get('HTTP_REFERER')
+                # return redirect(url_anterior) # type: ignore
+                template_name = 'usuario/professor/atualizar_professor.html'
+                return render(request, template_name, context={'form': formulario})
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
 
 def deletar_professor(request:HttpRequest, uid:int):
     if request.method == 'GET' and request.user.is_authenticated:
