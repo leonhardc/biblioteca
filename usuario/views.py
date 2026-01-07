@@ -431,17 +431,18 @@ def criar_professor(request:HttpRequest):
         return redirect(url_anterior) # type: ignore
 
 def ler_professor(request:HttpRequest, uid:int):
-    if request.method == 'GET' and request.user.is_authenticated:
-        # TODO: Implementar o template abaixo
-        template_name = 'usuario/professor/detalhes_professor.html'
-        professor_existe = Professor.objects.filter(id=uid).exists()
-        if professor_existe:
-            professor = Professor.objects.get(id=uid)
-            return render(request, template_name, context={'professor': professor})
-        else:
-            messages.add_message(request, messages.ERROR, 'O usuário solicitado nao existe na base de dados')
-            url_anterior = request.META.get('HTTP_REFERER')
-            return redirect(url_anterior) # pyright: ignore[reportArgumentType]
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            # TODO: Criar o template abaixo
+            template_name = 'usuario/professor/detalhes_professor.html'
+            professor_existe = Professor.objects.filter(id=uid).exists()
+            if professor_existe:
+                professor = Professor.objects.get(id=uid)
+                return render(request, template_name, context={'professor': professor})
+            else:
+                messages.add_message(request, messages.ERROR, 'O usuário solicitado nao existe na base de dados')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # pyright: ignore[reportArgumentType]
     else:
         messages.add_message(request, messages.ERROR, 'O usuário nao esta logado.')
         url_anterior = request.META.get('HTTP_REFERER')
@@ -518,9 +519,6 @@ def detalhes_professor(request:HttpRequest, uid:int):
         contexto['professor'] = professor
         return render(request, template_name, context=contexto) # type: ignore
 
-def listar_todas_as_reservas(request:HttpRequest):
-    pass
-
 # CRUD de Funcionário
 def criar_funcionario(request:HttpRequest):
     if request.user.is_authenticated:
@@ -530,7 +528,6 @@ def criar_funcionario(request:HttpRequest):
             formulario_funcionario = FormularioFuncionario()
             return render(request, template_name, context={'form':formulario_funcionario})
         if request.method == 'POST':
-            # TODO: Implementar a regra de criar funcionario
             pass
     else:
         messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
