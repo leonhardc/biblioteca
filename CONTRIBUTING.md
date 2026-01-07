@@ -1,5 +1,17 @@
 # Contribuindo para o Projeto Biblioteca Universitária
 
+## 🚀 Diagnóstico Rápido
+
+Execute o script de diagnóstico para verificar automaticamente sua configuração:
+
+```bash
+./check-contributions.sh
+```
+
+Este script verificará seu email, configurações do Git e identificará possíveis problemas.
+
+---
+
 ## Por que minhas contribuições não aparecem no meu perfil do GitHub?
 
 Se suas contribuições para este projeto não estão aparecendo na sua página inicial do GitHub, existem várias razões possíveis:
