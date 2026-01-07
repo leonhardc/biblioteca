@@ -593,11 +593,31 @@ def atualizar_funcionario(request:HttpRequest, uid:int):
         template_name = 'usuario/funcionario/atualizar_funcionario.html'
         if request.method == 'GET':
             # TODO: Adicionar dados iniciais no formulario
-            formulario_funcionario = FormularioFuncionario()
+            funcionario = Funcionario.objects.get(id=uid)
+            informacoes_funcionario = informacoes_formulario_funcionario(funcionario)
+            formulario_funcionario = FormularioFuncionario(initial=informacoes_funcionario)
             return render(request, template_name, context={'form':formulario_funcionario})
         if request.method == 'POST':
-            # TODO: Salvar os dados no banco de dados
-            pass
+            formulario = FormularioFuncionario(request.POST)
+            if formulario.is_valid():
+                funcionario = Funcionario.objects.get(id=uid)
+                # Dados de Usuario
+                funcionario.usuario.first_name = formulario.cleaned_data['nome']           # type: ignore
+                funcionario.usuario.last_name = formulario.cleaned_data['sobrenome']       # type: ignore
+                funcionario.usuario.email = formulario.cleaned_data['email']               # type: ignore
+                funcionario.usuario.username = formulario.cleaned_data['usuario']          # type: ignore
+                funcionario.usuario.save()
+                # Dados de Funcionario
+                funcionario.matricula = formulario.cleaned_data['matricula']               # type: ignore
+                funcionario.cpf = formulario.cleaned_data['cpf']                           # type: ignore
+                funcionario.save()
+                messages.add_message(request, messages.SUCCESS, 'Os dados do funcionario foram salvos com sucesso.')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # type: ignore
+            else:
+                messages.add_message(request, messages.ERROR, 'Formulario invalido.')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # type: ignore
     else:
         messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
         url_anterior = request.META.get('HTTP_REFERER')
