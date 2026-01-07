@@ -1,5 +1,7 @@
 # Biblioteca Universitária
 
+> **📌 Nota sobre Contribuições:** Se suas contribuições para este projeto não estão aparecendo no seu perfil do GitHub, consulte o arquivo [CONTRIBUTING.md](CONTRIBUTING.md) para soluções e configurações necessárias.
+
 ## Sobre o projeto
 
 <p align='justify' style='text-indent: 40px;'>
