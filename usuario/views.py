@@ -528,7 +528,45 @@ def criar_funcionario(request:HttpRequest):
             formulario_funcionario = FormularioFuncionario()
             return render(request, template_name, context={'form':formulario_funcionario})
         if request.method == 'POST':
-            pass
+            formulario = FormularioFuncionario(request.POST)
+            if formulario.is_valid():
+                nome = formulario.cleaned_data['nome']
+                sobrenome = formulario.cleaned_data['sobrenome']
+                email = formulario.cleaned_data['email']
+                usuario = formulario.cleaned_data['usuario']
+                cpf = formulario.cleaned_data['cpf']
+                # Passo 1: Criar o Usuario
+                # 1.1 - Checar se o usuario ja existe, se sim dar mensagem de erro
+                usuario_existe = User.objects.filter(username=usuario).exists()
+                if usuario_existe:
+                    messages.add_message(request, messages.ERROR, 'Erro ao adicionar novo usuario. O username ja existe na base de dados.')
+                    url_anterior = request.META.get('HTTP_REFERER')
+                    return redirect(url_anterior) # type: ignore
+                # 1.2 - Criar Usuario com nome, sobrenome, username, e senha padrao 1234
+                novo_usuario = User.objects.create_user(
+                    username=usuario,
+                    email=email,
+                    password='1234',
+                    first_name = nome,
+                    last_name=sobrenome
+                )
+                # Passo 2: Criar o Funcionario
+                # 2.1 Criar Matricula e verificar se a matricula ja existe, sair do loop so quando a matricula ja estiver criada
+                matricula = gerar_matricula_funcionario()
+                novo_funcionario = {
+                    'usuario':novo_usuario,
+                    'matricula':matricula,
+                    'cpf': cpf,
+                    'ativo': True,
+                }
+                Funcionario.objects.create(**novo_funcionario)
+                messages.add_message(request, messages.SUCCESS, 'Funcionario adicionado com sucesso.')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # type: ignore
+            else:
+                messages.add_message(request, messages.ERROR, 'Formulario invalido.')
+                url_anterior = request.META.get('HTTP_REFERER')
+                return redirect(url_anterior) # type: ignore
     else:
         messages.add_message(request, messages.ERROR, 'O usuario nao esta autenticado.')
         url_anterior = request.META.get('HTTP_REFERER')
