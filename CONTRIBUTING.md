@@ -5,6 +5,10 @@
 Execute o script de diagnóstico para verificar automaticamente sua configuração:
 
 ```bash
+# Tornar o script executável (se necessário)
+chmod +x check-contributions.sh
+
+# Executar o script
 ./check-contributions.sh
 ```
 
@@ -83,17 +87,40 @@ Se você ver um email diferente do seu email do GitHub, você precisa reconfigur
 
 Se você quiser corrigir commits antigos com email errado:
 
+**⚠️ AVISO:** Reescrever o histórico do Git é uma operação avançada e pode causar problemas em projetos colaborativos. Só faça isso se você tiver certeza do que está fazendo.
+
+**Método Recomendado: Usar arquivo `.mailmap`**
+
+A maneira mais segura é usar o arquivo `.mailmap` (já incluído neste projeto), que mapeia emails antigos para o email correto sem reescrever o histórico:
+
 ```bash
-# ATENÇÃO: Isso reescreve o histórico! Use com cuidado.
-git filter-branch --env-filter '
-if [ "$GIT_COMMITTER_EMAIL" = "email-antigo@exemplo.com" ]; then
-    export GIT_COMMITTER_EMAIL="email-novo@exemplo.com"
-    export GIT_AUTHOR_EMAIL="email-novo@exemplo.com"
-fi
-' --tag-name-filter cat -- --branches --tags
+# O arquivo .mailmap já está configurado neste projeto
+# Você pode adicionar suas próprias mapeamentos editando o arquivo:
+echo "Seu Nome <email-correto@exemplo.com> <email-antigo@exemplo.com>" >> .mailmap
 ```
 
-**Nota:** Reescrever histórico requer `git push --force`, que pode causar problemas em projetos colaborativos.
+**Método Alternativo: git filter-repo (avançado)**
+
+Se você realmente precisa reescrever o histórico, use `git filter-repo` (mais seguro que `git filter-branch`):
+
+```bash
+# Instale git-filter-repo primeiro
+# No Linux/Mac: pip install git-filter-repo
+# Ou baixe de: https://github.com/newren/git-filter-repo
+
+# Criar arquivo de mapeamento
+echo "email-antigo@exemplo.com=email-novo@exemplo.com" > email-map.txt
+
+# Reescrever histórico
+git filter-repo --email-callback '
+  return email.replace(b"email-antigo@exemplo.com", b"email-novo@exemplo.com")
+'
+
+# Depois você precisa forçar o push (CUIDADO!)
+# git push --force-with-lease
+```
+
+**Nota:** Reescrever histórico requer `git push --force`, que pode causar problemas em projetos colaborativos. **Prefira sempre usar `.mailmap` quando possível.**
 
 ## Verificação Rápida
 
