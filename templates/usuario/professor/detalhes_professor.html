@@ -1,0 +1,224 @@
+{% load static %}
+{% load my_filters %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/perfil-aluno.css' %}">
+</head>
+
+<body>
+    <header>
+        {% include 'usuario/professor/parciais/_nav.html' %}
+    </header>
+
+    <main class="profile-page">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:pagina_inicial_professor' user.id %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Meu Perfil</span>
+                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-user-circle"></i>
+                        Meu Perfil
+                    </h1>
+                    <p class="page-subtitle">
+                        Visualize e gerencie suas informações pessoais e profissionais.
+                    </p>
+                </div>
+            </section>
+
+            {% if professor %}
+                <!-- Profile Section -->
+                <section class="profile-section">
+                    <div class="profile-container">
+                        <!-- Sidebar -->
+                        <aside class="profile-sidebar">
+                            <div class="profile-card">
+                                <div class="profile-avatar">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <h2 class="profile-name">{{ professor.usuario.first_name }} {{ professor.usuario.last_name }}</h2>
+                                <span class="profile-role">
+                                    <i class="fa-solid fa-chalkboard-user"></i>
+                                    Professor
+                                </span>
+                            </div>
+
+                            <nav class="profile-menu">
+                                <a href="{% url 'usuario:ler-professor' user.id%}" class="profile-menu-item active">
+                                    <i class="fa-solid fa-user"></i>
+                                    Informações Pessoais
+                                </a>
+                                <a href="#" class="profile-menu-item">
+                                    <i class="fa-solid fa-gear"></i>
+                                    Configurações
+                                </a>
+                                <a href="{% url 'usuario:sair' %}" class="profile-menu-item danger">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                    Sair
+                                </a>
+                            </nav>
+                        </aside>
+
+                        <!-- Content -->
+                        <div class="profile-content">
+                            <!-- Personal Information -->
+                            <div class="info-section">
+                                <div class="info-section-header">
+                                    <div class="info-section-icon">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <h3 class="info-section-title">Informações Pessoais</h3>
+                                </div>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Nome Completo
+                                        </label>
+                                        <div class="info-value">{{ professor.usuario.first_name }} {{ professor.usuario.last_name }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Email
+                                        </label>
+                                        <div class="info-value">{{ professor.usuario.email }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            CPF
+                                        </label>
+                                        <div class="info-value">{{ professor.cpf|filter_formatar_cpf }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Professional Information -->
+                            <div class="info-section">
+                                <div class="info-section-header">
+                                    <div class="info-section-icon">
+                                        <i class="fa-solid fa-chalkboard-user"></i>
+                                    </div>
+                                    <h3 class="info-section-title">Informações Profissionais</h3>
+                                </div>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Curso
+                                        </label>
+                                        <div class="info-value">{{ professor.curso }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Regime de Trabalho
+                                        </label>
+                                        <div class="info-value">{{ professor.get_regime_display }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Data de Contratação
+                                        </label>
+                                        <div class="info-value">{{ professor.contratacao|date:"d/m/Y" }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="info-section">
+                                <div class="info-section-header">
+                                    <div class="info-section-icon">
+                                        <i class="fa-solid fa-info-circle"></i>
+                                    </div>
+                                    <h3 class="info-section-title">Informações Adicionais</h3>
+                                </div>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Matrícula
+                                        </label>
+                                        <div class="info-value">{{ professor.matricula }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label class="info-label">
+                                            <i class="fa-solid fa-circle"></i>
+                                            Status
+                                        </label>
+                                        <div class="info-value">
+                                            {% if professor.ativo %}
+                                                <span style="color: #10b981;">Ativo</span>
+                                            {% else %}
+                                                <span style="color: #ef4444;">Inativo</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="profile-actions">
+                                    <a href="#" class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-pen"></i>
+                                        Editar Informações
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+    // Mobile menu toggle and user dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
+</body>
+
+</html>

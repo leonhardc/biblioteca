@@ -16,7 +16,13 @@
 
 <body>
     <header>
-        {% include 'usuario/aluno/parciais/_nav.html' %}
+        {% if user_context.aluno %}
+            {% include 'usuario/aluno/parciais/_nav.html' %}
+        {% elif user_context.professor %}
+            {% include 'usuario/professor/parciais/_nav.html' %}
+        {% elif user_context.funcionario %}
+            {% include 'usuario/funcionario/parciais/_nav.html' %}
+        {% endif %}
     </header>
 
     <main class="reservations-page">
