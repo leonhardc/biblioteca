@@ -13,6 +13,11 @@ from utils.livros.utils import criar_reserva_aluno, criar_reserva_professor, cri
 # Método de Listar Livros, Autores e Categorias
 def listar_livros(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
+        user_context = {
+            'aluno': user_is_aluno(request.user),
+            'professor': user_is_professor(request.user),
+            'funcionario': user_is_funcionario(request.user),
+        }
         template_name = "livro/livros.html"
         itens_por_pagina = 21
         termo_pesquisa = request.GET.get("pesquisa", "").strip()
@@ -43,6 +48,7 @@ def listar_livros(request: HttpRequest) -> HttpResponse:
             "livros": page_obj,
             "termo_busca": termo_pesquisa,
             "total_resultados": paginator.count,
+            'user_context': user_context,
         }
         
         return render(request, template_name, context)
@@ -62,14 +68,19 @@ def criar_livro(request: HttpRequest) -> HttpResponse:
 
 def detalhar_livro(request: HttpRequest, id_livro:int) -> HttpResponse:
     if request.user.is_authenticated:
+        user_context = {
+            'aluno': user_is_aluno(request.user),
+            'professor': user_is_professor(request.user),
+            'funcionario': user_is_funcionario(request.user),
+        }
         livro = Livro.objects.filter(id=id_livro).exists()
         if livro:
             livro = Livro.objects.get(id=id_livro)
             template_name = "livro/detalhar_livro.html"
-            return render(request, template_name, context={'livro':livro})
+            return render(request, template_name, context={'livro':livro, 'user_context': user_context})
         else:
-            # TODO: IMPLEMENTAR LOGICA PARA MANDAR UMA MENSAGEM DE ERRO PARA O TEMPLATE ORIGINAL
-            return HttpResponse('Livro não encontrado.')
+            messages.add_message(request, messages.ERROR, 'Livro não encontrado.')
+            return redirect('livro:listar_livros')
     else:
         messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
         return redirect('usuario:entrar')
@@ -132,14 +143,19 @@ def criar_reserva(request: HttpRequest, id_livro:int):
 
 def listar_reservas(request:HttpRequest):
     if request.user.is_authenticated:
+        user_context = {
+            'aluno': user_is_aluno(request.user),
+            'professor': user_is_professor(request.user),
+            'funcionario': user_is_funcionario(request.user),
+        }
         reservas = Reserva.objects.filter(usuario=request.user).exists()
         template_name = "livro/listar_reservas.html"
         if reservas:
             reservas = Reserva.objects.filter(usuario=request.user)
-            return render(request, template_name=template_name, context={'reservas':reservas})
+            return render(request, template_name=template_name, context={'reservas':reservas, 'user_context': user_context})
         else:
             messages.add_message(request, messages.ERROR, 'Não existem reservas para este usuário.')
-            return render(request, template_name, context={'reserva':True})
+            return render(request, template_name, context={'reserva':True, 'user_context': user_context})
     else:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
@@ -192,14 +208,19 @@ def criar_emprestimo(request: HttpRequest, id_livro:int, id_usuario:int):
 
 def listar_emprestimos(request: HttpRequest):
     if request.user.is_authenticated:
+        user_context = {
+            'aluno': user_is_aluno(request.user),
+            'professor': user_is_professor(request.user),
+            'funcionario': user_is_funcionario(request.user),
+        }
         emprestimos_existem = Emprestimo.objects.filter(usuario=request.user, ativo=True).exists()
         template_name = 'livro/listar_emprestimos.html'
         if emprestimos_existem:
             emprestimos = Emprestimo.objects.filter(usuario=request.user, ativo=True)
-            return render(request, template_name, context={'emprestimos': emprestimos})
+            return render(request, template_name, context={'emprestimos': emprestimos, 'user_context': user_context})
         else:
             messages.add_message(request, messages.ERROR, 'Não existem emprestimos para este usuário.')
-            return render(request, template_name, context={'emprestimo':True})
+            return render(request, template_name, context={'emprestimo':True, 'user_context': user_context})
     else:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
