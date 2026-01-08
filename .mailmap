@@ -1,0 +1,7 @@
+# Git mailmap file to ensure proper attribution of commits
+# This helps GitHub correctly attribute contributions to your profile
+#
+# Format: Proper Name <proper@email.com> Commit Name <commit@email.com>
+#
+# Add your GitHub email here to ensure contributions are properly tracked
+Leonardo Costa <costa.leonardorodrigues@gmail.com> Leonardo <costa.leonardorodrigues@gmail.com>
