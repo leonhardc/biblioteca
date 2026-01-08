@@ -438,9 +438,9 @@ def ler_professor(request:HttpRequest, uid:int):
         if request.method == 'GET':
             # TODO: Criar o template abaixo
             template_name = 'usuario/professor/detalhes_professor.html'
-            professor_existe = Professor.objects.filter(id=uid).exists()
+            professor_existe = Professor.objects.filter(usuario=uid).exists()
             if professor_existe:
-                professor = Professor.objects.get(id=uid)
+                professor = Professor.objects.get(usuario=uid)
                 return render(request, template_name, context={'professor': professor})
             else:
                 messages.add_message(request, messages.ERROR, 'O usuário solicitado nao existe na base de dados')
