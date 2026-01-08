@@ -1,0 +1,244 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    {% include 'usuario/professor/parciais/_head.html' %}
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/dashboard-aluno.css' %}">
+</head>
+
+<body>
+    <header>
+        {% include 'usuario/professor/parciais/_nav.html' %}
+    </header>
+
+    <main class="dashboard-main">
+        <div class="container-fluid">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-content">
+                    <h1 class="font-display welcome-title">
+                        Olá, Prof. {{ user.first_name|default:"Professor" }}! 👨‍🏫
+                    </h1>
+                    <p class="welcome-subtitle">
+                        Bem-vindo ao seu painel. Aqui você pode gerenciar seus empréstimos, reservas e explorar nosso acervo acadêmico.
+                    </p>
+                </div>
+                <div class="quick-actions">
+                    <a href="{% url 'livro:listar_livros' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Buscar Livros
+                    </a>
+                    <a href="{% url 'livro:listar_reservas' %}" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-bookmark"></i>
+                        Minhas Reservas
+                    </a>
+                </div>
+            </section>
+
+            <!-- Stats Cards -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-primary">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">{{ professor.emprestimos|default:0 }}</h3>
+                            {% if professor.emprestimos == 1 %}
+                            <p class="stat-label">Empréstimo Ativo</p>
+                            {% else %}
+                            <p class="stat-label">Empréstimos Ativos</p>
+                            {% endif %}
+                            <a href="{% url 'livro:listar_emprestimos' %}" class="stat-link">
+                                Ver todos <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-secondary">
+                            <i class="fa-solid fa-bookmark"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">{{ professor.reservas|default:0 }}</h3>
+                            {% if professor.reservas == 1 %}
+                            <p class="stat-label">Reserva Pendente</p>
+                            {% else %}
+                            <p class="stat-label">Reservas Pendentes</p>
+                            {% endif %}
+                            <a href="{% url 'livro:listar_reservas' %}" class="stat-link">
+                                Ver todas <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-success">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">{{ professor.emprestimos_pendentes|default:0 }}</h3>
+                            <p class="stat-label">Devoluções Pendentes</p>
+                            <a href="{% url 'livro:listar_emprestimos' %}" class="stat-link">
+                                Gerenciar <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-info">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">{{ user.professor.regime|default:"N/A" }}</h3>
+                            <p class="stat-label">Regime de Trabalho</p>
+                            <a href="{% url 'usuario:ler-professor' uid=user.id %}" class="stat-link">
+                                Ver perfil <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <section class="content-section">
+                <div class="content-grid">
+                    <!-- Recent Activity -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-header-content">
+                                <h2 class="font-display card-title">
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                    Atividades Recentes
+                                </h2>
+                                <p class="card-subtitle">Suas últimas interações na biblioteca</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon activity-icon-primary">
+                                        <i class="fa-solid fa-book"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p class="activity-title">Nenhuma atividade recente</p>
+                                        <p class="activity-time">Comece explorando nosso acervo acadêmico</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-header-content">
+                                <h2 class="font-display card-title">
+                                    <i class="fa-solid fa-link"></i>
+                                    Acesso Rápido
+                                </h2>
+                                <p class="card-subtitle">Links úteis e recursos</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-links-grid">
+                                <a href="{% url 'livro:listar_livros' %}" class="quick-link-item">
+                                    <div class="quick-link-icon">
+                                        <i class="fa-solid fa-search"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Explorar Acervo</h4>
+                                        <p>Buscar livros disponíveis</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'livro:listar_emprestimos' %}" class="quick-link-item">
+                                    <div class="quick-link-icon">
+                                        <i class="fa-solid fa-book-open"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Meus Empréstimos</h4>
+                                        <p>Ver livros emprestados</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'livro:listar_reservas' %}" class="quick-link-item">
+                                    <div class="quick-link-icon">
+                                        <i class="fa-solid fa-bookmark"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Minhas Reservas</h4>
+                                        <p>Gerenciar reservas</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'usuario:ler-professor' uid=user.id %}" class="quick-link-item">
+                                    <div class="quick-link-icon">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Meu Perfil</h4>
+                                        <p>Configurações da conta</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Information Banner -->
+            <section class="info-banner">
+                <div class="info-banner-content">
+                    <div class="info-banner-icon">
+                        <i class="fa-solid fa-info-circle"></i>
+                    </div>
+                    <div class="info-banner-text">
+                        <h3>Privilégio Docente</h3>
+                        <p>Como professor, você pode emprestar até <strong>5 livros</strong> simultaneamente por um período estendido de <strong>30 dias</strong>. Aproveite os recursos da biblioteca para apoiar suas pesquisas e aulas.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+    // Mobile menu toggle and user dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
+</body>
+
+</html>

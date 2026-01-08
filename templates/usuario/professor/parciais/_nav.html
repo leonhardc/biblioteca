@@ -1,0 +1,86 @@
+{% load static %}
+
+<!-- Header -->
+<header class="header-backdrop border-bottom">
+    <div class="container-fluid">
+        <nav class="navbar">
+            <!-- Logo -->
+            <a href="{% url 'usuario:pagina_inicial_professor' uid=user.id %}" class="navbar-brand">
+                <div class="logo-box">
+                    <i class="fa-solid fa-book"></i>
+                </div>
+                <div class="logo-text d-none d-sm-block">
+                    <h1 class="font-display">Biblioteca</h1>
+                    <p class="small text-muted">Acadêmica</p>
+                </div>
+            </a>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="navbar-toggler" id="mobile-menu-btn" type="button">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Navigation Menu -->
+            <div class="navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {% if dashboard %}active{% endif %}" href="{% url 'usuario:pagina_inicial_professor' uid=user.id %}">
+                            <i class="fa-solid fa-house"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if livros %}active{% endif %}" href="{% url 'livro:listar_livros' %}">
+                            <i class="fa-solid fa-book-open"></i>
+                            <span>Livros</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if reserva %}active{% endif %}" href="{% url 'livro:listar_reservas' %}">
+                            <i class="fa-solid fa-bookmark"></i>
+                            <span>Reservas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if emprestimo %}active{% endif %}" href="{% url 'livro:listar_emprestimos' %}">
+                            <i class="fa-solid fa-book"></i>
+                            <span>Empréstimos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if notificacoes %}active{% endif %}" href="#">
+                            <i class="fa-solid fa-bell"></i>
+                            <span>Notificações</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- User Actions -->
+            <div class="navbar-actions d-none d-md-flex">
+                <div class="user-menu">
+                    <button class="btn btn-user" id="user-menu-btn" type="button">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <span class="user-name">Prof. {{ user.first_name|default:"Usuário" }}</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <a href="{% url 'usuario:ler-professor' uid=user.id %}" class="dropdown-item {% if conta %}active{% endif %}">
+                            <i class="fa-solid fa-user-circle"></i>
+                            Meu Perfil
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fa-solid fa-gear"></i>
+                            Configurações
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'usuario:sair' %}" class="dropdown-item text-danger">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Sair
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
