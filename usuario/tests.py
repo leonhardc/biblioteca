@@ -1,7 +1,7 @@
 from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
-from usuario.models import Aluno, Funcionario
+from usuario.models import Aluno, Professor, Funcionario
 from curso.models import Curso
 from livro.models import Emprestimo, Reserva, Livro
 import datetime
@@ -470,3 +470,458 @@ class AlunoPaginationTestCase(TestCase):
             response = self.client.get(reverse('usuario:listar-alunos') + '?page=2')
             
             self.assertEqual(response.status_code, 200)
+
+
+class ProfessorViewsTestCase(TestCase):
+    """Testes unitários para as views relacionadas aos Professores"""
+
+    def setUp(self):
+        """Configuração inicial para todos os testes"""
+        self.client = Client()
+        
+        # Criar um curso
+        self.curso = Curso.objects.create(
+            cod_curso='ENG001',
+            curso='Engenharia de Software',
+            descricao='Curso de Engenharia de Software',
+            turno='M',
+            duracao=5
+        )
+        
+        # Criar usuário professor
+        self.user = User.objects.create_user(
+            username='professor_teste',
+            password='senha123',
+            email='professor@teste.com',
+            first_name='Carlos',
+            last_name='Oliveira'
+        )
+        
+        # Criar professor
+        self.professor = Professor.objects.create(
+            usuario=self.user,
+            matricula='P001',
+            curso=self.curso,
+            cpf='11111111111',
+            regime='40h',
+            contratacao=datetime.date.today(),
+            ativo=True,
+            reservas=0,
+            emprestimos=0
+        )
+        
+        # Criar usuário funcionário
+        self.funcionario_user = User.objects.create_user(
+            username='funcionario_teste',
+            password='senha123',
+            email='funcionario@teste.com',
+            first_name='Maria',
+            last_name='Santos'
+        )
+        
+        self.funcionario = Funcionario.objects.create(
+            usuario=self.funcionario_user,
+            matricula='F001',
+            cpf='22222222222',
+            ativo=True,
+            reservas=0,
+            emprestimos=0
+        )
+        
+        # Criar usuário admin
+        self.admin_user = User.objects.create_superuser(
+            username='admin',
+            password='admin123',
+            email='admin@teste.com'
+        )
+
+    def test_pagina_inicial_professor_authenticated(self):
+        """Testa página inicial do professor com usuário autenticado"""
+        self.client.login(username='professor_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:pagina_inicial_professor', kwargs={'uid': self.user.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_pagina_inicial_professor_not_authenticated(self):
+        """Testa página inicial do professor sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:pagina_inicial_professor', kwargs={'uid': self.user.id})
+        )
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('usuario:entrar'))
+
+    def test_criar_professor_get_authenticated(self):
+        """Testa GET para criação de professor com usuário autenticado"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(reverse('usuario:criar-professor'))
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_criar_professor_not_authenticated(self):
+        """Testa criação de professor sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:criar-professor'),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+    def test_ler_professor_authenticated(self):
+        """Testa visualização de dados do professor autenticado"""
+        self.client.login(username='professor_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:ler-professor', kwargs={'uid': self.professor.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_ler_professor_not_authenticated(self):
+        """Testa visualização de dados do professor sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:ler-professor', kwargs={'uid': self.professor.id}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+    def test_detalhes_professor_as_funcionario(self):
+        """Testa visualização de detalhes do professor como funcionário"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:detalhes-professor', kwargs={'uid': self.professor.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_detalhes_professor_as_admin(self):
+        """Testa visualização de detalhes do professor como admin"""
+        self.client.login(username='admin', password='admin123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:detalhes-professor', kwargs={'uid': self.professor.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_atualizar_professor_get_as_funcionario(self):
+        """Testa GET para atualização de professor como funcionário"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:atualizar-professor', kwargs={'uid': self.professor.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_atualizar_professor_get_as_admin(self):
+        """Testa GET para atualização de professor como admin"""
+        self.client.login(username='admin', password='admin123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:atualizar-professor', kwargs={'uid': self.professor.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_atualizar_professor_professor_inexistente(self):
+        """Testa atualização de professor inexistente"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        response = self.client.get(
+            reverse('usuario:atualizar-professor', kwargs={'uid': 99999}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+    def test_atualizar_professor_not_authenticated(self):
+        """Testa atualização de professor sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:atualizar-professor', kwargs={'uid': self.professor.id}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+    def test_deletar_professor_authenticated(self):
+        """Testa deleção de professor com usuário autenticado"""
+        # Criar um novo professor para deletar
+        novo_user = User.objects.create_user(
+            username='professor_deletar',
+            password='senha123',
+            email='deletar@teste.com'
+        )
+        novo_professor = Professor.objects.create(
+            usuario=novo_user,
+            matricula='P999',
+            curso=self.curso,
+            cpf='99999999999',
+            regime='20h',
+            contratacao=datetime.date.today(),
+            ativo=True,
+            reservas=0,
+            emprestimos=0
+        )
+        
+        self.client.login(username='admin', password='admin123')
+        response = self.client.get(
+            reverse('usuario:deletar-professor', kwargs={'uid': novo_professor.id}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Professor.objects.filter(id=novo_professor.id).exists())
+
+    def test_deletar_professor_inexistente(self):
+        """Testa deleção de professor inexistente"""
+        self.client.login(username='admin', password='admin123')
+        response = self.client.get(
+            reverse('usuario:deletar-professor', kwargs={'uid': 99999}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+    def test_deletar_professor_not_authenticated(self):
+        """Testa deleção de professor sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:deletar-professor', kwargs={'uid': self.professor.id}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+
+class FuncionarioViewsTestCase(TestCase):
+    """Testes unitários para as views relacionadas aos Funcionários"""
+
+    def setUp(self):
+        """Configuração inicial para todos os testes"""
+        self.client = Client()
+        
+        # Criar usuário funcionário
+        self.user = User.objects.create_user(
+            username='funcionario_teste',
+            password='senha123',
+            email='funcionario@teste.com',
+            first_name='Ana',
+            last_name='Silva'
+        )
+        
+        # Criar funcionário
+        self.funcionario = Funcionario.objects.create(
+            usuario=self.user,
+            matricula='F001',
+            cpf='33333333333',
+            ativo=True,
+            reservas=0,
+            emprestimos=0
+        )
+        
+        # Criar outro funcionário
+        self.outro_funcionario_user = User.objects.create_user(
+            username='outro_funcionario',
+            password='senha123',
+            email='outro@teste.com',
+            first_name='Pedro',
+            last_name='Costa'
+        )
+        
+        self.outro_funcionario = Funcionario.objects.create(
+            usuario=self.outro_funcionario_user,
+            matricula='F002',
+            cpf='44444444444',
+            ativo=True,
+            reservas=0,
+            emprestimos=0
+        )
+        
+        # Criar usuário admin
+        self.admin_user = User.objects.create_superuser(
+            username='admin',
+            password='admin123',
+            email='admin@teste.com'
+        )
+
+    def test_pagina_inicial_funcionario_authenticated(self):
+        """Testa página inicial do funcionário com usuário autenticado"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:pagina_inicial_funcionario', kwargs={'uid': self.user.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_pagina_inicial_funcionario_not_authenticated(self):
+        """Testa página inicial do funcionário sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:pagina_inicial_funcionario', kwargs={'uid': self.user.id})
+        )
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('usuario:entrar'))
+
+    def test_criar_funcionario_get_authenticated(self):
+        """Testa GET para criação de funcionário com usuário autenticado"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(reverse('usuario:criar-funcionario'))
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_criar_funcionario_not_authenticated(self):
+        """Testa criação de funcionário sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:criar-funcionario'),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+    def test_ler_funcionario_authenticated(self):
+        """Testa visualização de dados do funcionário autenticado"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:ler-funcionario', kwargs={'uid': self.funcionario.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_ler_funcionario_not_authenticated(self):
+        """Testa visualização de dados do funcionário sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:ler-funcionario', kwargs={'uid': self.funcionario.id}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+    def test_ler_funcionario_inexistente(self):
+        """Testa visualização de funcionário inexistente"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        response = self.client.get(
+            reverse('usuario:ler-funcionario', kwargs={'uid': 99999}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+    def test_detalhes_funcionario_as_funcionario(self):
+        """Testa visualização de detalhes do funcionário como funcionário"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:detalhes-funcionario', kwargs={'uid': self.funcionario.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_detalhes_funcionario_as_admin(self):
+        """Testa visualização de detalhes do funcionário como admin"""
+        self.client.login(username='admin', password='admin123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:detalhes-funcionario', kwargs={'uid': self.funcionario.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_atualizar_funcionario_get_as_funcionario(self):
+        """Testa GET para atualização de funcionário como funcionário"""
+        self.client.login(username='funcionario_teste', password='senha123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:atualizar-funcionario', kwargs={'uid': self.funcionario.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_atualizar_funcionario_get_as_admin(self):
+        """Testa GET para atualização de funcionário como admin"""
+        self.client.login(username='admin', password='admin123')
+        
+        with patch('usuario.views.render') as mock_render:
+            mock_render.return_value = HttpResponse('OK')
+            response = self.client.get(
+                reverse('usuario:atualizar-funcionario', kwargs={'uid': self.funcionario.id})
+            )
+            
+            self.assertEqual(response.status_code, 200)
+
+    def test_atualizar_funcionario_not_authenticated(self):
+        """Testa atualização de funcionário sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:atualizar-funcionario', kwargs={'uid': self.funcionario.id}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+
+    def test_deletar_funcionario_authenticated(self):
+        """Testa deleção de funcionário com usuário autenticado"""
+        # Criar um novo funcionário para deletar
+        novo_user = User.objects.create_user(
+            username='funcionario_deletar',
+            password='senha123',
+            email='deletar@teste.com'
+        )
+        novo_funcionario = Funcionario.objects.create(
+            usuario=novo_user,
+            matricula='F999',
+            cpf='99999999999',
+            ativo=True,
+            reservas=0,
+            emprestimos=0
+        )
+        
+        self.client.login(username='admin', password='admin123')
+        response = self.client.get(
+            reverse('usuario:deletar-funcionario', kwargs={'uid': novo_funcionario.id}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Funcionario.objects.filter(id=novo_funcionario.id).exists())
+
+    def test_deletar_funcionario_not_authenticated(self):
+        """Testa deleção de funcionário sem autenticação"""
+        response = self.client.get(
+            reverse('usuario:deletar-funcionario', kwargs={'uid': self.funcionario.id}),
+            HTTP_REFERER='/some-page/'
+        )
+        
+        self.assertEqual(response.status_code, 302)
