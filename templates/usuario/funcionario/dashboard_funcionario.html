@@ -1,14 +1,349 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    {% include 'usuario/funcionario/parciais/_head.html' %}
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/dashboard-aluno.css' %}">
 </head>
 
 <body>
-    Dashboard-Funcionario
+    <header>
+        {% include 'usuario/funcionario/parciais/_nav.html' %}
+    </header>
+
+    <main class="dashboard-main">
+        <div class="container-fluid">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-content">
+                    <h1 class="font-display welcome-title">
+                        Olá, {{ user.first_name|default:"Funcionário" }}! 👨‍💼
+                    </h1>
+                    <p class="welcome-subtitle">
+                        Bem-vindo ao seu painel de trabalho. Gerencie operações da biblioteca e seus próprios empréstimos.
+                    </p>
+                </div>
+                <div class="quick-actions">
+                    <a href="{% url 'livro:listar_livros' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Buscar Livros
+                    </a>
+                    <a href="#operacoes-funcionais" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-users"></i>
+                        Operações de Atendimento
+                    </a>
+                </div>
+            </section>
+
+            <!-- Stats Cards -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-primary">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">{{ funcionario.emprestimos|default:0 }}</h3>
+                            {% if funcionario.emprestimos == 1 %}
+                            <p class="stat-label">Meu Empréstimo Ativo</p>
+                            {% else %}
+                            <p class="stat-label">Meus Empréstimos Ativos</p>
+                            {% endif %}
+                            <a href="{% url 'livro:listar_emprestimos' %}" class="stat-link">
+                                Ver meus empréstimos <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-secondary">
+                            <i class="fa-solid fa-bookmark"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">{{ funcionario.reservas|default:0 }}</h3>
+                            {% if funcionario.reservas == 1 %}
+                            <p class="stat-label">Minha Reserva Pendente</p>
+                            {% else %}
+                            <p class="stat-label">Minhas Reservas Pendentes</p>
+                            {% endif %}
+                            <a href="{% url 'livro:listar_reservas' %}" class="stat-link">
+                                Ver minhas reservas <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-success">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">{{ total_emprestimos_realizados|default:0 }}</h3>
+                            <p class="stat-label">Empréstimos Processados Hoje</p>
+                            <a href="#" class="stat-link">
+                                Ver estatísticas <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-info">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">{{ user.funcionario.cargo|default:"Funcionário" }}</h3>
+                            <p class="stat-label">Cargo</p>
+                            <a href="{% url 'usuario:ler-funcionario' uid=user.id %}" class="stat-link">
+                                Ver perfil <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <section class="content-section">
+                <div class="content-grid" style="grid-template-columns: 1fr;">
+                    
+                    <!-- Seção 1: Operações do Próprio Funcionário -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-header-content">
+                                <h2 class="font-display card-title">
+                                    <i class="fa-solid fa-user-circle"></i>
+                                    Minhas Operações Pessoais
+                                </h2>
+                                <p class="card-subtitle">Gerencie seus próprios empréstimos e reservas</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-links-grid">
+                                <a href="{% url 'livro:listar_livros' %}" class="quick-link-item">
+                                    <div class="quick-link-icon">
+                                        <i class="fa-solid fa-search"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Buscar Livros para Mim</h4>
+                                        <p>Explore o acervo e faça empréstimos pessoais</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'livro:listar_emprestimos' %}" class="quick-link-item">
+                                    <div class="quick-link-icon">
+                                        <i class="fa-solid fa-book-open"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Meus Empréstimos</h4>
+                                        <p>Ver meus livros emprestados</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'livro:listar_reservas' %}" class="quick-link-item">
+                                    <div class="quick-link-icon">
+                                        <i class="fa-solid fa-bookmark"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Minhas Reservas</h4>
+                                        <p>Gerenciar minhas reservas de livros</p>
+                                    </div>
+                                </a>
+
+                                <a href="{% url 'usuario:ler-funcionario' uid=user.id %}" class="quick-link-item">
+                                    <div class="quick-link-icon">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Meu Perfil</h4>
+                                        <p>Ver e editar meus dados</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seção 2: Operações para Outros Usuários -->
+                    <div class="dashboard-card" id="operacoes-funcionais">
+                        <div class="card-header">
+                            <div class="card-header-content">
+                                <h2 class="font-display card-title">
+                                    <i class="fa-solid fa-users-gear"></i>
+                                    Operações de Atendimento ao Público
+                                </h2>
+                                <p class="card-subtitle">Gerencie empréstimos, devoluções e reservas de usuários</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-links-grid">
+                                <!-- Emprestar Livro para Usuário -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Emprestar livro para usuário'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #4CAF50;">
+                                        <i class="fa-solid fa-hand-holding-hand"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Emprestar Livro</h4>
+                                        <p>Registrar empréstimo para um usuário</p>
+                                    </div>
+                                </a>
+
+                                <!-- Devolver Livro -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Registrar devolução'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #2196F3;">
+                                        <i class="fa-solid fa-rotate-left"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Registrar Devolução</h4>
+                                        <p>Processar devolução de livros</p>
+                                    </div>
+                                </a>
+
+                                <!-- Consultar Reservas de Usuários -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Consultar reservas'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #FF9800;">
+                                        <i class="fa-solid fa-list-check"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Consultar Reservas</h4>
+                                        <p>Ver todas as reservas pendentes</p>
+                                    </div>
+                                </a>
+
+                                <!-- Buscar Usuário -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Buscar usuário'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #9C27B0;">
+                                        <i class="fa-solid fa-user-magnifying-glass"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Buscar Usuário</h4>
+                                        <p>Consultar informações de usuários</p>
+                                    </div>
+                                </a>
+
+                                <!-- Renovar Empréstimo -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Renovar empréstimo'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #00BCD4;">
+                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Renovar Empréstimo</h4>
+                                        <p>Renovar prazo de empréstimo de usuário</p>
+                                    </div>
+                                </a>
+
+                                <!-- Cancelar Reserva -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Cancelar reserva'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #F44336;">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Cancelar Reserva</h4>
+                                        <p>Cancelar reserva de um usuário</p>
+                                    </div>
+                                </a>
+
+                                <!-- Histórico de Empréstimos -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Histórico'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #607D8B;">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Histórico de Empréstimos</h4>
+                                        <p>Ver histórico completo de operações</p>
+                                    </div>
+                                </a>
+
+                                <!-- Relatórios -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #795548;">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Relatórios</h4>
+                                        <p>Gerar relatórios de atividades</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-header-content">
+                                <h2 class="font-display card-title">
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                    Atividades Recentes
+                                </h2>
+                                <p class="card-subtitle">Últimas operações realizadas</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon activity-icon-primary">
+                                        <i class="fa-solid fa-info-circle"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p class="activity-title">Nenhuma atividade recente</p>
+                                        <p class="activity-time">Suas operações aparecerão aqui</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Information Banner -->
+            <section class="info-banner">
+                <div class="info-banner-content">
+                    <div class="info-banner-icon">
+                        <i class="fa-solid fa-info-circle"></i>
+                    </div>
+                    <div class="info-banner-text">
+                        <h3>Lembrete Importante!</h3>
+                        <p>Como funcionário, você pode emprestar livros para si mesmo e também processar empréstimos para outros usuários. Sempre verifique os dados antes de confirmar qualquer operação.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+    // Mobile menu toggle and user dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
 </body>
 
 </html>

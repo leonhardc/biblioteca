@@ -1,33 +1,92 @@
 {% load static %}
 
-<nav>
-    <span class="roboto-bold">Biblioteca</span>
-    <ul class="roboto-normal">
-        <li>
-            {% if not dashboard and not livros and not reservas and not emprestimos and not conta and not notificacoes%}
-            <a href="{% url 'usuario:dashboard_aluno' %}" class="ativo">
-                Página Inicial
+<!-- Header -->
+<header class="header-backdrop border-bottom">
+    <div class="container-fluid">
+        <nav class="navbar">
+            <!-- Logo -->
+            <a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}" class="navbar-brand">
+                <div class="logo-box">
+                    <i class="fa-solid fa-book"></i>
+                </div>
+                <div class="logo-text d-none d-sm-block">
+                    <h1 class="font-display">Biblioteca</h1>
+                    <p class="small text-muted">Sistema de Gestão</p>
+                </div>
             </a>
-            {%else%}
-            <a href="{% url 'usuario:dashboard_aluno' %}" class="{%if dashboard%}ativo{%endif%}">
-                Página Inicial
-            </a>
-            {% endif %}
-        </li>
-        <li>
-            <a href="{% url 'livro:listar_livros' %}" class="{%if livros%}ativo{%endif%}">Livros</a>
-        </li>
-        <li>
-            <a href="{% url 'livro:listar_reservas' %}" class="{%if reservas%}ativo{%endif%}">Reservas</a>
-        </li>
-        <li>
-            <a href="{% url 'livro:listar_emprestimos' %}" class="{%if emprestimos%}ativo{%endif%}">Emprestimos</a>
-        </li>
-        <li>
-            <a href="#" class="{%if notificacoes%}ativo{%endif%}">Notificações</a>
-        </li>
-        <li>
-            <a href="#" class="{%if conta%}ativo{%endif%}">Conta</a>
-        </li>
-    </ul>
-</nav>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="navbar-toggler" id="mobile-menu-btn" type="button">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Navigation Menu -->
+            <div class="navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav" style="align-items: end;">
+                    <li class="nav-item">
+                        <a class="nav-link {% if dashboard %}active{% endif %}" href="{% url 'usuario:pagina_inicial_funcionario' user.id %}">
+                            <i class="fa-solid fa-house"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if livros %}active{% endif %}" href="{% url 'livro:listar_livros' %}">
+                            <i class="fa-solid fa-book-open"></i>
+                            <span>Livros</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if reserva %}active{% endif %}" href="{% url 'livro:listar_reservas' %}">
+                            <i class="fa-solid fa-bookmark"></i>
+                            <span>Minhas Reservas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if emprestimo %}active{% endif %}" href="{% url 'livro:listar_emprestimos' %}">
+                            <i class="fa-solid fa-book"></i>
+                            <span>Meus Empréstimos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if atendimento %}active{% endif %}" href="#operacoes-funcionais">
+                            <i class="fa-solid fa-users-gear"></i>
+                            <span>Atendimento</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if notificacoes %}active{% endif %}" href="#">
+                            <i class="fa-solid fa-bell"></i>
+                            <span>Notificações</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- User Actions -->
+            <div class="navbar-actions d-none d-md-flex">
+                <div class="user-menu">
+                    <button class="btn btn-user" id="user-menu-btn" type="button">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span class="user-name">{{ user.first_name|default:"Funcionário" }}</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <a href="{% url 'usuario:ler-funcionario' uid=user.id %}" class="dropdown-item {% if conta %}active{% endif %}">
+                            <i class="fa-solid fa-user-circle"></i>
+                            Meu Perfil
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fa-solid fa-gear"></i>
+                            Configurações
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'usuario:sair' %}" class="dropdown-item text-danger">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Sair
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
