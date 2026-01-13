@@ -1,0 +1,750 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-gray: #ecf0f1;
+            --medium-gray: #95a5a6;
+            --dark-gray: #34495e;
+            --body-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --input-border: #dfe6e9;
+            --input-focus: #3498db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Header */
+        .header-backdrop {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-box {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .form-page {
+            min-height: 100vh;
+            padding: 120px 2rem 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 3rem;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 1.5rem;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: var(--medium-gray);
+            font-size: 1rem;
+        }
+
+        /* Messages */
+        .messages-container {
+            margin-bottom: 2rem;
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+        }
+
+        .alert-error,
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: var(--accent-color);
+            color: #721c24;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--secondary-color);
+            color: #0c5460;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+        }
+
+        /* Form Groups */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-row.three-columns {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .form-row.full-width {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label i {
+            color: var(--secondary-color);
+            font-size: 1rem;
+        }
+
+        .form-label .required {
+            color: var(--accent-color);
+        }
+
+        /* Form Controls */
+        .form-control,
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        input[type="number"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .form-control:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2334495e' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+        }
+
+        /* Field Errors */
+        .field-errors {
+            margin-top: 0.5rem;
+        }
+
+        .error-message {
+            color: var(--accent-color);
+            font-size: 0.875rem;
+            margin: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-message::before {
+            content: "⚠";
+            font-size: 1rem;
+        }
+
+        .form-control.is-invalid,
+        input.is-invalid {
+            border-color: var(--accent-color);
+        }
+
+        /* Helptext */
+        .helptext {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Checkbox and Radio */
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"],
+        .radio-item input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--light-gray);
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--medium-gray);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Footer Info */
+        .form-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-gray);
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        .form-footer a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 767px) {
+            .form-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header-backdrop">
+        <div class="container-fluid">
+            <nav class="navbar">
+                <!-- Logo -->
+                <a href="{% url 'usuario:index' %}" class="navbar-brand">
+                    <div class="logo-box">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="font-display">Biblioteca</h1>
+                        <p>Acadêmica</p>
+                    </div>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="form-page">
+        <div class="form-wrapper">
+            <div class="form-card">
+                <!-- Form Header -->
+                <div class="form-header">
+                    <h1 class="form-title font-display">Formulário de Empréstimo</h1>
+                    <!-- <p class="form-subtitle">Preencha todos os campos obrigatórios para continuar</p> -->
+                </div>
+
+                <!-- Messages
+                {% if messages %}
+                    <div class="messages-container">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %} -->
+
+                <!-- Form -->
+                <form method="POST" action="{% url 'livro:emprestar_livro' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form}}
+                    <!-- Seção 1: Dados Pessoais -->
+                    <!-- <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-user"></i>
+                            Dados Pessoais
+                        </h2>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="id_nome" class="form-label">
+                                    Nome Completo <span class="required">*</span>
+                                </label>
+                                {{ form.nome }}
+                                {% if form.nome.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.nome.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if form.nome.help_text %}
+                                    <small class="helptext">{{ form.nome.help_text }}</small>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_email" class="form-label">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    E-mail <span class="required">*</span>
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.email.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="id_telefone" class="form-label">
+                                    <i class="fa-solid fa-phone"></i>
+                                    Telefone
+                                </label>
+                                {{ form.telefone }}
+                                {% if form.telefone.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.telefone.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_data_nascimento" class="form-label">
+                                    <i class="fa-solid fa-calendar"></i>
+                                    Data de Nascimento <span class="required">*</span>
+                                </label>
+                                {{ form.data_nascimento }}
+                                {% if form.data_nascimento.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.data_nascimento.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- Seção 2: Endereço -->
+                    <!-- <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-location-dot"></i>
+                            Endereço
+                        </h2>
+
+                        <div class="form-row three-columns">
+                            <div class="form-group">
+                                <label for="id_cep" class="form-label">
+                                    CEP <span class="required">*</span>
+                                </label>
+                                {{ form.cep }}
+                                {% if form.cep.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.cep.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_estado" class="form-label">
+                                    Estado <span class="required">*</span>
+                                </label>
+                                {{ form.estado }}
+                                {% if form.estado.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.estado.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_cidade" class="form-label">
+                                    Cidade <span class="required">*</span>
+                                </label>
+                                {{ form.cidade }}
+                                {% if form.cidade.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.cidade.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="id_rua" class="form-label">
+                                    Rua <span class="required">*</span>
+                                </label>
+                                {{ form.rua }}
+                                {% if form.rua.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.rua.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_numero" class="form-label">
+                                    Número
+                                </label>
+                                {{ form.numero }}
+                                {% if form.numero.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.numero.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-row full-width">
+                            <div class="form-group">
+                                <label for="id_complemento" class="form-label">
+                                    Complemento
+                                </label>
+                                {{ form.complemento }}
+                                {% if form.complemento.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.complemento.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- Seção 3: Informações Adicionais -->
+                    <!-- <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Informações Adicionais
+                        </h2>
+
+                        <div class="form-row full-width">
+                            <div class="form-group">
+                                <label for="id_observacoes" class="form-label">
+                                    Observações
+                                </label>
+                                {{ form.observacoes }}
+                                {% if form.observacoes.errors %}
+                                    <div class="field-errors">
+                                        {% for error in form.observacoes.errors %}
+                                            <p class="error-message">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="helptext">Campo opcional para informações adicionais</small>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <input type="submit" value="Fazer Emprestimo" class="btn btn-primary">
+                        <a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}" class="btn btn-secondary">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Cancelar
+                        </a>
+                        <!-- <button type="reset" class="btn btn-danger">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Limpar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-check"></i>
+                            Enviar Formulário
+                        </button> -->
+                    </div>
+                </form>
+
+                <!-- Form Footer -->
+                <div class="form-footer">
+                    <!-- <p>Todos os campos marcados com <span class="required">*</span> são obrigatórios.</p> -->
+                    <p>Precisa de ajuda? <a href="#">Entre em contato</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        // Adiciona classe de erro visual aos campos com erro
+        document.addEventListener('DOMContentLoaded', function() {
+            const fieldsWithErrors = document.querySelectorAll('.field-errors');
+            fieldsWithErrors.forEach(function(errorDiv) {
+                const formGroup = errorDiv.closest('.form-group');
+                const input = formGroup.querySelector('input, select, textarea');
+                if (input) {
+                    input.classList.add('is-invalid');
+                }
+            });
+        });
+
+        // Validação de CEP (exemplo)
+        const cepInput = document.querySelector('#id_cep');
+        if (cepInput) {
+            cepInput.addEventListener('blur', function() {
+                const cep = this.value.replace(/\D/g, '');
+                if (cep.length === 8) {
+                    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.erro) {
+                                const ruaInput = document.querySelector('#id_rua');
+                                const bairroInput = document.querySelector('#id_bairro');
+                                const cidadeInput = document.querySelector('#id_cidade');
+                                const estadoInput = document.querySelector('#id_estado');
+                                
+                                if (ruaInput) ruaInput.value = data.logradouro;
+                                if (bairroInput) bairroInput.value = data.bairro;
+                                if (cidadeInput) cidadeInput.value = data.localidade;
+                                if (estadoInput) estadoInput.value = data.uf;
+                            }
+                        })
+                        .catch(error => console.log('Erro ao buscar CEP:', error));
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
