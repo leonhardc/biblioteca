@@ -466,7 +466,7 @@
                     <!-- <p class="form-subtitle">Preencha todos os campos obrigatórios para continuar</p> -->
                 </div>
 
-                <!-- Messages
+                <!-- Messages -->
                 {% if messages %}
                     <div class="messages-container">
                         {% for message in messages %}
@@ -475,7 +475,7 @@
                             </div>
                         {% endfor %}
                     </div>
-                {% endif %} -->
+                {% endif %}
 
                 <!-- Form -->
                 <form method="POST" action="{% url 'livro:emprestar_livro' %}" enctype="multipart/form-data">

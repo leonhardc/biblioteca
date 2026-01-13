@@ -69,6 +69,11 @@ LOGRADOUROS = (
     ('Estação', 'Estação')
 )
 
+MAX_EMPRESTIMOS_POR_USUARIO = {
+    'aluno': 4,
+    'professore': 5,
+    'funcionario': 4,    
+}
 NUM_MAX_EMPRESTIMOS = {
     'aluno': 4,
     'professore': 5,

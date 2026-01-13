@@ -114,19 +114,30 @@ def checa_se_funcionario_tem_numero_maximo_de_emprestimos(usuario_id:int) -> boo
     return True
 
 def fazer_emprestimo(usuario, livro, data_emprestimo, data_devolucao):
-    try:
-        emprestimo = Emprestimo.objects.create(
-            usuario=usuario,
-            livro=livro,
-            data_emprestimo=data_emprestimo,
-            data_devolucao=data_devolucao,
-            ativo=True
-        )
-        emprestimo.save()
-        return True
-    except Exception as e:
-        print(f'Erro ao criar emprestimo: {e}')
-        return False
+    # try:
+    #     emprestimo = Emprestimo.objects.create(
+    #         usuario=usuario,
+    #         livro=livro,
+    #         data_emprestimo=data_emprestimo,
+    #         data_devolucao=data_devolucao,
+    #         ativo=True
+    #     )
+    #     emprestimo.save()
+    #     return True
+    # except Exception as e:
+    #     print(f'Erro ao criar emprestimo: {e}')
+    #     return False
+    usuario = User.objects.get(id=usuario)
+    livro = Livro.objects.get(id=livro)
+    emprestimo = Emprestimo.objects.create(
+        usuario=usuario,
+        livro=livro,
+        data_emprestimo=data_emprestimo,
+        data_devolucao=data_devolucao,
+        ativo=True
+    )
+    emprestimo.save()
+    return True
 
 def emprestar_livro(request:HttpResponse) -> HttpResponse:
     if request.user.is_authenticated:
@@ -138,8 +149,8 @@ def emprestar_livro(request:HttpResponse) -> HttpResponse:
             if request.method == 'POST':
                 formulario_emprestimo = FormularioCriarEmprestimo(request.POST)
                 if formulario_emprestimo.is_valid():
-                    usuario_id = formulario_emprestimo.cleaned_data['usuario']
-                    livro_id = formulario_emprestimo.cleaned_data['livro']
+                    usuario_id = int(formulario_emprestimo.cleaned_data['usuario'])
+                    livro_id = int(formulario_emprestimo.cleaned_data['livro'])
                     data_emprestimo = formulario_emprestimo.cleaned_data['data_emprestimo']
                     data_devolucao = data_emprestimo + timedelta(days=7)  # Empréstimo padrão de 7 dias
                     if user_is_aluno(usuario_id):
@@ -178,6 +189,9 @@ def emprestar_livro(request:HttpResponse) -> HttpResponse:
                             else:
                                 messages.add_message(request, messages.ERROR, f'Erro ao realizar o empréstimo para o funcionário.')
                                 return redirect('livro:emprestar_livro')
+                        else:
+                            messages.add_message(request, messages.ERROR, f'O funcionário atingiu o número máximo de empréstimos.')
+                            return redirect('livro:emprestar_livro')
         else:
             messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
             return redirect('usuario:entrar')
