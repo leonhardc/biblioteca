@@ -95,6 +95,8 @@ def deletar_livro(request:HttpRequest, id_livro:int) -> HttpResponse:
 def reservar_livro(request:HttpRequest, id_livro:int, usuario:str) -> HttpResponse:
     return HttpResponse("View reservar livro")
 
+# Funcoes auxiliares para emprestimo de livros.
+# TODO: Mover estas funcoes para utils.py
 def checa_se_aluno_tem_numero_maximo_de_emprestimos(usuario_id:int) -> bool:
     aluno = Aluno.objects.get(usuario__id=usuario_id)
     if aluno.emprestimos <= MAX_EMPRESTIMOS_POR_USUARIO['aluno']:
@@ -114,19 +116,6 @@ def checa_se_funcionario_tem_numero_maximo_de_emprestimos(usuario_id:int) -> boo
     return True
 
 def fazer_emprestimo(usuario, livro, data_emprestimo, data_devolucao):
-    # try:
-    #     emprestimo = Emprestimo.objects.create(
-    #         usuario=usuario,
-    #         livro=livro,
-    #         data_emprestimo=data_emprestimo,
-    #         data_devolucao=data_devolucao,
-    #         ativo=True
-    #     )
-    #     emprestimo.save()
-    #     return True
-    # except Exception as e:
-    #     print(f'Erro ao criar emprestimo: {e}')
-    #     return False
     usuario = User.objects.get(id=usuario)
     livro = Livro.objects.get(id=livro)
     emprestimo = Emprestimo.objects.create(
@@ -138,6 +127,8 @@ def fazer_emprestimo(usuario, livro, data_emprestimo, data_devolucao):
     )
     emprestimo.save()
     return True
+
+# Fim das funcoes auxiliares para emprestimo de livros.
 
 def emprestar_livro(request:HttpResponse) -> HttpResponse:
     if request.user.is_authenticated:
@@ -257,6 +248,29 @@ def listar_reservas(request:HttpRequest):
         else:
             messages.add_message(request, messages.ERROR, 'Não existem reservas para este usuário.')
             return render(request, template_name, context={'reserva':True, 'user_context': user_context})
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
+
+def listar_todas_reservas(request:HttpRequest):
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            reservas = Reserva.objects.all().exists()
+            template_name = "livro/listar_todas_reservas.html"
+            if reservas:
+                reservas = Reserva.objects.all().order_by('-data_reserva')
+                return render(request, template_name=template_name, context={'reservas':reservas, 'user_context': user_context})
+            else:
+                messages.add_message(request, messages.ERROR, 'Não existem reservas na biblioteca.')
+                return render(request, template_name, context={'reserva':True})
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
     else:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
