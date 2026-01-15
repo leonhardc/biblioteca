@@ -12,6 +12,13 @@ import random
 # from django.db.models.query import QuerySet
 
 
+def limpar_mensagens(request: HttpRequest) -> None:
+    """Limpa todas as mensagens do Django messages framework."""
+    storage = messages.get_messages(request)
+    for _ in storage:
+        pass
+
+
 def formatar_endereco(formulario:FormularioAluno|FormularioProfessor|FormularioFuncionario):
     tipo_logadouro = formulario.cleaned_data['tipo_logradouro'] # type: ignore
     logadouro = formulario.cleaned_data['logradouro']           # type: ignore

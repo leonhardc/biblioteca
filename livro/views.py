@@ -136,6 +136,7 @@ def emprestar_livro(request:HttpResponse) -> HttpResponse:
             if request.method == 'GET':
                 template_name = 'livro/emprestar_livro.html'
                 formulario_emprestimo = FormularioCriarEmprestimo()
+                limpar_mensagens(request)
                 return render(request, template_name, context={'form': formulario_emprestimo})
             if request.method == 'POST':
                 formulario_emprestimo = FormularioCriarEmprestimo(request.POST)
