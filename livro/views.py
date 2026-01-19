@@ -9,7 +9,7 @@ from django.db.models import Q
 from usuario.constants import MAX_RESERVAS_POR_USUARIO, MAX_EMPRESTIMOS_POR_USUARIO, NUM_MAX_DIAS_EMPRESTIMOS
 from utils.usuarios.utils import user_is_aluno, user_is_professor, user_is_funcionario
 from utils.livros.utils import criar_reserva_aluno, criar_reserva_professor, criar_reserva_funcionario
-
+from .forms import *
 # Método de Listar Livros, Autores e Categorias
 def listar_livros(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
@@ -349,3 +349,19 @@ def atualizar_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpRespons
 
 def deletar_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpResponse:
     return HttpResponse('View de deletar emprestimo')
+
+def renovar_emprestimo(request: HttpRequest):
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            if request.method == 'GET':
+                formulario = FormularioRenovarEmprestimo()
+                template_name = 'livro/renovar_emprestimo.html'
+                return render(request, template_name, context={'form': formulario})
+            if request.method == 'POST':
+                pass
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt_BR">
+
+<head>
+    {% include 'parciais/_head.html' %}
+</head>
+
+<body>
+    {% include 'parciais/_navbar.html' %}
+    {% include 'parciais/_aside.html' %}
+    <div class="container">
+        <!-- Mensagens -->
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="alert {{ message.tags }}"{% endif %}>
+                {{ message }} 
+                <img src="{% static 'usuario/img/close_E3E3E3.png' %}" class="icone icone-fechar {{ message.tags }}" alt="icone de fechar mensagem">
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <!-- Conteúdo Principal -->
+        <div class="content">
+            <h1 class="titulo-pagina">Buscar Usuário</h1>
+            
+            <form class="formulario" action="" method="POST">
+                {% csrf_token %}
+                
+                <div class="campo-formulario">
+                    <label for="id_usuario">Usuário:</label>
+                    <input type="text" name="usuario" id="id_usuario" class="input-campo" placeholder="Digite o nome de usuário" required>
+                    {% if form.usuario.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.usuario.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                
+                <div class="acoes-formulario">
+                    <button type="submit" class="botao-primario">Buscar</button>
+                    <button type="reset" class="botao-secundario">Limpar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+    {% include 'parciais/_scripts.html' %}
+</html>

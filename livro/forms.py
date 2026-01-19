@@ -94,3 +94,6 @@ class FormularioAtualizarEmprestimo(forms.Form):
     livro = forms.ChoiceField(label='Livro', choices=get_livros(), widget=forms.Select())                                     # type: ignore
     data_emprestimo = forms.DateField(label='Data da Reserva', widget=forms.DateInput(attrs={'type':'date'}))           # type: ignore
     data_devolucao = forms.DateField(label='Data da Devolução', widget=forms.DateInput(attrs={'type':'date'}))            # type: ignore
+
+class FormularioRenovarEmprestimo(forms.Form):
+    usuario = forms.ChoiceField(label='Usuário', choices=get_usuarios(),widget=forms.Select(attrs={'disabled':True})) # type: ignore
