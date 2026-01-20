@@ -353,12 +353,25 @@ def deletar_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpResponse:
 def renovar_emprestimo(request: HttpRequest):
     if request.user.is_authenticated:
         if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            template_name = 'livro/renovar_emprestimo.html'
             if request.method == 'GET':
                 formulario = FormularioRenovarEmprestimo()
-                template_name = 'livro/renovar_emprestimo.html'
-                return render(request, template_name, context={'form': formulario})
+                return render(request, template_name, context={'form': formulario, 'user_context': user_context})
             if request.method == 'POST':
-                pass
+                formulario = FormularioRenovarEmprestimo(request.POST)
+                if formulario.is_valid():
+                    usuario = formulario.cleaned_data['usuario']
+                    emprestimos = Emprestimo.objects.filter(usuario__id=usuario, ativo=True).exists()
+                    if emprestimos:
+                        emprestimos = Emprestimo.objects.filter(usuario__id=usuario, ativo=True)
+                        return render(request, template_name, context={'emprestimos': emprestimos, 'form': formulario, 'user_context': user_context})
+                    else:
+                        return render(request, template_name, context={'form': formulario, 'user_context': user_context})
         else:
             messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
             return redirect('usuario:entrar')

@@ -1,30 +1,30 @@
 {% load static %}
-<aside>
-    <ul class="menu">
-        <a href="{% url 'administrador:dashboard-admin'%}">
+<!-- <aside>
+    <ul class="menu"> -->
+        <!-- <a href="{% url 'administrador:dashboard-admin'%}"> -->
             <!-- Acessa o menu principal da dashboard de administrador -->
              <!-- TODO: Melhorar a condição abaixo para mostrar a classe ativo no asside -->
-            <li class="{%if not usuarios and not livros and not cursos and not aluno and not professor and not funcionario%} ativo {% endif %}">
+            <!-- <li class="{%if not usuarios and not livros and not cursos and not aluno and not professor and not funcionario%} ativo {% endif %}">
                 <img class="icone" src="{%static 'usuario/img/home0F0526.png'%}">
             </li>
-        </a>
-        <a href="{% url 'administrador:dashboard-admin-usuarios'%}">
+        </a> -->
+        <!-- <a href="{% url 'administrador:dashboard-admin-usuarios'%}"> -->
             <!-- Acessa a primeira página que mostra os Alunos, Professores e os Funcionarios 
                 cadastrados na Aplicação -->
-            <li class="{%if usuarios or aluno or professor or funcionario %} ativo {% endif %}">
+            <!-- <li class="{%if usuarios or aluno or professor or funcionario %} ativo {% endif %}">
                 <img class="icone" src="{%static 'usuario/img/group0F0526.png'%}">
             </li>
-        </a>
-        <a href="{% url 'administrador:dashboard-admin-livros'%}">
+        </a> -->
+        <!-- <a href="{% url 'administrador:dashboard-admin-livros'%}"> -->
             <!-- Acessa a segunda página que mostra os Livros, autores e categorias além de reservas
             e emprestimos e seus respectivos usuários-->
-            <li class="{%if livros %} ativo {% endif %}">
+            <!-- <li class="{%if livros %} ativo {% endif %}">
                 <img class="icone" src="{%static 'usuario/img/importcontacts0F0526.png'%}">
             </li>
-        </a>
-        <a href="{% url 'administrador:dashboard-admin-cursos'%}">
+        </a> -->
+        <!-- <a href="{% url 'administrador:dashboard-admin-cursos'%}"> -->
             <!-- Mostra a terceira parte da aplicação que mostra os cursos cadastrados na plataforma -->
-            <li class="{%if cursos %} ativo {% endif %}">
+            <!-- <li class="{%if cursos %} ativo {% endif %}">
                 <img class="icone" src="{%static 'usuario/img/stacks0F0526.png'%}">
             </li>
         </a>
@@ -34,4 +34,4 @@
             <img class="icone" src="{%static 'usuario/img/logout0F0526.png'%}">
         </li>
     </ul>
-</aside>
+</aside> -->

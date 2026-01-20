@@ -1,53 +1,83 @@
-<!DOCTYPE html>
 {% load static %}
-<html lang="pt_BR">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    {% include 'parciais/_head.html' %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
+    <title>Renovar Emprestimo</title>
 </head>
-
 <body>
-    {% include 'parciais/_navbar.html' %}
-    <!-- {% include 'parciais/_aside.html' %} -->
-    <div class="container">
-        <!-- Mensagens -->
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="alert {{ message.tags }}"{% endif %}>
-                {{ message }} 
-                <img src="{% static 'usuario/img/close_E3E3E3.png' %}" class="icone icone-fechar {{ message.tags }}" alt="icone de fechar mensagem">
-            </li>
-            {% endfor %}
-        </ul>
+    <header>
+        {% if user_context.aluno %}
+            {% include 'usuario/aluno/parciais/_nav.html' %}
+        {% elif user_context.professor %}
+            {% include 'usuario/professor/parciais/_nav.html' %}
+        {% elif user_context.funcionario %}
+            {% include 'usuario/funcionario/parciais/_nav.html' %}
         {% endif %}
-        
-        <!-- Conteúdo Principal -->
-        <div class="content">
-            <h1 class="titulo-pagina">Buscar Usuário</h1>
-            
-            <form class="formulario" action="" method="POST">
+    </header>
+    <main class="container">
+        <div class="form-container">
+            <h2>Renovar Empréstimo</h2>
+            <form action="{% url 'livro:renovar_emprestimo' %}" method="POST">
                 {% csrf_token %}
-                
-                <div class="campo-formulario">
-                    <label for="id_usuario">Usuário:</label>
-                    <input type="text" name="usuario" id="id_usuario" class="input-campo" placeholder="Digite o nome de usuário" required>
-                    {% if form.usuario.errors %}
-                        <ul class="errorlist">
-                            {% for error in form.usuario.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <style>
+                        .form-group p { margin-bottom: 15px; }
+                        .form-group label { 
+                            display: block; 
+                            margin-bottom: 8px; 
+                            font-weight: 500; 
+                            color: #555; 
+                        }
+                        .form-group input, 
+                        .form-group select, 
+                        .form-group textarea { 
+                            width: 100%; 
+                            padding: 12px 15px; 
+                            border: 1px solid #ddd; 
+                            border-radius: 4px; 
+                            font-size: 14px; 
+                            transition: border-color 0.3s;
+                            box-sizing: border-box;
+                        }
+                        .form-group input:focus, 
+                        .form-group select:focus, 
+                        .form-group textarea:focus { 
+                            outline: none; 
+                            border-color: #4CAF50; 
+                        }
+                    </style>
+                    {{form.as_p}}
                 </div>
-                
-                <div class="acoes-formulario">
-                    <button type="submit" class="botao-primario">Buscar</button>
-                    <button type="reset" class="botao-secundario">Limpar</button>
+                <div class="form-actions">
+                    <input type="submit" value="Buscar Emprestimos" class="btn btn-primary">
+                    <a href="{% url 'livro:listar_emprestimos' %}" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>
-    </div>
+        {% if emprestimos %}
+        <div class="livros-list" style="margin-top: 30px;">
+            <h3>Empréstimos Disponíveis para Renovação</h3>
+            <div class="cards-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;">
+                {% for emprestimo in emprestimos %}
+                <div class="card-livro" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                    <h4 style="margin-top: 0; color: #333;">{{ emprestimo.livro.titulo }}</h4>
+                    <p><strong>Autor:</strong> {{ emprestimo.livro.autor }}</p>
+                    <p><strong>Data de Empréstimo:</strong> {{ emprestimo.data_emprestimo|date:"d/m/Y" }}</p>
+                    <p><strong>Data de Devolução:</strong> {{ emprestimo.data_devolucao|date:"d/m/Y" }}</p>
+                    <p><strong>Status:</strong> {{ emprestimo.get_status_display }}</p>
+                    <div style="margin-top: 15px;">
+                        <a href="#" class="btn btn-primary" style="text-decoration: none; padding: 8px 16px; background: #4CAF50; color: white; border-radius: 4px; display: inline-block;">Renovar</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </main>
 </body>
-    {% include 'parciais/_scripts.html' %}
 </html>

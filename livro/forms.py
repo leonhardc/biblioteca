@@ -96,4 +96,4 @@ class FormularioAtualizarEmprestimo(forms.Form):
     data_devolucao = forms.DateField(label='Data da Devolução', widget=forms.DateInput(attrs={'type':'date'}))            # type: ignore
 
 class FormularioRenovarEmprestimo(forms.Form):
-    usuario = forms.ChoiceField(label='Usuário', choices=get_usuarios(),widget=forms.Select(attrs={'disabled':True})) # type: ignore
+    usuario = forms.ChoiceField(label='Usuário', choices=get_usuarios(),widget=forms.Select(attrs={'disabled':False})) # type: ignore
