@@ -1,14 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <title>Renovar Empréstimo - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
     <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
-    <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
-    <title>Renovar Emprestimo</title>
+    <link rel="stylesheet" href="{% static 'livro/css/styles-renovar-emprestimo.css' %}">
 </head>
+
 <body>
     <header>
         {% if user_context.aluno %}
@@ -19,65 +24,152 @@
             {% include 'usuario/funcionario/parciais/_nav.html' %}
         {% endif %}
     </header>
-    <main class="container">
-        <div class="form-container">
-            <h2>Renovar Empréstimo</h2>
-            <form action="{% url 'livro:renovar_emprestimo' %}" method="POST">
-                {% csrf_token %}
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <style>
-                        .form-group p { margin-bottom: 15px; }
-                        .form-group label { 
-                            display: block; 
-                            margin-bottom: 8px; 
-                            font-weight: 500; 
-                            color: #555; 
-                        }
-                        .form-group input, 
-                        .form-group select, 
-                        .form-group textarea { 
-                            width: 100%; 
-                            padding: 12px 15px; 
-                            border: 1px solid #ddd; 
-                            border-radius: 4px; 
-                            font-size: 14px; 
-                            transition: border-color 0.3s;
-                            box-sizing: border-box;
-                        }
-                        .form-group input:focus, 
-                        .form-group select:focus, 
-                        .form-group textarea:focus { 
-                            outline: none; 
-                            border-color: #4CAF50; 
-                        }
-                    </style>
-                    {{form.as_p}}
-                </div>
-                <div class="form-actions">
-                    <input type="submit" value="Buscar Emprestimos" class="btn btn-primary">
-                    <a href="{% url 'livro:listar_emprestimos' %}" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </form>
-        </div>
-        {% if emprestimos %}
-        <div class="livros-list" style="margin-top: 30px;">
-            <h3>Empréstimos Disponíveis para Renovação</h3>
-            <div class="cards-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;">
-                {% for emprestimo in emprestimos %}
-                <div class="card-livro" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.3s;">
-                    <h4 style="margin-top: 0; color: #333;">{{ emprestimo.livro.titulo }}</h4>
-                    <p><strong>Autor:</strong> {{ emprestimo.livro.autor }}</p>
-                    <p><strong>Data de Empréstimo:</strong> {{ emprestimo.data_emprestimo|date:"d/m/Y" }}</p>
-                    <p><strong>Data de Devolução:</strong> {{ emprestimo.data_devolucao|date:"d/m/Y" }}</p>
-                    <p><strong>Status:</strong> {{ emprestimo.get_status_display }}</p>
-                    <div style="margin-top: 15px;">
-                        <a href="#" class="btn btn-primary" style="text-decoration: none; padding: 8px 16px; background: #4CAF50; color: white; border-radius: 4px; display: inline-block;">Renovar</a>
+
+    <main class="renew-page">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:pagina_inicial_aluno' user.id %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <a href="{% url 'livro:listar_emprestimos' %}">
+                            <i class="fa-solid fa-book-bookmark"></i> Empréstimos
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Renovar Empréstimo</span>
                     </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        Renovar Empréstimo
+                    </h1>
                 </div>
-                {% endfor %}
-            </div>
+            </section>
+
+            <!-- Search Form Section -->
+            <section class="search-section">
+                <div class="search-card">
+                    <form action="{% url 'livro:renovar_emprestimo' %}" method="POST" class="search-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ form.as_p }}
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span>Buscar Empréstimos</span>
+                            </button>
+                            <a href="{% url 'livro:listar_emprestimos' %}" class="btn btn-secondary">
+                                <i class="fa-solid fa-xmark"></i>
+                                <span>Cancelar</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <!-- Messages Section -->
+            {% if messages %}
+                <section class="messages-section">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            <div class="alert-content">
+                                {% if message.tags == 'success' %}
+                                    <i class="fa-solid fa-circle-check"></i>
+                                {% elif message.tags == 'error' %}
+                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                {% elif message.tags == 'warning' %}
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                {% elif message.tags == 'info' %}
+                                    <i class="fa-solid fa-circle-info"></i>
+                                {% endif %}
+                                <span>{{ message }}</span>
+                            </div>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </section>
+            {% endif %}
+
+            <!-- Loans List Section -->
+            {% if emprestimos %}
+                <section class="loans-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-list"></i>
+                            Empréstimos Disponíveis para Renovação
+                        </h2>
+                        <p class="section-subtitle">
+                            Selecione o empréstimo que deseja renovar
+                        </p>
+                    </div>
+
+                    <div class="loans-list">
+                        {% for emprestimo in emprestimos %}
+                            <div class="loan-card">
+                                <div class="loan-card-header">
+                                    <div class="loan-icon">
+                                        <i class="fa-solid fa-book"></i>
+                                    </div>
+                                    <div class="loan-status">
+                                        {% if emprestimo.ativo %}
+                                            <span class="badge badge-success">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                                Ativo
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">
+                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                Inativo
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="loan-card-body">
+                                    <h3 class="loan-title">{{ emprestimo.livro.titulo }}</h3>
+                                    
+                                    <div class="loan-details">
+                                        <div class="detail-item">
+                                            <i class="fa-solid fa-calendar-plus"></i>
+                                            <div class="detail-content">
+                                                <span class="detail-label">Data de Empréstimo</span>
+                                                <span class="detail-value">{{ emprestimo.data_emprestimo|date:"d/m/Y" }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="detail-item">
+                                            <i class="fa-solid fa-calendar-check"></i>
+                                            <div class="detail-content">
+                                                <span class="detail-label">Data de Devolução</span>
+                                                <span class="detail-value">{{ emprestimo.data_devolucao|date:"d/m/Y" }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="loan-card-footer">
+                                    {% if emprestimo.ativo %}
+                                        <a href="{% url 'livro:renovar_emprestimo_livro' emprestimo.id %}" class="btn btn-primary btn-block">
+                                            <i class="fa-solid fa-arrows-rotate"></i>
+                                            <span>Renovar Empréstimo</span>
+                                        </a>
+                                    {% else %}
+                                        <button class="btn btn-secondary btn-block" disabled>
+                                            <i class="fa-solid fa-ban"></i>
+                                            <span>Não Disponível</span>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
         </div>
-        {% endif %}
     </main>
 </body>
 </html>

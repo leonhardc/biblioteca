@@ -71,3 +71,4 @@ class Emprestimo(models.Model):
     # * Um PROFESSOR pode pedir até 5 livros emprestados por até 30 dias cada.
     # * Um FUNCIONARIO pode pedir até 4 livros emprestados por até 21 dias cada.
     data_devolucao = models.DateField(default=timezone.now, blank=False, null=False, verbose_name='Data da Devolução')  # type: ignore
+    numero_renovacoes = models.IntegerField(default=0, blank=False, null=False, verbose_name='Número de Renovações') # type: ignore

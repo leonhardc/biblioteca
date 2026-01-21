@@ -119,3 +119,9 @@ SEXO = (
     ('M', 'Masculino'),
     ('F', 'Feminino')
 )
+
+NUMERO_MAXIMO_DE_RENOVACOES_POR_USUARIO = {
+    'aluno': 2,
+    'professor': 4,
+    'funcionario': 3
+}
