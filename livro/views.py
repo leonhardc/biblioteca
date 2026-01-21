@@ -134,11 +134,16 @@ def fazer_emprestimo(usuario, livro, data_emprestimo, data_devolucao):
 def emprestar_livro(request:HttpResponse) -> HttpResponse:
     if request.user.is_authenticated:
         if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
             if request.method == 'GET':
                 template_name = 'livro/emprestar_livro.html'
                 formulario_emprestimo = FormularioCriarEmprestimo()
                 limpar_mensagens(request)
-                return render(request, template_name, context={'form': formulario_emprestimo})
+                return render(request, template_name, context={'form': formulario_emprestimo, 'user_context': user_context})
             if request.method == 'POST':
                 formulario_emprestimo = FormularioCriarEmprestimo(request.POST)
                 if formulario_emprestimo.is_valid():
@@ -391,75 +396,6 @@ def renovar_emprestimo_aluno(usuario, livro):
         return True
     except:
         return False
-
-# def renovar_emprestimo_professor(usuario, livro):
-#     try:
-#         emprestimo = Emprestimo.objects.get(usuario=usuario, livro=livro, ativo=True)
-#         nova_data_devolucao = emprestimo.data_devolucao + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['professor'])
-#         # TODO: Adicionar checagens de quantas vezes o professor ja renovou determinado emprestimo
-#         emprestimo.data_devolucao = nova_data_devolucao
-#         emprestimo.save()
-#         return True
-#     except:
-#         return False
-# def renovar_emprestimo_funcionario(usuario, livro):
-#     try:
-#         emprestimo = Emprestimo.objects.get(usuario=usuario, livro=livro, ativo=True)
-#         nova_data_devolucao = emprestimo.data_devolucao + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['funcionario'])
-#         # TODO: Adicionar checagens de quantas vezes o funcionario ja renovou determinado emprestimo
-#         emprestimo.data_devolucao = nova_data_devolucao
-#         emprestimo.save()
-#         return True
-#     except:
-#         return False
-
-# def renovar_emprestimo_livro(request, id_livro):
-#     if request.user.is_authenticated:
-#         if user_is_funcionario(request.user):
-#             emprestimo = Emprestimo.objects.filter(id=id_livro, ativo=True).exists()
-#             if emprestimo:
-#                 formulario = FormularioRenovarEmprestimo(request.POST or None)
-#                 if formulario.is_valid():
-#                     usuario = formulario.cleaned_data['usuario']
-#                     livro = Livro.objects.get(id=id_livro)
-#                     if user_is_aluno(usuario):
-#                         renovou = renovar_emprestimo_aluno(usuario, livro)
-#                         if renovou:
-#                             messages.add_message(request, messages.SUCCESS, 'Empréstimo renovado com sucesso para o aluno.')
-#                         else:
-#                             messages.add_message(request, messages.ERROR, 'Erro ao renovar o empréstimo para o aluno.')
-#                         pagina_anterior = request.META.get('HTTP_REFERER')
-#                         return redirect(pagina_anterior)
-#                     if user_is_professor(usuario):
-#                         renovou = renovar_emprestimo_professor(usuario, livro)
-#                         if renovou:
-#                             messages.add_message(request, messages.SUCCESS, 'Empréstimo renovado com sucesso para o aluno.')
-#                         else:
-#                             messages.add_message(request, messages.ERROR, 'Erro ao renovar o empréstimo para o aluno.')
-#                         pagina_anterior = request.META.get('HTTP_REFERER')
-#                         return redirect(pagina_anterior)
-#                     if user_is_funcionario(usuario):
-#                         renovou = renovar_emprestimo_funcionario(usuario, livro)
-#                         if renovou:
-#                             messages.add_message(request, messages.SUCCESS, 'Empréstimo renovado com sucesso para o aluno.')
-#                         else:
-#                             messages.add_message(request, messages.ERROR, 'Erro ao renovar o empréstimo para o aluno.')
-#                         pagina_anterior = request.META.get('HTTP_REFERER')
-#                         return redirect(pagina_anterior)
-#                 else:
-#                     messages.add_message(request, messages.ERROR, 'Formulário inválido.')
-#                     pagina_anterior = request.META.get('HTTP_REFERER')
-#                     return redirect(pagina_anterior)
-#             else:
-#                 messages.add_message(request, messages.ERROR, 'Empréstimo não encontrado ou já devolvido.')
-#                 pagina_anterior = request.META.get('HTTP_REFERER')
-#                 return redirect(pagina_anterior)
-#         else:
-#             messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
-#             return redirect('usuario:entrar')
-#     else:
-#         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
-#         return redirect('usuario:entrar')
 
 def renovar_emprestimo_aluno(emprestimo):
     if emprestimo.numero_renovacoes < NUMERO_MAXIMO_DE_RENOVACOES_POR_USUARIO['aluno']:
