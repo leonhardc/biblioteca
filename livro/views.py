@@ -124,6 +124,7 @@ def deletar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
 
 
 # Views de Reserva
+
 def criar_reserva(request: HttpRequest, id_livro:int):
     if request.user.is_authenticated:
         if user_is_aluno(request.user):
@@ -261,7 +262,7 @@ def deletar_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpResponse:
                 emprestimo.ativo = False
                 emprestimo.save()
                 livro = emprestimo.livro
-                livro.copias_disponiveis += 1
+                livro.copias += 1
                 livro.save()
                 messages.add_message(request, messages.SUCCESS, 'Empréstimo finalizado com sucesso.')
                 pagina_anterior = request.META.get('HTTP_REFERER')
@@ -430,7 +431,7 @@ def checa_se_funcionario_tem_numero_maximo_de_emprestimos(usuario_id:int) -> boo
 def fazer_emprestimo(usuario, livro, data_emprestimo, data_devolucao):
     usuario = User.objects.get(id=usuario)
     livro = Livro.objects.get(id=livro)
-    livro.copias_disponiveis -= 1
+    livro.copias -= 1
     livro.save()
     emprestimo = Emprestimo.objects.create(
         usuario=usuario,
@@ -511,3 +512,50 @@ def emprestar_livro(request:HttpResponse) -> HttpResponse:
         return redirect('usuario:entrar')
 
 # TODO: Implementar view de registrar devolucao de livros emprestados
+
+def devolver_livro(request, emprestimo_id):
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            emprestimo_existe = Emprestimo.objects.filter(id=emprestimo_id, ativo=True).exists()
+            if emprestimo_existe:
+                emprestimo = Emprestimo.objects.get(id=emprestimo_id, ativo=True)
+                emprestimo.ativo = False
+                emprestimo.save()
+                livro = emprestimo.livro
+                livro.copias += 1
+                livro.save()
+                messages.add_message(request, messages.SUCCESS, 'Livro devolvido com sucesso.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+            else:
+                messages.add_message(request, messages.ERROR, 'Empréstimo não encontrado ou já devolvido.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
+
+def registrar_devolucao_livro(request: HttpRequest) -> HttpResponse:
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            if request.method == 'GET':
+                template_name = 'livro/registrar_devolucao.html'
+                formulario_devolucao = FormularioRegistrarDevolucao()
+                return render(request, template_name, context={'form': formulario_devolucao})
+            if request.method == 'POST':
+                formulario = FormularioRegistrarDevolucao(request.POST)
+                if formulario.is_valid():
+                    usuario_id = int(formulario.cleaned_data['usuario'])
+                    emprestimos_existem = Emprestimo.objects.filter(usuario__id=usuario_id, ativo=True).exists()
+                    if emprestimos_existem:
+                        emprestimos = Emprestimo.objects.filter(usuario__id=usuario_id, ativo=True)
+                        return render(request, 'livro/registrar_devolucao.html', context={'emprestimos': emprestimos, 'form': formulario})
+                    else:
+                        messages.add_message(request, messages.ERROR, 'Não existem empréstimos ativos para este usuário.')
+                        return render(request, 'livro/registrar_devolucao.html', context={'form': formulario})
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')

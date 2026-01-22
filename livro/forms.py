@@ -97,3 +97,6 @@ class FormularioAtualizarEmprestimo(forms.Form):
 
 class FormularioRenovarEmprestimo(forms.Form):
     usuario = forms.ChoiceField(label='Usuário', choices=get_usuarios(),widget=forms.Select(attrs={'disabled':False})) # type: ignore
+
+class FormularioRegistrarDevolucao(forms.Form):
+    usuario = forms.ChoiceField(label='Usuário', choices=get_usuarios(),widget=forms.Select(attrs={'disabled':False})) # type: ignore
