@@ -96,107 +96,6 @@ def deletar_livro(request:HttpRequest, id_livro:int) -> HttpResponse:
 def reservar_livro(request:HttpRequest, id_livro:int, usuario:str) -> HttpResponse:
     return HttpResponse("View reservar livro")
 
-# Funcoes auxiliares para emprestimo de livros.
-# TODO: Mover estas funcoes para utils.py
-def checa_se_aluno_tem_numero_maximo_de_emprestimos(usuario_id:int) -> bool:
-    aluno = Aluno.objects.get(usuario__id=usuario_id)
-    if aluno.emprestimos <= MAX_EMPRESTIMOS_POR_USUARIO['aluno']:
-        return False
-    return True
-
-def checa_se_professor_tem_numero_maximo_de_emprestimos(usuario_id:int) -> bool:
-    professor = Professor.objects.get(usuario__id=usuario_id)
-    if professor.emprestimos <= MAX_EMPRESTIMOS_POR_USUARIO['professor']:
-        return False
-    return True
-
-def checa_se_funcionario_tem_numero_maximo_de_emprestimos(usuario_id:int) -> bool:
-    funcionario = Funcionario.objects.get(usuario__id=usuario_id)
-    if funcionario.emprestimos <= MAX_EMPRESTIMOS_POR_USUARIO['funcionario']:
-        return False
-    return True
-
-def fazer_emprestimo(usuario, livro, data_emprestimo, data_devolucao):
-    usuario = User.objects.get(id=usuario)
-    livro = Livro.objects.get(id=livro)
-    emprestimo = Emprestimo.objects.create(
-        usuario=usuario,
-        livro=livro,
-        data_emprestimo=data_emprestimo,
-        data_devolucao=data_devolucao,
-        ativo=True
-    )
-    emprestimo.save()
-    return True
-
-# Fim das funcoes auxiliares para emprestimo de livros.
-
-def emprestar_livro(request:HttpResponse) -> HttpResponse:
-    if request.user.is_authenticated:
-        if user_is_funcionario(request.user):
-            user_context = {
-                'aluno': user_is_aluno(request.user),
-                'professor': user_is_professor(request.user),
-                'funcionario': user_is_funcionario(request.user),
-            }
-            if request.method == 'GET':
-                template_name = 'livro/emprestar_livro.html'
-                formulario_emprestimo = FormularioCriarEmprestimo()
-                limpar_mensagens(request)
-                return render(request, template_name, context={'form': formulario_emprestimo, 'user_context': user_context})
-            if request.method == 'POST':
-                formulario_emprestimo = FormularioCriarEmprestimo(request.POST)
-                if formulario_emprestimo.is_valid():
-                    usuario_id = int(formulario_emprestimo.cleaned_data['usuario'])
-                    livro_id = int(formulario_emprestimo.cleaned_data['livro'])
-                    data_emprestimo = formulario_emprestimo.cleaned_data['data_emprestimo']
-                    data_devolucao = data_emprestimo + timedelta(days=7)  # Empréstimo padrão de 7 dias
-                    if user_is_aluno(usuario_id):
-                        if not checa_se_aluno_tem_numero_maximo_de_emprestimos(usuario_id):
-                            data_devolucao = data_emprestimo + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['aluno'])
-                            sucesso = fazer_emprestimo(usuario_id, livro_id, data_emprestimo, data_devolucao)
-                            if sucesso:
-                                messages.add_message(request, messages.SUCCESS, f'Empréstimo realizado com sucesso para o aluno. Data de devolução: {data_devolucao}.')
-                                return redirect('livro:emprestar_livro')
-                            else:
-                                messages.add_message(request, messages.ERROR, f'Erro ao realizar o empréstimo para o aluno.')
-                                return redirect('livro:emprestar_livro')
-                        else:
-                            messages.add_message(request, messages.ERROR, f'O aluno atingiu o número máximo de empréstimos.')
-                            return redirect('livro:emprestar_livro')
-                    if user_is_professor(usuario_id):
-                        if not checa_se_professor_tem_numero_maximo_de_emprestimos(usuario_id):
-                            data_devolucao = data_emprestimo + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['professor'])
-                            sucesso = fazer_emprestimo(usuario_id, livro_id, data_emprestimo, data_devolucao)
-                            if sucesso:
-                                messages.add_message(request, messages.SUCCESS, f'Empréstimo realizado com sucesso para o professor. Data de devolução: {data_devolucao}.')
-                                return redirect('livro:emprestar_livro')
-                            else:
-                                messages.add_message(request, messages.ERROR, f'Erro ao realizar o empréstimo para o professor.')
-                                return redirect('livro:emprestar_livro')
-                        else:
-                            messages.add_message(request, messages.ERROR, f'O professor atingiu o número máximo de empréstimos.')
-                            return redirect('livro:emprestar_livro')
-                    if user_is_funcionario(usuario_id):
-                        if not checa_se_funcionario_tem_numero_maximo_de_emprestimos(usuario_id):
-                            data_devolucao = data_emprestimo + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['funcionario'])
-                            sucesso = fazer_emprestimo(usuario_id, livro_id, data_emprestimo, data_devolucao)
-                            if sucesso:
-                                messages.add_message(request, messages.SUCCESS, f'Empréstimo realizado com sucesso para o funcionário. Data de devolução: {data_devolucao}.')
-                                return redirect('livro:emprestar_livro')
-                            else:
-                                messages.add_message(request, messages.ERROR, f'Erro ao realizar o empréstimo para o funcionário.')
-                                return redirect('livro:emprestar_livro')
-                        else:
-                            messages.add_message(request, messages.ERROR, f'O funcionário atingiu o número máximo de empréstimos.')
-                            return redirect('livro:emprestar_livro')
-        else:
-            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
-            return redirect('usuario:entrar')
-    else:
-        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
-        return redirect('usuario:entrar')
-
 # CRUD para Autor
 def criar_autor(request:HttpRequest) -> HttpResponse:
     return HttpResponse("View criar Autor")
@@ -361,6 +260,9 @@ def deletar_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpResponse:
                 emprestimo = Emprestimo.objects.get(id=id_emprestimo, ativo=True)
                 emprestimo.ativo = False
                 emprestimo.save()
+                livro = emprestimo.livro
+                livro.copias_disponiveis += 1
+                livro.save()
                 messages.add_message(request, messages.SUCCESS, 'Empréstimo finalizado com sucesso.')
                 pagina_anterior = request.META.get('HTTP_REFERER')
                 return redirect(pagina_anterior)
@@ -501,6 +403,109 @@ def historico_emprestimos(request: HttpRequest) -> HttpResponse:
             else:
                 messages.add_message(request, messages.ERROR, 'Não existe nenhum emprestimo ate o momento.')
                 return render(request, template_name, context={'historico_emprestimo':True, 'user_context': user_context})
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
+
+# Funcoes auxiliares para emprestimo de livros.
+# TODO: Mover estas funcoes para utils.py
+def checa_se_aluno_tem_numero_maximo_de_emprestimos(usuario_id:int) -> bool:
+    aluno = Aluno.objects.get(usuario__id=usuario_id)
+    if aluno.emprestimos <= MAX_EMPRESTIMOS_POR_USUARIO['aluno']:
+        return False
+    return True
+
+def checa_se_professor_tem_numero_maximo_de_emprestimos(usuario_id:int) -> bool:
+    professor = Professor.objects.get(usuario__id=usuario_id)
+    if professor.emprestimos <= MAX_EMPRESTIMOS_POR_USUARIO['professor']:
+        return False
+    return True
+
+def checa_se_funcionario_tem_numero_maximo_de_emprestimos(usuario_id:int) -> bool:
+    funcionario = Funcionario.objects.get(usuario__id=usuario_id)
+    if funcionario.emprestimos <= MAX_EMPRESTIMOS_POR_USUARIO['funcionario']:
+        return False
+    return True
+
+def fazer_emprestimo(usuario, livro, data_emprestimo, data_devolucao):
+    usuario = User.objects.get(id=usuario)
+    livro = Livro.objects.get(id=livro)
+    livro.copias_disponiveis -= 1
+    livro.save()
+    emprestimo = Emprestimo.objects.create(
+        usuario=usuario,
+        livro=livro,
+        data_emprestimo=data_emprestimo,
+        data_devolucao=data_devolucao,
+        ativo=True
+    )
+    emprestimo.save()
+    return True
+
+# Fim das funcoes auxiliares para emprestimo de livros.
+
+def emprestar_livro(request:HttpResponse) -> HttpResponse:
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            if request.method == 'GET':
+                template_name = 'livro/emprestar_livro.html'
+                formulario_emprestimo = FormularioCriarEmprestimo()
+                limpar_mensagens(request)
+                return render(request, template_name, context={'form': formulario_emprestimo, 'user_context': user_context})
+            if request.method == 'POST':
+                formulario_emprestimo = FormularioCriarEmprestimo(request.POST)
+                if formulario_emprestimo.is_valid():
+                    usuario_id = int(formulario_emprestimo.cleaned_data['usuario'])
+                    livro_id = int(formulario_emprestimo.cleaned_data['livro'])
+                    data_emprestimo = formulario_emprestimo.cleaned_data['data_emprestimo']
+                    data_devolucao = data_emprestimo + timedelta(days=7)  # Empréstimo padrão de 7 dias
+                    if user_is_aluno(usuario_id):
+                        if not checa_se_aluno_tem_numero_maximo_de_emprestimos(usuario_id):
+                            data_devolucao = data_emprestimo + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['aluno'])
+                            sucesso = fazer_emprestimo(usuario_id, livro_id, data_emprestimo, data_devolucao)
+                            if sucesso:
+                                messages.add_message(request, messages.SUCCESS, f'Empréstimo realizado com sucesso para o aluno. Data de devolução: {data_devolucao}.')
+                                return redirect('livro:emprestar_livro')
+                            else:
+                                messages.add_message(request, messages.ERROR, f'Erro ao realizar o empréstimo para o aluno.')
+                                return redirect('livro:emprestar_livro')
+                        else:
+                            messages.add_message(request, messages.ERROR, f'O aluno atingiu o número máximo de empréstimos.')
+                            return redirect('livro:emprestar_livro')
+                    if user_is_professor(usuario_id):
+                        if not checa_se_professor_tem_numero_maximo_de_emprestimos(usuario_id):
+                            data_devolucao = data_emprestimo + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['professor'])
+                            sucesso = fazer_emprestimo(usuario_id, livro_id, data_emprestimo, data_devolucao)
+                            if sucesso:
+                                messages.add_message(request, messages.SUCCESS, f'Empréstimo realizado com sucesso para o professor. Data de devolução: {data_devolucao}.')
+                                return redirect('livro:emprestar_livro')
+                            else:
+                                messages.add_message(request, messages.ERROR, f'Erro ao realizar o empréstimo para o professor.')
+                                return redirect('livro:emprestar_livro')
+                        else:
+                            messages.add_message(request, messages.ERROR, f'O professor atingiu o número máximo de empréstimos.')
+                            return redirect('livro:emprestar_livro')
+                    if user_is_funcionario(usuario_id):
+                        if not checa_se_funcionario_tem_numero_maximo_de_emprestimos(usuario_id):
+                            data_devolucao = data_emprestimo + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['funcionario'])
+                            sucesso = fazer_emprestimo(usuario_id, livro_id, data_emprestimo, data_devolucao)
+                            if sucesso:
+                                messages.add_message(request, messages.SUCCESS, f'Empréstimo realizado com sucesso para o funcionário. Data de devolução: {data_devolucao}.')
+                                return redirect('livro:emprestar_livro')
+                            else:
+                                messages.add_message(request, messages.ERROR, f'Erro ao realizar o empréstimo para o funcionário.')
+                                return redirect('livro:emprestar_livro')
+                        else:
+                            messages.add_message(request, messages.ERROR, f'O funcionário atingiu o número máximo de empréstimos.')
+                            return redirect('livro:emprestar_livro')
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
     else:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
