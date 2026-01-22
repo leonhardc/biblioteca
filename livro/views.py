@@ -354,7 +354,23 @@ def atualizar_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpRespons
     return HttpResponse('View de atualizar emprestimo')
 
 def deletar_emprestimo(request: HttpRequest, id_emprestimo:int) -> HttpResponse:
-    return HttpResponse('View de deletar emprestimo')
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            emprestimo = Emprestimo.objects.filter(id=id_emprestimo, ativo=True).exists()
+            if emprestimo:
+                emprestimo = Emprestimo.objects.get(id=id_emprestimo, ativo=True)
+                emprestimo.ativo = False
+                emprestimo.save()
+                messages.add_message(request, messages.SUCCESS, 'Empréstimo finalizado com sucesso.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+            else:
+                messages.add_message(request, messages.ERROR, 'Empréstimo não encontrado ou já devolvido.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
 
 def renovar_emprestimo(request: HttpRequest):
     if request.user.is_authenticated:
@@ -466,3 +482,27 @@ def renovar_emprestimo_livro(request, emprestimo_id):
     else:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
+
+# TODO: Implementar view de historico de emprestimos
+
+def historico_emprestimos(request: HttpRequest) -> HttpResponse:
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            template_name = 'livro/historico_emprestimos.html'
+            emprestimos_existem = Emprestimo.objects.all().exists()
+            if emprestimos_existem:
+                emprestimos = Emprestimo.objects.all().order_by('-data_emprestimo')
+                return render(request, template_name, context={'emprestimos': emprestimos, 'user_context': user_context})
+            else:
+                messages.add_message(request, messages.ERROR, 'Não existe nenhum emprestimo ate o momento.')
+                return render(request, template_name, context={'historico_emprestimo':True, 'user_context': user_context})
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
+
+# TODO: Implementar view de registrar devolucao de livros emprestados

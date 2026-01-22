@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'livro/css/styles-reservas.css' %}">
+</head>
+
+<body>
+    <header>
+        {% if user_context.aluno %}
+            {% include 'usuario/aluno/parciais/_nav.html' %}
+        {% elif user_context.professor %}
+            {% include 'usuario/professor/parciais/_nav.html' %}
+        {% elif user_context.funcionario %}
+            {% include 'usuario/funcionario/parciais/_nav.html' %}
+        {% endif %}
+    </header>
+    <main>
+        <div class="container" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <h1 style="margin-bottom: 2rem; color: #333;">Histórico de Empréstimos</h1>
+            
+            <div class="table-container" style="width: 100%; max-width: 1200px; overflow-x: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px;">
+            <table class="table" style="width: 100%; border-collapse: collapse; background-color: white;">
+            <thead>
+            <tr style="background-color: #4CAF50; color: white;">
+            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">ID</th>
+            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Usuário</th>
+            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Livro</th>
+            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Data Empréstimo</th>
+            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Data Devolução</th>
+            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Status</th>
+            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for emprestimo in emprestimos %}
+            <tr style="border-bottom: 1px solid #ddd; transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor='white'">
+            <td style="padding: 12px 15px;">{{emprestimo.id}}</td>
+            <td style="padding: 12px 15px;">{{emprestimo.usuario}}</td>
+            <td style="padding: 12px 15px;">{{emprestimo.livro}}</td>
+            <td style="padding: 12px 15px;">{{emprestimo.data_emprestimo|date:"d/m/Y"}}</td>
+            <td style="padding: 12px 15px;">{{emprestimo.data_devolucao|date:"d/m/Y"}}</td>
+            <td style="padding: 12px 15px;">
+            {% if emprestimo.ativo %}
+            <span class="badge badge-success" style="padding: 6px 12px; border-radius: 12px; background-color: #28a745; color: white; font-size: 0.85rem; font-weight: 500;">Ativo</span>
+            {% else %}
+            <span class="badge badge-secondary" style="padding: 6px 12px; border-radius: 12px; background-color: #6c757d; color: white; font-size: 0.85rem; font-weight: 500;">Devolvido</span>
+            {% endif %}
+            </td>
+            <td style="padding: 12px 15px;">
+            <a href="#" style="color: #4CAF50; text-decoration: none; font-weight: 500;">Ver Detalhes</a>
+            </td>
+            </tr>
+            {% empty %}
+            <tr>
+            <td colspan="7" class="text-center" style="padding: 20px; text-align: center; color: #666; font-style: italic;">Nenhum empréstimo encontrado.</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
