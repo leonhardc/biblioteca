@@ -7,7 +7,7 @@
 # tipo de usuario so pode acessar as views as quais ele tem permissao
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
-from usuario.forms import LoginForm, FormularioAluno
+from usuario.forms import LoginForm, FormularioAluno, FormularioBuscarUsuario
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from usuario.models import Aluno, Professor, Funcionario
@@ -19,7 +19,7 @@ from utils.usuarios.utils import user_is_aluno, user_is_professor, user_is_funci
 from .constants import *
 import datetime
 from utils.utils import gerar_matricula_aluno, gerar_matricula_professor, gerar_matricula_funcionario
-
+from django.db.models import Q
 # Views de controle de usuario
 def index(request:HttpRequest) -> HttpResponse:
     # if request.user.is_authenticated:
@@ -645,3 +645,63 @@ def detalhes_funcionario(request:HttpRequest, uid:int):
         template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
         funcionario = Funcionario.objects.get(id=uid)
         return render(request, template_name, context={'funcionario':funcionario})
+
+
+def buscar_usuario(request):
+    if request.user.is_authenticated:
+        template_name = 'usuario/buscar_usuarios.html'
+        if request.method == 'GET':
+            formulario = FormularioBuscarUsuario()
+            return render(
+                request,
+                template_name=template_name,
+                context={'form':formulario}
+            )
+        if request.method == 'POST':
+            formulario = FormularioBuscarUsuario(request.POST)
+            if formulario.is_valid():
+                nome = formulario.cleaned_data['nome']
+                sobrenome = formulario.cleaned_data['sobrenome']
+                email = formulario.cleaned_data['email']
+                usuarios = User.objects.none()
+                if nome and sobrenome and email:
+                    usuarios = User.objects.filter(
+                        Q(first_name__icontains=nome) |
+                        Q(last_name__icontains=sobrenome) |
+                        Q(email__icontains=email)
+                    )
+                elif nome and sobrenome:
+                    usuarios = User.objects.filter(
+                        Q(first_name__icontains=nome) |
+                        Q(last_name__icontains=sobrenome)
+                    )
+                elif nome and email:
+                    usuarios = User.objects.filter(
+                        Q(first_name__icontains=nome) |
+                        Q(email__icontains=email)
+                    )
+                elif sobrenome and email:
+                    usuarios = User.objects.filter(
+                        Q(last_name__icontains=sobrenome) |
+                        Q(email__icontains=email)
+                    )
+                elif nome:
+                    usuarios = User.objects.filter(first_name__icontains=nome)
+                elif sobrenome:
+                    usuarios = User.objects.filter(last_name__icontains=sobrenome)
+                elif email:
+                    usuarios = User.objects.filter(email__icontains=email)
+                else:
+                    usuarios = User.objects.none()
+                return render(
+                    request,
+                    template_name=template_name,
+                    context={
+                        'form':formulario,
+                        'usuarios':usuarios
+                    }
+                )
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuário não está autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore

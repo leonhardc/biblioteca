@@ -31,4 +31,5 @@ urlpatterns = [                                                                 
     path('atualizar-funcionario/<int:uid>/', views.atualizar_funcionario, name='atualizar-funcionario'),                # type: ignore
     path('deletar-funcionario/<int:uid>/', views.deletar_funcionario, name='deletar-funcionario'),                      # type: ignore
     path('detalhes-funcionario/<int:uid>/', views.detalhes_funcionario, name='detalhes-funcionario'),                   # type: ignore
+    path('buscar-usuario/', views.buscar_usuario, name='buscar_usuario'),                                                 # type: ignore
 ]

@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Usuário - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=book,person,search" />
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/css/entrar.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/dashboard-aluno.css' %}">
+    <style>
+        .results-card {
+            background: var(--card-bg, #ffffff);
+            border: 1px solid var(--border-color, #e2e4e8);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            width: 100%;
+        }
+
+        .table-modern {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table-modern thead th {
+            background: linear-gradient(90deg, rgba(var(--primary-rgb, 30, 58, 95), 0.12) 0%, rgba(var(--primary-rgb, 30, 58, 95), 0.05) 100%);
+            color: var(--primary, #1e3a5f);
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color, #e2e4e8);
+        }
+
+        .table-modern tbody td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid var(--border-color, #e2e4e8);
+            vertical-align: middle;
+        }
+
+        .table-modern tbody tr:hover {
+            background: rgba(var(--primary-rgb, 30, 58, 95), 0.04);
+            transition: background-color 0.2s ease;
+        }
+
+        .avatar-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb 0%, #1e3a5f 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 8px 18px rgba(30, 58, 95, 0.25);
+        }
+
+        .user-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-meta .name {
+            color: var(--body-color, #1a2a3d);
+            font-weight: 600;
+        }
+
+        .user-meta .username {
+            color: var(--muted, #6b7280);
+            font-size: 0.875rem;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(var(--primary-rgb, 30, 58, 95), 0.08);
+            color: var(--primary, #1e3a5f);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.45rem 0.75rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color, #e2e4e8);
+            background: rgba(var(--primary-rgb, 30, 58, 95), 0.05);
+            color: var(--primary, #1e3a5f);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--primary, #1e3a5f);
+            background: rgba(var(--primary-rgb, 30, 58, 95), 0.12);
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            background: var(--card-bg, #ffffff);
+            border: 1px solid var(--border-color, #e2e4e8);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        {% include 'usuario/funcionario/parciais/_nav.html' %}
+    </header>
+
+    <main style="margin-top: 80px;">
+        <section class="section-featured">
+            <div class="container-fluid py-5">
+                <div class="section-header">
+                    <div>
+                        <span class="section-label">Usuários</span>
+                        <h2 class="font-display section-title">Buscar Usuário</h2>
+                        <p class="section-subtitle">Filtre por nome, sobrenome, usuário, CPF ou email</p>
+                    </div>
+                </div>
+
+                {% include 'parciais/_messages.html' %}
+
+                <div class="login-container" style="max-width: 900px;">
+                    <div class="login-form-side">
+                        <div class="login-form-container">
+                            <div class="login-header">
+                                <h1 class="font-display login-title" style="margin-bottom: 0.25rem;">Pesquisar</h1>
+                                <p class="login-subtitle">Preencha um ou mais campos para refinar a busca</p>
+                            </div>
+
+                            <form class="login-form" action="{% url 'usuario:buscar_usuario' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="row g-5">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.nome.id_for_label }}" class="form-label">
+                                                <i class="fa-solid fa-user"></i>
+                                                {{ form.nome.label }}
+                                            </label>
+                                            {{ form.nome }}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.sobrenome.id_for_label }}" class="form-label">
+                                                <i class="fa-solid fa-user"></i>
+                                                {{ form.sobrenome.label }}
+                                            </label>
+                                            {{ form.sobrenome }}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="{{ form.email.id_for_label }}" class="form-label">
+                                                <i class="fa-solid fa-envelope"></i>
+                                                {{ form.email.label }}
+                                            </label>
+                                            {{ form.email }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end mt-3">
+                                    <button type="submit" class="btn btn-primary">
+                                        Buscar
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section-featured" style="margin-top: 40px;">
+            <div class="container-fluid">
+                {% if usuarios %}
+                    <div class="section-header mb-3">
+                        <div>
+                            <span class="section-label">Resultados</span>
+                            <h3 class="font-display section-title" style="margin-top: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-users"></i>
+                                {{ usuarios|length }} usuário(s) encontrado(s)
+                            </h3>
+                            <p class="section-subtitle">Visualize rapidamente os usuários encontrados e acesse detalhes.</p>
+                        </div>
+                    </div>
+
+                    <div class="results-card">
+                        <table class="table-modern">
+                            <thead>
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Email</th>
+                                    <th style="width: 140px; text-align: center;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for usuario in usuarios %}
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div class="avatar-pill">
+                                                {{ usuario.first_name|default_if_none:""|slice:":1"|upper }}{{ usuario.last_name|default_if_none:""|slice:":1"|upper }}
+                                            </div>
+                                            <div class="user-meta">
+                                                <span class="name">{{ usuario.first_name }} {{ usuario.last_name }}</span>
+                                                <span class="username">@{{ usuario.username }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="pill">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            {{ usuario.email|default:"Sem email" }}
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <div class="actions">
+                                            <a href="#" class="btn-ghost">
+                                                <i class="fa-solid fa-eye"></i>
+                                                Detalhes
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 2.5rem; color: var(--muted, #6b7280); opacity: 0.5; margin-bottom: 1rem;"></i>
+                        <h3 class="font-display" style="color: var(--primary, #1e3a5f); margin-bottom: 0.5rem;">Nenhum usuário encontrado</h3>
+                        <p style="color: var(--muted, #6b7280); max-width: 520px; margin: 0 auto;">
+                            Ajuste os filtros de busca (nome, sobrenome ou email) e tente novamente.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <!-- <script src="{% static 'index.js' %}"></script> -->
+</body>
+
+</html>

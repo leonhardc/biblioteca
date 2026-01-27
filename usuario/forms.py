@@ -143,3 +143,8 @@ class FormularioFuncionario(forms.Form):
         if re.search(r'[a-zA-Z]', matricula):
             raise ValidationError('O campo de matricula deve conter somente numeros.')
         return matricula
+    
+class FormularioBuscarUsuario(forms.Form):
+    nome = forms.CharField(label='Nome', max_length=50, required=False, widget=forms.TextInput(attrs={'placeholder':'Digite o nome do usuário'}))
+    sobrenome = forms.CharField(label='Sobrenome', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder':'Digite o sobrenome do usuário'}))
+    email = forms.CharField(label='Email', max_length=100, required=False, widget=forms.EmailInput(attrs={'placeholder':'Digite o email do usuário'}))
