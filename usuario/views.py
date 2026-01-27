@@ -98,8 +98,11 @@ def pagina_inicial_funcionario(request:HttpRequest, uid:int):
     if request.user.is_authenticated:
         template_name='usuario/funcionario/dashboard_funcionario.html'
         usuario = User.objects.get(id=uid)
+        cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
+        cont_reservas = len(get_reservas_ativas_usuario(usuario))
+        cont_emprestimos_pendentes = len(get_emprestimos_pendentes_usuario(usuario))
         messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-        return render(request, template_name=template_name)
+        return render(request, template_name=template_name, context={'funcionario':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas, 'emprestimos_pendentes':cont_emprestimos_pendentes}})
     else:
         messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
         return redirect('usuario:entrar')
@@ -645,7 +648,6 @@ def detalhes_funcionario(request:HttpRequest, uid:int):
         template_name = 'admin/dashboard_admin_detalhes_usuarios.html'
         funcionario = Funcionario.objects.get(id=uid)
         return render(request, template_name, context={'funcionario':funcionario})
-
 
 def buscar_usuario(request):
     if request.user.is_authenticated:
