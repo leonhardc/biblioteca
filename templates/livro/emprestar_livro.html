@@ -492,7 +492,15 @@
                                             {{ field.label }}
                                             {% if field.field.required %}<span class="required" style="margin-left: 0.25rem;">*</span>{% endif %}
                                         </label>
-                                        {{ field }}
+                                        {% if field.name == 'usuario' %}
+                                            <div style="display: flex; flex-direction: row; gap: 5px;">
+                                                {{ field }}
+                                                <input id="usuario-pesquisar" type="text" style="max-width: 300px;" list="usuario-list" placeholder="Pesquisar usuário..." />
+                                                <datalist id="usuario-list"></datalist>
+                                            </div>    
+                                        {% else %}
+                                            {{ field }}
+                                        {% endif %}
                                         {% if field.errors %}
                                             <div class="field-errors" style="margin-top: 0.75rem;">
                                                 {% for error in field.errors %}
@@ -571,32 +579,36 @@
                 }
             });
         });
-
-        // Validação de CEP (exemplo)
-        const cepInput = document.querySelector('#id_cep');
-        if (cepInput) {
-            cepInput.addEventListener('blur', function() {
-                const cep = this.value.replace(/\D/g, '');
-                if (cep.length === 8) {
-                    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (!data.erro) {
-                                const ruaInput = document.querySelector('#id_rua');
-                                const bairroInput = document.querySelector('#id_bairro');
-                                const cidadeInput = document.querySelector('#id_cidade');
-                                const estadoInput = document.querySelector('#id_estado');
-                                
-                                if (ruaInput) ruaInput.value = data.logradouro;
-                                if (bairroInput) bairroInput.value = data.bairro;
-                                if (cidadeInput) cidadeInput.value = data.localidade;
-                                if (estadoInput) estadoInput.value = data.uf;
-                            }
-                        })
-                        .catch(error => console.log('Erro ao buscar CEP:', error));
+        
+        // Função de pesquisa de usuário (a ser implementada)
+        document.getElementById('usuario-pesquisar').addEventListener('keyup', function() {
+            const query = this.value.toLowerCase();
+            const select = document.getElementById('id_usuario');
+            const dataList = document.getElementById('usuario-list');
+            dataList.innerHTML = '';
+            for (let i = 0; i < select.options.length; i++) {
+                const option = select.options[i];
+                if (option.text.toLowerCase().includes(query)) {
+                    const dataOption = document.createElement('option');
+                    dataOption.value = option.text;
+                    dataList.appendChild(dataOption);
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
                 }
-            });
-        }
+            }
+        });
+        document.getElementById('usuario-pesquisar').addEventListener('change', function() {
+            const value = this.value;
+            const select = document.getElementById('id_usuario');
+            for (let i = 0; i < select.options.length; i++) {
+                const option = select.options[i];
+                if (option.text === value) {
+                    select.value = option.value;
+                    break;
+                }
+            }
+        });
     </script>
 </body>
 

@@ -26,7 +26,7 @@ def get_livros() -> tuple[tuple[int, str]]:
 def get_usuarios() -> tuple[tuple[int, str]]:
     from django.contrib.auth.models import User
     try:
-        return tuple([(usuario.id, usuario.username) for usuario in User.objects.all()])                 # type: ignore
+        return tuple([(usuario.id, usuario.username) for usuario in User.objects.all().exclude(is_staff=True)])                 # type: ignore
     except:
         return ()  # type: ignore
 

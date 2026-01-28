@@ -186,7 +186,6 @@ def ler_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
     if request.user.is_authenticated:
         reserva = Reserva.objects.filter(id=id_reserva).exists()
         if reserva:
-            # TODO: Logica implementada, falta criar o template
             template_name = ""
             reserva = Reserva.objects.get(id=id_reserva)
             return render(request, template_name=template_name, context={})
@@ -559,3 +558,7 @@ def registrar_devolucao_livro(request: HttpRequest) -> HttpResponse:
         else:
             messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
             return redirect('usuario:entrar')
+
+# TODO: Implementar view para transformar reserva em emprestimo
+def converte_reserva_em_emprestimo(request, id_reserva):
+    return HttpResponse('View para converter reserva em emprestimo')
