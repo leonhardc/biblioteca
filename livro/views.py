@@ -186,11 +186,12 @@ def ler_reserva(request: HttpRequest, id_reserva:int) -> HttpResponse:
     if request.user.is_authenticated:
         reserva = Reserva.objects.filter(id=id_reserva).exists()
         if reserva:
-            template_name = ""
+            template_name = "livro/detalhe_reserva.html"
             reserva = Reserva.objects.get(id=id_reserva)
-            return render(request, template_name=template_name, context={})
+            return render(request, template_name=template_name, context={'reserva': reserva})
         else:
-            return HttpResponse("Reserva não encontrada.")
+            messages.add_message(request, messages.ERROR, f'reserva nao encontrada.')
+            return redirect('livro:listar_reservas')
     else:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
@@ -560,5 +561,50 @@ def registrar_devolucao_livro(request: HttpRequest) -> HttpResponse:
             return redirect('usuario:entrar')
 
 # TODO: Implementar view para transformar reserva em emprestimo
-def converte_reserva_em_emprestimo(request, id_reserva):
-    return HttpResponse('View para converter reserva em emprestimo')
+def emprestar_livro_reserva(request, reserva_id):
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            reserva_existe = Reserva.objects.filter(id=reserva_id).exists()
+            if reserva_existe:
+                reserva = Reserva.objects.get(id=reserva_id)
+                usuario = reserva.usuario
+                livro = reserva.livro
+                data_emprestimo = date.today()
+                if user_is_aluno(usuario.id):
+                    data_devolucao = data_emprestimo + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['aluno'])
+                    sucesso = fazer_emprestimo(usuario.id, livro.id, data_emprestimo, data_devolucao)
+                    if sucesso:
+                        reserva.delete()
+                        messages.add_message(request, messages.SUCCESS, f'Empréstimo realizado com sucesso para o aluno. Data de devolução: {data_devolucao}.')
+                        pagina_anterior = request.META.get('HTTP_REFERER')
+                        return redirect(pagina_anterior)
+                    else:
+                        messages.add_message(request, messages.ERROR, f'Erro ao realizar o empréstimo para o aluno.')
+                        pagina_anterior = request.META.get('HTTP_REFERER')
+                        return redirect(pagina_anterior)
+                if user_is_professor(usuario.id):
+                    data_devolucao = data_emprestimo + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['professor'])
+                    sucesso = fazer_emprestimo(usuario.id, livro.id, data_emprestimo, data_devolucao)
+                    if sucesso:
+                        reserva.delete()
+                        messages.add_message(request, messages.SUCCESS, f'Empréstimo realizado com sucesso para o professor. Data de devolução: {data_devolucao}.')
+                        pagina_anterior = request.META.get('HTTP_REFERER')
+                        return redirect(pagina_anterior)
+                    else:
+                        messages.add_message(request, messages.ERROR, f'Erro ao realizar o empréstimo para o professor.')
+                        pagina_anterior = request.META.get('HTTP_REFERER')
+                        return redirect(pagina_anterior)
+                if user_is_funcionario(usuario.id):
+                    data_devolucao = data_emprestimo + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['funcionario'])
+                    sucesso = fazer_emprestimo(usuario.id, livro.id, data_emprestimo, data_devolucao)
+                    if sucesso:
+                        reserva.delete()
+                        messages.add_message(request, messages.SUCCESS, f'Empréstimo realizado com sucesso para o funcionário. Data de devolução: {data_devolucao}.')
+                        pagina_anterior = request.META.get('HTTP_REFERER')
+                        return redirect(pagina_anterior)
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')

@@ -43,4 +43,5 @@ urlpatterns = [ # type: ignore
     path('historico-emprestimos/', view=historico_emprestimos, name="historico_emprestimos"),
     path('registrar-devolucao/', view=registrar_devolucao_livro, name="registrar_devolucao"),
     path("registrar-devolucao-livro/<int:emprestimo_id>/", view=devolver_livro, name="registrar_devolucao_livro"), # type: ignore
+    path("emprestar-livro-reserva/<int:reserva_id>/", view=emprestar_livro_reserva, name="emprestar_livro_reserva"), # type: ignore
 ]

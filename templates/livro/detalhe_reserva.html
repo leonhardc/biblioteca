@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'livro/css/styles-renovar-emprestimo.css' %}">
+</head>
+<body>
+    <header>
+        {% include 'usuario/funcionario/parciais/_nav.html' %}
+    </header>
+    <main class="profile-page">
+        <div class="container-fluid">
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <a href="{% url 'livro:listar_todas_reservas' %}">
+                            Reservas
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Detalhes da Reserva</span>
+                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        Detalhes da Reserva
+                    </h1>
+                    <p class="page-subtitle">
+                        Veja as informações detalhadas desta reserva de livro.
+                    </p>
+                </div>
+            </section>
+        <section class="reserva-detail-section">
+            <div class="reserva-detail-card">
+                <h2 class="reserva-title">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    Detalhes da Reserva
+                </h2>
+                <div class="reserva-info-list">
+                    <div class="reserva-info-item">
+                        <span class="reserva-info-label">
+                            <i class="fa-solid fa-user"></i> Usuário:
+                        </span>
+                        <span class="reserva-info-value highlight">
+                            {{ reserva.usuario.get_full_name|default:reserva.usuario.username }}
+                        </span>
+                    </div>
+                    <div class="reserva-info-item">
+                        <span class="reserva-info-label">
+                            <i class="fa-solid fa-calendar"></i> Data da Reserva:
+                        </span>
+                        <span class="reserva-info-value badge-date">
+                            {{ reserva.data_reserva|date:"d/m/Y" }}
+                        </span>
+                    </div>
+                    <div class="reserva-info-item">
+                        <span class="reserva-info-label">
+                            <i class="fa-solid fa-barcode"></i> Código da Reserva:
+                        </span>
+                        <span class="reserva-info-value badge-id">
+                            #{{ reserva.id }}
+                        </span>
+                    </div>
+                </div>
+                <div class="reserva-actions">
+                    <a href="{% url 'livro:listar_todas_reservas' %}" class="btn btn-back">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Voltar às Reservas
+                    </a>
+                    <a href="{% url 'livro:emprestar_livro_reserva' reserva.id %}" class="btn btn-primary">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Emprestar Livro
+                    </a>
+                </div>
+            </div>
+        </section>
+        <style>
+        .reserva-detail-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .reserva-detail-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 2.5rem 2rem;
+            max-width: 480px;
+            width: 100%;
+            animation: fadeIn 0.7s;
+        }
+        .reserva-title {
+            font-size: 2rem;
+            color: #374151;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .reserva-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .reserva-info-item {
+            display: flex;
+            align-items: center;
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+        .reserva-info-label {
+            font-weight: 600;
+            color: #6366f1;
+            min-width: 140px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .reserva-info-value {
+            margin-left: 1rem;
+            font-size: 1.1rem;
+            color: #374151;
+        }
+        .highlight {
+            background: #e0f2fe;
+            color: #0284c7;
+            padding: 0.2rem 0.7rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .badge-date {
+            background: #fef9c3;
+            color: #b45309;
+            padding: 0.2rem 0.7rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .badge-id {
+            background: #f3e8ff;
+            color: #7c3aed;
+            padding: 0.2rem 0.7rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .status-badge {
+            padding: 0.2rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .status-ativa {
+            background: #d1fae5;
+            color: #059669;
+        }
+        .status-cancelada {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .status-outro {
+            background: #e0e7ff;
+            color: #6366f1;
+        }
+        .reserva-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        .btn.btn-back {
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            padding: 0.7rem 1.3rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn.btn-back:hover {
+            background: #e5e7eb;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        </style>
+        </div>
+    </main>
+</body>
+</html>
