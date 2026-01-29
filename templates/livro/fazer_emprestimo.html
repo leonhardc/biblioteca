@@ -3,10 +3,52 @@
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/css/responsive-components.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Emprestimo</title>
     <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
+    <style>
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        form {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 2rem 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 576px) {
+            main {
+                margin: 1rem auto;
+                padding: 0.5rem;
+            }
+
+            form {
+                padding: 1.5rem 1rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        button {
+            width: 100%;
+        }
+
+        @media (min-width: 576px) {
+            button {
+                width: auto;
+                min-width: 120px;
+            }
+        }
+    </style>
 </head>
 
 <body>
