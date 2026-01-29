@@ -53,8 +53,10 @@
                 <div class="search-card">
                     <form action="{% url 'livro:renovar_emprestimo' %}" method="POST" class="search-form">
                         {% csrf_token %}
-                        <div class="form-group">
+                        <div class="form-group" style="display: grid; gap: 10px; grid-template-columns: 3fr 1fr; align-items: end;">
                             {{ form.as_p }}
+                            <input type="text" name="usuario-pesquisar" id="usuario-pesquisar" list="usuario-list" placeholder="Pesquisar usuario..." style="height: 50px;">
+                            <datalist id="usuario-list"></datalist>
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
@@ -171,5 +173,6 @@
             {% endif %}
         </div>
     </main>
+    <script src="{% static 'usuario/scripts/scripts_de_pesquisa.js' %}"></script>
 </body>
 </html>
