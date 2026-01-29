@@ -17,16 +17,17 @@
     <style>
         .login-page {
             width: 100%;
-            min-height: 100vh;
+            min-height: auto;
             padding: 0;
             margin: 0;
+            margin-top: 60px;
         }
 
         .login-container {
             display: flex;
             flex-wrap: wrap;
-            min-height: calc(100vh - 60px);
-            overflow: hidden;
+            min-height: auto;
+            overflow: auto;
         }
 
         /* Mobile: Coluna única */
@@ -38,6 +39,7 @@
 
         .login-form-side {
             width: 100%;
+            min-height: auto;
             padding: 2rem 1rem;
             display: flex;
             flex-direction: column;
@@ -53,6 +55,7 @@
         /* Tablet: Aumenta padding */
         @media (min-width: 576px) {
             .login-form-side {
+                min-height: auto;
                 padding: 2rem 1.5rem;
             }
 
@@ -65,12 +68,14 @@
         @media (min-width: 992px) {
             .login-container {
                 flex-wrap: nowrap;
+                min-height: auto;
             }
 
             .login-side {
                 display: flex !important;
                 width: 50%;
                 height: auto;
+                min-height: auto;
                 background: linear-gradient(135deg, #0f0526 0%, #2d4a6f 100%);
                 color: white;
                 padding: 3rem;
@@ -78,6 +83,7 @@
 
             .login-form-side {
                 width: 50%;
+                min-height: auto;
                 padding: 3rem;
             }
 
