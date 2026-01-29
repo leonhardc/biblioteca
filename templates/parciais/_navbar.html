@@ -1,78 +1,26 @@
 {% load static %}
-
-<!-- Admin Header -->
-<header class="header-backdrop border-bottom">
-    <link rel="stylesheet" href="{% static 'usuario/css/navbar-responsive.css' %}">
-    <div class="container-fluid">
-        <nav class="navbar">
-            <!-- Logo -->
-            <a href="{% url 'administrador:dashboard_admin_home' %}" class="navbar-brand">
-                <i class="fa-solid fa-book"></i>
-                <span class="navbar-brand-text">Administração</span>
-            </a>
-
-            <!-- Mobile Menu Toggle -->
-            <button class="navbar-toggler" id="mobile-menu-btn" type="button">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-
-            <!-- Navigation Menu -->
-            <div class="navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'administrador:dashboard_admin_home' %}">
-                            <i class="fa-solid fa-gauge"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'livro:listar' %}">
-                            <i class="fa-solid fa-books"></i>
-                            <span>Livros</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fa-solid fa-bell"></i>
-                            <span>Notificações</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fa-solid fa-calendar"></i>
-                            <span>Calendário</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- User Actions -->
-            <div class="navbar-actions d-none d-md-flex">
-                <div class="user-menu">
-                    <button class="btn btn-user" id="user-menu-btn" type="button">
-                        <i class="fa-solid fa-user-shield"></i>
-                        <span class="user-name">Admin</span>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </button>
-                    <div class="user-dropdown" id="user-dropdown">
-                        <a href="#" class="dropdown-item">
-                            <i class="fa-solid fa-user-circle"></i>
-                            Perfil
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="fa-solid fa-gear"></i>
-                            Configurações
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="{% url 'usuario:sair' %}" class="dropdown-item text-danger">
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                            Sair
-                        </a>
-                    </div>
+<header>
+    <nav>
+        <div class="logo">
+            <img class="icone" src="{% static 'usuario/img/logo-1.png' %}" alt="Imagem de um livro aberto">
+        </div>
+        <div class="conteudo d-flex-row">
+            <div class="opcoes d-flex-row">
+                <div class="notificacoes">
+                    <img class="icone" src="{%static 'usuario/img/notificacoes.png'%}"
+                        alt="Imagem de um sino de notificações">
+                </div>
+                <div class="calendario">
+                    <img class="icone" src="{%static 'usuario/img/calendar.png'%}" alt="Imagem de um calendário">
                 </div>
             </div>
-        </nav>
-    </div>
+            <div class="usuario">
+                <img src="{%static 'usuario/img/person.png'%}" alt="">
+                <div class="informacoes-usuario">
+                    <span>Username</span>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </div>
+    </nav>
 </header>
-
-<script src="{% static 'usuario/js/navbar-responsive.js' %}"></script>

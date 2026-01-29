@@ -251,7 +251,9 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem 1.5rem;
-    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05) 0%, rgba(var(--secondary-rgb), 0.05) 100%);
+    background: linear-gradient(135deg,
+            rgba(var(--primary-rgb), 0.05) 0%,
+            rgba(var(--secondary-rgb), 0.05) 100%);
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -480,4 +482,230 @@
     background-color: #d1ecf1;
     border-left-color: #17a2b8;
     color: #0c5460;
+}
+
+/* ======================================================
+RESPONSIVE CLASSES
+====================================================== */
+
+/* Responsividade para emprestar_livro.html */
+@media (max-width: 1200px) {
+    main.form-page {
+        padding: 10px 4rem 4rem !important;
+    }
+
+    .form-card {
+        padding: 2.5rem !important;
+    }
+}
+
+@media (max-width: 992px) {
+    main.form-page {
+        padding: 10px 2rem 2rem !important;
+    }
+
+    .form-card {
+        padding: 2rem !important;
+        margin: 1.5rem auto !important;
+    }
+
+    .form-header {
+        margin-bottom: 2rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+
+    .form-row {
+        flex-direction: column !important;
+        gap: 1.5rem !important;
+    }
+
+    .form-title {
+        font-size: 1.75rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    main.form-page {
+        padding: 10px 1rem 2rem !important;
+    }
+
+    .form-card {
+        padding: 1.5rem !important;
+        margin: 1rem auto !important;
+        border-radius: 12px !important;
+    }
+
+    .form-header {
+        margin-bottom: 1.5rem !important;
+        padding-bottom: 1rem !important;
+    }
+
+    .form-title {
+        font-size: 1.5rem !important;
+    }
+
+    .form-subtitle {
+        font-size: 0.95rem !important;
+    }
+
+    .section-title {
+        font-size: 1.125rem !important;
+        margin-bottom: 1.25rem !important;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem !important;
+    }
+
+    .form-label {
+        font-size: 0.9rem !important;
+    }
+
+    input,
+    select,
+    textarea {
+        padding: 0.75rem !important;
+        font-size: 1rem !important;
+    }
+
+    .form-row {
+        gap: 1rem !important;
+    }
+
+    .form-actions {
+        flex-direction: column !important;
+        margin-top: 2rem !important;
+        padding-top: 1.5rem !important;
+        gap: 1rem !important;
+    }
+
+    .btn {
+        width: 100% !important;
+        padding: 0.75rem 1.5rem !important;
+        font-size: 0.95rem !important;
+    }
+
+    #usuario-pesquisar {
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    main.form-page {
+        padding: 8px 0.75rem 1.5rem !important;
+    }
+
+    .form-card {
+        padding: 1.25rem !important;
+        margin: 0.75rem auto !important;
+        border-width: 1px !important;
+        border-radius: 10px !important;
+    }
+
+    .form-header {
+        margin-bottom: 1.25rem !important;
+        padding-bottom: 0.75rem !important;
+    }
+
+    .form-title {
+        font-size: 1.25rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .form-subtitle {
+        font-size: 0.85rem !important;
+        margin-top: 0.25rem !important;
+    }
+
+    .section-title {
+        font-size: 1rem !important;
+        margin-bottom: 1rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+
+    .section-title i {
+        margin-right: 0.35rem !important;
+    }
+
+    .form-group {
+        margin-bottom: 1rem !important;
+    }
+
+    .form-label {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .required {
+        margin-left: 0.15rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    input,
+    select,
+    textarea {
+        padding: 0.625rem 0.75rem !important;
+        font-size: 0.95rem !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .form-row {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+        margin-bottom: 0 !important;
+    }
+
+    .form-row div {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+
+    .form-actions {
+        flex-direction: column !important;
+        margin-top: 1.5rem !important;
+        padding-top: 1.25rem !important;
+        gap: 0.75rem !important;
+    }
+
+    .btn {
+        width: 100% !important;
+        padding: 0.625rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .btn i {
+        margin-right: 0.35rem !important;
+    }
+
+    .error-message {
+        font-size: 0.8rem !important;
+    }
+
+    .helptext {
+        font-size: 0.8rem !important;
+    }
+
+    .alert {
+        padding: 1rem 1.25rem !important;
+        margin-bottom: 1rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .form-footer {
+        margin-top: 1.5rem !important;
+        padding-top: 1rem !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+
+    button,
+    a.btn,
+    input[type="submit"] {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
 }

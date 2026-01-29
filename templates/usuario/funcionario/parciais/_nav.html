@@ -2,7 +2,6 @@
 
 <!-- Header -->
 <header class="header-backdrop border-bottom">
-    <link rel="stylesheet" href="{% static 'usuario/css/navbar-responsive.css' %}">
     <div class="container-fluid">
         <nav class="navbar">
             <!-- Logo -->
@@ -23,7 +22,7 @@
 
             <!-- Navigation Menu -->
             <div class="navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav" style="align-items: end;">
                     <li class="nav-item">
                         <a class="nav-link {% if dashboard %}active{% endif %}" href="{% url 'usuario:pagina_inicial_funcionario' user.id %}">
                             <i class="fa-solid fa-house"></i>
@@ -91,5 +90,3 @@
         </nav>
     </div>
 </header>
-
-<script src="{% static 'usuario/js/navbar-responsive.js' %}"></script>

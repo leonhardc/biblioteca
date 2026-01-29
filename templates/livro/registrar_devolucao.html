@@ -32,7 +32,7 @@
             <section class="page-header">
                 <div class="page-header-content">
                     <div class="page-breadcrumb">
-                        <a href="{% url 'usuario:pagina_inicial_aluno' user.id %}">
+                        <a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}">
                             <i class="fa-solid fa-home"></i> Dashboard
                         </a>
                         <i class="fa-solid fa-chevron-right"></i>
@@ -40,11 +40,11 @@
                             <i class="fa-solid fa-book-bookmark"></i> Empréstimos
                         </a>
                         <i class="fa-solid fa-chevron-right"></i>
-                        <span>Renovar Empréstimo</span>
+                        <span>Registrar Devolução</span>
                     </div>
                     <h1 class="font-display page-title">
                         <i class="fa-solid fa-arrows-rotate"></i>
-                        Renovar Empréstimo
+                        Registrar Devolução
                     </h1>
                 </div>
             </section>
@@ -56,6 +56,8 @@
                         {% csrf_token %}
                         <div class="form-group">
                             {{ form.as_p }}
+                            <input id="usuario-pesquisar" type="text" style="max-width: 300px; flex: 1; min-width: 150px;" list="usuario-list" placeholder="Pesquisar usuário..." />
+                            <datalist id="usuario-list"></datalist>
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
@@ -172,5 +174,6 @@
             {% endif %}
         </div>
     </main>
+    <script src="{% static 'usuario/scripts/scripts_de_pesquisa.js' %}"></script>
 </body>
 </html>
