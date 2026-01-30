@@ -258,7 +258,7 @@
                                     </div>
                                 </a>
 
-                                <!-- Relatórios -->
+                                <!-- Relatórios
                                 <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
                                     <div class="quick-link-icon" style="background-color: #795548;">
                                         <i class="fa-solid fa-chart-line"></i>
@@ -266,6 +266,148 @@
                                     <div class="quick-link-content">
                                         <h4>Relatórios</h4>
                                         <p>Gerar relatórios de atividades</p>
+                                    </div>
+                                </a> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <div class="card-header-content">
+                                <h2 class="font-display card-title">
+                                    <i class="fa-solid fa-plus"></i>
+                                    Cadastro e Gerenciamento de Livros, Autores e Categorias
+                                </h2>
+                                <p class="card-subtitle">Gerencie Livros, Autores e Categorias</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-links-grid">
+                                <!-- Cadastrar um novo livro -->
+                                <a href="{% url 'livro:emprestar_livro' %}" class="quick-link-item">
+                                    <div class="quick-link-icon" style="background-color: #4CAF50;">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Cadastrar Livro</h4>
+                                        <p>Registrar um novo livro no sistema</p>
+                                    </div>
+                                </a>
+
+                                <!-- Cadastrar um novo autor -->
+                                <a href="{% url 'livro:criar_autor' %}" class="quick-link-item">
+                                    <div class="quick-link-icon" style="background-color: #4CAF50;">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Cadastrar Autor</h4>
+                                        <p>Registrar um novo autor no sistema</p>
+                                    </div>
+                                </a>
+
+                                <!-- Cadastrar uma nova categoria -->
+                                <a href="{% url 'livro:criar_categoria' %}" class="quick-link-item">
+                                    <div class="quick-link-icon" style="background-color: #4CAF50;">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Cadastrar Categoria</h4>
+                                        <p>Registrar uma nova categoria no sistema</p>
+                                    </div>
+                                </a>
+
+                                <!-- Atualizar o conteudo de um livro -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #00BCD4;">
+                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Atualizar Livro</h4>
+                                        <p>Atualizar informações de um livro existente</p>
+                                    </div>
+                                </a>
+
+                                <!-- Atualizar Conteudo de Autor -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #00BCD4;">
+                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Atualizar Autor</h4>
+                                        <p>Atualizar informações de um autor existente</p>
+                                    </div>
+                                </a>
+
+                                <!-- Atualizar o Conteudo de uma categoria -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #00BCD4;">
+                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Atualizar Categoria</h4>
+                                        <p>Atualizar informações de uma categoria existente</p>
+                                    </div>
+                                </a>
+
+                                <!-- Buscar livros Existentes -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #607D8B;">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Buscar Livro</h4>
+                                        <p>Ler informações de livros existentes</p>
+                                    </div>
+                                </a>
+                                <!-- Buscar Autores Existentes -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #607D8B;">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Buscar Autor</h4>
+                                        <p>Ler informações de autores existentes</p>
+                                    </div>
+                                </a>
+                                <!-- Buscar categorias Existentes -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #607D8B;">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Buscar Categoria</h4>
+                                        <p>Ler informações de categorias existentes</p>
+                                    </div>
+                                </a>
+                                <!-- Deletar categorias Existentes -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #F44336;">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Deletar Livro</h4>
+                                        <p>Remover livro do Sistema</p>
+                                    </div>
+                                </a>
+                                <!-- Deletar Autores Existentes -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #F44336;">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Deletar Autor</h4>
+                                        <p>Remover autor do Sistema</p>
+                                    </div>
+                                </a>
+                                <!-- Deletar categorias Existentes -->
+                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                    <div class="quick-link-icon" style="background-color: #F44336;">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </div>
+                                    <div class="quick-link-content">
+                                        <h4>Deletar Categoria</h4>
+                                        <p>Remover categoria do Sistema</p>
                                     </div>
                                 </a>
                             </div>
