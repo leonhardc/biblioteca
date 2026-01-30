@@ -613,3 +613,33 @@ def emprestar_livro_reserva(request, reserva_id):
     else:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
+
+def cancelar_reserva(request):
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            template_name = 'livro/cancelar_reserva.html'
+            if request.method == 'GET':
+                formulario_cancelar = FormularioCancelarReserva()
+                return render(request, template_name, context={'form': formulario_cancelar, 'user_context': user_context})
+            if request.method == 'POST':
+                formulario = FormularioCancelarReserva(request.POST)
+                if formulario.is_valid():
+                    usuario_id = int(formulario.cleaned_data['usuario'])
+                    reservas_existem = Reserva.objects.filter(usuario__id=usuario_id).exists()
+                    if reservas_existem:
+                        reservas = Reserva.objects.filter(usuario__id=usuario_id)
+                        return render(request, template_name, context={'reservas': reservas, 'form': formulario, 'user_context': user_context})
+                    else:
+                        messages.add_message(request, messages.ERROR, 'Não existem reservas para este usuário.')
+                        return render(request, template_name, context={'form': formulario, 'user_context': user_context})
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')

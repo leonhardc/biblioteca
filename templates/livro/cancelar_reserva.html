@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renovar Empréstimo - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'livro/css/styles-renovar-emprestimo.css' %}">
+</head>
+
+<body>
+    <header>
+        {% if user_context.aluno %}
+            {% include 'usuario/aluno/parciais/_nav.html' %}
+        {% elif user_context.professor %}
+            {% include 'usuario/professor/parciais/_nav.html' %}
+        {% elif user_context.funcionario %}
+            {% include 'usuario/funcionario/parciais/_nav.html' %}
+        {% endif %}
+    </header>
+
+    <main class="renew-page">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Cancelar Reserva</span>
+                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        Cancelar Reserva
+                    </h1>
+                </div>
+            </section>
+
+            <!-- Search Form Section -->
+            <section class="search-section">
+                <div class="search-card">
+                    <form action="{% url 'livro:cancelar_reserva' %}" method="POST" class="search-form">
+                        {% csrf_token %}
+                        <div class="form-group" style="display: grid; gap: 10px; grid-template-columns: 3fr 1fr; align-items: end;">
+                            {{ form.as_p }}
+                            <input type="text" name="usuario-pesquisar" id="usuario-pesquisar" list="usuario-list" placeholder="Pesquisar usuario..." style="height: 50px;">
+                            <datalist id="usuario-list"></datalist>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span>Buscar Empréstimos</span>
+                            </button>
+                            <a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}" class="btn btn-secondary">
+                                <i class="fa-solid fa-xmark"></i>
+                                <span>Cancelar</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <!-- Messages Section -->
+            {% if messages %}
+                <section class="messages-section">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            <div class="alert-content">
+                                {% if message.tags == 'success' %}
+                                    <i class="fa-solid fa-circle-check"></i>
+                                {% elif message.tags == 'error' %}
+                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                {% elif message.tags == 'warning' %}
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                {% elif message.tags == 'info' %}
+                                    <i class="fa-solid fa-circle-info"></i>
+                                {% endif %}
+                                <span>{{ message }}</span>
+                            </div>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </section>
+            {% endif %}
+
+            <!-- Loans List Section -->
+            {% if reservas %}
+                <section class="loans-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fa-solid fa-list"></i>
+                            Empréstimos Disponíveis para Renovação
+                        </h2>
+                        <p class="section-subtitle">
+                            Selecione o empréstimo que deseja renovar
+                        </p>
+                    </div>
+
+                    <div class="loans-list">
+                        {% for reserva in reservas %}
+                            <div class="loan-card">
+                                <div class="loan-card-header">
+                                    <div class="loan-icon">
+                                        <i class="fa-solid fa-book"></i>
+                                    </div>
+                                </div>
+
+                                <div class="loan-card-body">
+                                    <h3 class="loan-title">{{ reserva.livro.titulo }}</h3>
+                                    
+                                    <div class="loan-details">
+                                        <div class="detail-item">
+                                            <i class="fa-solid fa-calendar-plus"></i>
+                                            <div class="detail-content">
+                                                <span class="detail-label">Data de Empréstimo</span>
+                                                <span class="detail-value">{{ reserva.data_reserva|date:"d/m/Y" }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="loan-card-footer" style="display: flex; flex-direction: row; justify-content: flex-end;">
+                                    <a href="{% url 'livro:deletar_reserva' reserva.id %}" class="btn btn-secondary">
+                                        <i class="fa-solid fa-ban"></i>
+                                        <span>Cancelar Reserva</span>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+        </div>
+    </main>
+    <script src="{% static 'usuario/scripts/scripts_de_pesquisa.js' %}"></script>
+</body>
+</html>
