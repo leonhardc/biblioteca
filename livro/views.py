@@ -541,10 +541,15 @@ def devolver_livro(request, emprestimo_id):
 def registrar_devolucao_livro(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
             if request.method == 'GET':
                 template_name = 'livro/registrar_devolucao.html'
                 formulario_devolucao = FormularioRegistrarDevolucao()
-                return render(request, template_name, context={'form': formulario_devolucao})
+                return render(request, template_name, context={'form': formulario_devolucao, 'user_context': user_context})
             if request.method == 'POST':
                 formulario = FormularioRegistrarDevolucao(request.POST)
                 if formulario.is_valid():
@@ -552,10 +557,10 @@ def registrar_devolucao_livro(request: HttpRequest) -> HttpResponse:
                     emprestimos_existem = Emprestimo.objects.filter(usuario__id=usuario_id, ativo=True).exists()
                     if emprestimos_existem:
                         emprestimos = Emprestimo.objects.filter(usuario__id=usuario_id, ativo=True)
-                        return render(request, 'livro/registrar_devolucao.html', context={'emprestimos': emprestimos, 'form': formulario})
+                        return render(request, 'livro/registrar_devolucao.html', context={'emprestimos': emprestimos, 'form': formulario, 'user_context': user_context})
                     else:
                         messages.add_message(request, messages.ERROR, 'Não existem empréstimos ativos para este usuário.')
-                        return render(request, 'livro/registrar_devolucao.html', context={'form': formulario})
+                        return render(request, 'livro/registrar_devolucao.html', context={'form': formulario, 'user_context': user_context})
         else:
             messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
             return redirect('usuario:entrar')

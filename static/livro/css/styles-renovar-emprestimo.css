@@ -709,3 +709,88 @@ RESPONSIVE CLASSES
         min-width: 44px !important;
     }
 }
+
+.container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.loans-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.loan-card {
+    flex: 1 1 350px;
+    max-width: 400px;
+    min-width: 260px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.search-form .form-group {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 3fr 1fr;
+    align-items: end;
+}
+
+@media (max-width: 900px) {
+    .container-fluid {
+        padding: 8px;
+    }
+
+    .loans-list {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .loan-card {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .search-form .form-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-title {
+        font-size: 1.3rem;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+
+    .loan-card {
+        padding: 8px;
+    }
+
+    .loan-card-body h3 {
+        font-size: 1rem;
+    }
+
+    .search-form .form-group input,
+    .search-form .form-group select {
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
