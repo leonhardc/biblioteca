@@ -13,7 +13,7 @@ def get_categorias() -> tuple[tuple[int, str]]:
 
 def get_autores() -> tuple[tuple[int, str]]:
     try:
-        return tuple([(autor.id, autor.nome) for autor in Autor.objects.all()])                         # type: ignore
+        return tuple([(autor.id, autor.nome + ' ' + autor.sobrenome) for autor in Autor.objects.all()])                         # type: ignore
     except:
         return () # type: ignore
 
@@ -41,7 +41,7 @@ class FormularioLivro(forms.Form):
     isbn = forms.CharField(
         label='ISBN', 
         max_length=6, 
-        widget=forms.TextInput(attrs={'placeholder':'Digite o numero de ISBN'})
+        widget=forms.TextInput(attrs={'placeholder':'Este campo será preenchido automaticamente', 'disabled':True})
     )
     titulo = forms.CharField(
         label='Titulo', 

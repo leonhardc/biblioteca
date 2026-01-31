@@ -65,7 +65,28 @@ def listar_categorias(request: HttpRequest) -> HttpResponse:
 
 # Implementação do CRUD para livro
 def criar_livro(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("View Criar Livro")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            if request.method == 'GET':
+                user_context = {
+                    'aluno': user_is_aluno(request.user),
+                    'professor': user_is_professor(request.user),
+                    'funcionario': user_is_funcionario(request.user),
+                }
+                template_name = "livro/criar_livro.html"
+                formulario_livro = FormularioLivro()
+                return render(request, template_name, context={'form': formulario_livro, 'user_context': user_context})
+            if request.method == 'POST':
+                formulario_livro = FormularioLivro(request.POST)
+                if formulario_livro.is_valid():
+                    # TODO: Implementar a criação do livro
+                    pass
+        else:
+            messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
+        return redirect('usuario:entrar')
 
 def detalhar_livro(request: HttpRequest, id_livro:int) -> HttpResponse:
     if request.user.is_authenticated:

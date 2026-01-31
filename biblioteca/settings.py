@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'curso.apps.CursoConfig',
     'livro.apps.LivroConfig',
     'administrador.apps.AdministradorConfig',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -170,3 +172,5 @@ MESSAGE_TAGS = {
     constants.WARNING:'alert-warning',
 }
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
