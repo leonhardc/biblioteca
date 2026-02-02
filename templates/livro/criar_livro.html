@@ -28,7 +28,16 @@
         {% endif %}
     </header>
     <main class="form-page" style="padding: 10px 18rem 18rem; min-height: calc(100vh - 60px);">
-        <form action="{% url 'livro:criar_livro' %}" method="post" style="margin-top: 100px;">
+        {% if messages %}
+        <div style="margin-top: 200px;">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form action="{% url 'livro:criar_livro' %}" method="POST" style="margin-top: 100px;">
             {% csrf_token %}
             {{ form|crispy }}
             <div style="display: flex; flex-direction: row; justify-content: end; gap: 10px;">

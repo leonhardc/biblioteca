@@ -38,22 +38,27 @@ USUARIOS = get_usuarios()
 LIVROS = get_livros()
 
 class FormularioLivro(forms.Form):
-    isbn = forms.CharField(
-        label='ISBN', 
-        max_length=6, 
-        widget=forms.TextInput(attrs={'placeholder':'Este campo será preenchido automaticamente', 'disabled':True})
-    )
+    # isbn = forms.CharField(
+    #     label='ISBN', 
+    #     max_length=6, 
+    #     widget=forms.TextInput(attrs={'placeholder':'Este campo será preenchido automaticamente', 'disabled':True})
+    # )
     titulo = forms.CharField(
         label='Titulo', 
         max_length=100, 
         widget=forms.TextInput(attrs={'placeholder':'Digite o titulo do livro'})
+    )
+    resumo = forms.CharField(
+        label='Resumo', 
+        max_length=2000,
+        widget=forms.Textarea(attrs={'placeholder':'Digite o resumo do livro'})
     )
     subtitulo = forms.CharField(
         label='Subtitulo', 
         max_length=100, 
         widget=forms.TextInput(attrs={'placeholder':'Digite o subtitulo do livro'})
     )
-    lancamento = forms.DateField(label='Ano de Lançamento', widget=forms.DateInput())
+    lancamento = forms.DateField(label='Ano de Lançamento', widget=forms.DateInput(attrs={'type':'date'}))
     editora = forms.CharField(
         label='Editora', 
         widget=forms.TextInput(attrs={'placeholder':'Digite a Editora do livro'})
@@ -62,12 +67,12 @@ class FormularioLivro(forms.Form):
     autores = forms.MultipleChoiceField(label='Autores', choices=AUTORES, widget=forms.SelectMultiple())    # type: ignore
     categoria = forms.ChoiceField(label='Categoria', choices=CATEGORIAS, widget=forms.Select(attrs={}))     # type: ignore
 
-    def clean_categoria(self):
-        categoria_id = self.cleaned_data['categoria']
-        categoria = Categoria.objects.get(id=categoria_id)
-        if not categoria:
-            raise forms.ValidationError('Categoria não existe na base de dados.')
-        return categoria
+    # def clean_categoria(self):
+    #     categoria_id = self.cleaned_data['categoria']
+    #     categoria = Categoria.objects.get(id=categoria_id)
+    #     if not categoria:
+    #         raise forms.ValidationError('Categoria não existe na base de dados.')
+    #     return categoria
 
 class FormularioAutor(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100, widget=forms.TextInput())

@@ -63,6 +63,18 @@ def listar_autores(resquest: HttpRequest) -> HttpResponse:
 def listar_categorias(request: HttpRequest) -> HttpResponse:
     return HttpResponse("View listar Categorias")
 
+
+# FUNCAO AUXILIAR
+def criar_isbn() -> str:
+    import random
+    isbn = ''
+    while True:
+        isbn = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+        livro_existe = Livro.objects.filter(isbn=isbn).exists()
+        if not livro_existe:
+            break
+    return isbn
+
 # Implementação do CRUD para livro
 def criar_livro(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
@@ -79,8 +91,39 @@ def criar_livro(request: HttpRequest) -> HttpResponse:
             if request.method == 'POST':
                 formulario_livro = FormularioLivro(request.POST)
                 if formulario_livro.is_valid():
-                    # TODO: Implementar a criação do livro
-                    pass
+                    isbn = criar_isbn()
+                    titulo = formulario_livro.cleaned_data['titulo']
+                    resumo = formulario_livro.cleaned_data['resumo']
+                    subtitulo = formulario_livro.cleaned_data['subtitulo']
+                    lancamento = formulario_livro.cleaned_data['lancamento']
+                    editora = formulario_livro.cleaned_data['editora']
+                    copias = formulario_livro.cleaned_data['copias']
+                    autores = formulario_livro.cleaned_data['autores']
+                    categoria = Categoria.objects.get(id=formulario_livro.cleaned_data['categoria'])
+                    novo_livro = Livro.objects.create(
+                        isbn=isbn,
+                        titulo=titulo,
+                        resumo=resumo,
+                        subtitulo=subtitulo,
+                        lancamento=lancamento,
+                        editora=editora,
+                        copias=copias,
+                        categoria=categoria
+                    )
+                    novo_livro.autores.set(autores)
+                    novo_livro.save()
+                    messages.add_message(request, messages.SUCCESS, 'Livro criado com sucesso.')
+                    return redirect('livro:listar_livros')
+                else:
+                    print(formulario_livro.errors)
+                    user_context = {
+                        'aluno': user_is_aluno(request.user),
+                        'professor': user_is_professor(request.user),
+                        'funcionario': user_is_funcionario(request.user),
+                    }
+                    messages.add_message(request, messages.ERROR, 'Erro ao criar o livro. Verifique os dados informados.')
+                    template_name = "livro/criar_livro.html"
+                    return render(request, template_name, context={'form': formulario_livro, 'user_context': user_context})
         else:
             messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não é funcionário.')
             return redirect('usuario:entrar')
