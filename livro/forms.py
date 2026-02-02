@@ -5,6 +5,11 @@ from livro.models import Categoria
 from livro.models import Autor
 from livro.models import Livro
 
+SEXO = ( # type: ignore
+    ('M', 'Masculino'),
+    ('F', 'Feminino')
+)
+
 def get_categorias() -> tuple[tuple[int, str]]:
     try:
         return tuple([(categoria.id, categoria.categoria) for categoria in Categoria.objects.all()])  # type: ignore
@@ -76,8 +81,11 @@ class FormularioLivro(forms.Form):
 
 class FormularioAutor(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100, widget=forms.TextInput())
-    cpf = forms.CharField(label='CPF', max_length=100, widget=forms.TextInput())
-    nacionalidade = forms.ChoiceField(label='Nome', choices=NACIONALIDADES, widget=forms.Select())
+    sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput())
+    email_de_contato = forms.EmailField(label='Email de Contato', widget=forms.EmailInput())
+    nascimento = forms.DateField(label='Data de Nascimento', widget=forms.DateInput(attrs={'type':'date'}))
+    nacionalidade = forms.ChoiceField(label='Nacionalidade', choices=NACIONALIDADES, widget=forms.Select())
+    sexo = forms.ChoiceField(label='Sexo', choices=SEXO, widget=forms.Select())
 
 class FormularioCategoria(forms.Form):
     categoria = forms.CharField(label='Categoria', max_length=100, widget=forms.TextInput())

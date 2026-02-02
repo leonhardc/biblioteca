@@ -57,8 +57,42 @@ def listar_livros(request: HttpRequest) -> HttpResponse:
         messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
         return redirect('usuario:entrar')
 
-def listar_autores(resquest: HttpRequest) -> HttpResponse:
-    return HttpResponse('View listar autores')
+def listar_autores(request:HttpRequest) -> HttpResponse:
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            termo_pesquisa = request.GET.get("pesquisa", "").strip()
+            if termo_pesquisa:
+                autores_queryset = Autor.objects.filter(
+                    Q(nome__icontains=termo_pesquisa) |
+                    Q(sobrenome__icontains=termo_pesquisa)
+                ).distinct().order_by('nome')
+                user_context = {
+                    'aluno': user_is_aluno(request.user),
+                    'professor': user_is_professor(request.user),
+                    'funcionario': user_is_funcionario(request.user),
+                }
+                template_name = "livro/listar_autores.html"
+                if autores_queryset.exists():
+                    return render(request, template_name=template_name, context={'autores':autores_queryset, 'user_context': user_context})
+                else:
+                    messages.add_message(request, messages.ERROR, 'Nenhum autor encontrado para o termo de pesquisa informado.')
+                    return render(request, template_name, context={'autor':True, 'user_context': user_context})
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            template_name = "livro/listar_autores.html"
+            autores_existem = Autor.objects.all().exists()
+            if autores_existem:
+                autores = Autor.objects.all().order_by('nome')
+                return render(request, template_name=template_name, context={'autores':autores, 'user_context': user_context})
+            else:
+                messages.add_message(request, messages.ERROR, 'Não existem autores cadastrados na biblioteca.')
+                return render(request, template_name, context={'autor':True, 'user_context': user_context})
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
 
 def listar_categorias(request: HttpRequest) -> HttpResponse:
     return HttpResponse("View listar Categorias")
@@ -161,8 +195,49 @@ def reservar_livro(request:HttpRequest, id_livro:int, usuario:str) -> HttpRespon
     return HttpResponse("View reservar livro")
 
 # CRUD para Autor
+
 def criar_autor(request:HttpRequest) -> HttpResponse:
-    return HttpResponse("View criar Autor")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            if request.method == 'GET':
+                user_context = {
+                    'aluno': user_is_aluno(request.user),
+                    'professor': user_is_professor(request.user),
+                    'funcionario': user_is_funcionario(request.user),
+                }
+                template_name = "livro/criar_autor.html"
+                formulario_autor = FormularioAutor()
+                return render(request, template_name, context={'form': formulario_autor, 'user_context': user_context})
+            if request.method == 'POST':
+                formulario_autor = FormularioAutor(request.POST)
+                if formulario_autor.is_valid():
+                    nome = formulario_autor.cleaned_data['nome']
+                    sobrenome = formulario_autor.cleaned_data['sobrenome']
+                    email_de_contato = formulario_autor.cleaned_data['email_de_contato']
+                    nascimento = formulario_autor.cleaned_data['nascimento']
+                    sexo = formulario_autor.cleaned_data['sexo']
+                    nacionalidade = formulario_autor.cleaned_data['nacionalidade']
+                    novo_autor = Autor.objects.create(
+                        nome=nome,
+                        sobrenome=sobrenome,
+                        email_de_contato=email_de_contato,
+                        nascimento=nascimento,
+                        sexo=sexo,
+                        nacionalidade=nacionalidade
+                    )
+                    novo_autor.save()
+                    messages.add_message(request, messages.SUCCESS, 'Autor criado com sucesso.')
+                    return redirect('livro:listar_autores')
+                else:
+                    messages.add_message(request, messages.ERROR, 'Erro ao criar o autor. Verifique os dados informados.')
+                    template_name = "livro/criar_autor.html"
+                    return render(request, template_name, context={'form': formulario_autor, 'user_context': user_context})
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+        return redirect('usuario:entrar')
 
 def detalhar_autor(request:HttpRequest, id_autor:int) -> HttpResponse:
     return HttpResponse("View detalhar Autor")

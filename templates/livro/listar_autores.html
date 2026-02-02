@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autores - Biblioteca Acadêmica</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
+</head>
+
+<body>
+    <header>
+        {% if user_context.aluno %}
+            {% include 'usuario/aluno/parciais/_nav.html' %}
+        {% elif user_context.professor %}
+            {% include 'usuario/professor/parciais/_nav.html' %}
+        {% elif user_context.funcionario %}
+            {% include 'usuario/funcionario/parciais/_nav.html' %}
+        {% endif %}
+    </header>
+
+    <main class="books-page">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <section class="page-header" style="margin-bottom: 20px;">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:pagina_inicial_aluno' user.id %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Autores</span>
+                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-user"></i>
+                        Autores
+                    </h1>
+                    <p class="page-subtitle">
+                        Encontre autores cadastrados na biblioteca. Use o filtro de busca para localizar rapidamente.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-card">
+                    <form action="{% url 'livro:listar_autores' %}" method="GET" class="search-form">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input 
+                                type="text" 
+                                name="pesquisa" 
+                                placeholder="Buscar por nome ou sobrenome..." 
+                                value="{{ termo_busca }}"
+                                class="search-input"
+                                autocomplete="off"
+                            >
+                            {% if termo_busca %}
+                                <a href="{% url 'livro:listar_autores' %}" class="clear-search" title="Limpar busca">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-search">
+                            <i class="fa-solid fa-search"></i>
+                            <span>Pesquisar</span>
+                        </button>
+                    </form>
+
+                    {% if termo_busca %}
+                        <div class="search-results-info">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Exibindo resultados para "<strong>{{ termo_busca }}</strong>"
+                            {% if autores.paginator.count %}
+                                - {{ autores.paginator.count }} autor{{ autores.paginator.count|pluralize }}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <!-- Authors List Section -->
+            <section class="books-section">
+                {% if autores %}
+                    <div class="books-list">
+                        {% for autor in autores %}
+                            <div class="book-card">
+                                <div class="book-card-header">
+                                    <div class="book-icon">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <div class="book-availability">
+                                        <span class="badge badge-success">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                            Cadastrado
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="book-card-body">
+                                    <h3 class="book-title">
+                                        {{ autor.nome }} {{ autor.sobrenome }}
+                                    </h3>
+                                    <div class="book-meta">
+                                        <div class="book-meta-item">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            <span>{{ autor.email_de_contato }}</span>
+                                        </div>
+                                        <div class="book-meta-item">
+                                            <i class="fa-solid fa-venus-mars"></i>
+                                            <span>{{ autor.get_sexo_display }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="book-card-footer">
+                                    <a href="{% url 'livro:detalhar_autor' autor.id %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fa-solid fa-eye"></i>
+                                        Ver Detalhes
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if autores.paginator.num_pages > 1 %}
+                        <div class="pagination-section">
+                            <nav class="pagination-nav">
+                                {% if autores.has_previous %}
+                                    <a href="?pesquisa={{ termo_busca }}&page=1" class="pagination-btn pagination-btn-first">
+                                        <i class="fa-solid fa-angles-left"></i>
+                                        <span class="d-none d-sm-inline">Primeira</span>
+                                    </a>
+                                    <a href="?pesquisa={{ termo_busca }}&page={{ autores.previous_page_number }}" class="pagination-btn">
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                        <span class="d-none d-sm-inline">Anterior</span>
+                                    </a>
+                                {% else %}
+                                    <button class="pagination-btn pagination-btn-first" disabled>
+                                        <i class="fa-solid fa-angles-left"></i>
+                                        <span class="d-none d-sm-inline">Primeira</span>
+                                    </button>
+                                    <button class="pagination-btn" disabled>
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                        <span class="d-none d-sm-inline">Anterior</span>
+                                    </button>
+                                {% endif %}
+
+                                <div class="pagination-info">
+                                    <span class="pagination-current">Página {{ autores.number }}</span>
+                                    <span class="pagination-separator">de</span>
+                                    <span class="pagination-total">{{ autores.paginator.num_pages }}</span>
+                                </div>
+
+                                {% if autores.has_next %}
+                                    <a href="?pesquisa={{ termo_busca }}&page={{ autores.next_page_number }}" class="pagination-btn">
+                                        <span class="d-none d-sm-inline">Próxima</span>
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </a>
+                                    <a href="?pesquisa={{ termo_busca }}&page={{ autores.paginator.num_pages }}" class="pagination-btn pagination-btn-last">
+                                        <span class="d-none d-sm-inline">Última</span>
+                                        <i class="fa-solid fa-angles-right"></i>
+                                    </a>
+                                {% else %}
+                                    <button class="pagination-btn" disabled>
+                                        <span class="d-none d-sm-inline">Próxima</span>
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                    <button class="pagination-btn pagination-btn-last" disabled>
+                                        <span class="d-none d-sm-inline">Última</span>
+                                        <i class="fa-solid fa-angles-right"></i>
+                                    </button>
+                                {% endif %}
+                            </nav>
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <h2 class="font-display empty-state-title">
+                            {% if termo_busca %}
+                                Nenhum autor encontrado
+                            {% else %}
+                                Nenhum autor disponível
+                            {% endif %}
+                        </h2>
+                        <p class="empty-state-text">
+                            {% if termo_busca %}
+                                Não encontramos resultados para "{{ termo_busca }}". Tente usar outros termos de busca.
+                            {% else %}
+                                O cadastro de autores está sendo atualizado. Por favor, volte mais tarde.
+                            {% endif %}
+                        </p>
+                        {% if termo_busca %}
+                            <a href="{% url 'livro:listar_autores' %}" class="btn btn-primary">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                Ver todos os autores
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </main>
+</body>
+</html>

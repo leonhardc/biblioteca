@@ -16,8 +16,7 @@ class Autor(models.Model):
     email_de_contato = models.EmailField(blank=False, null=False, verbose_name='Email de contato do Autor')
     nascimento = models.DateTimeField(verbose_name='Data de Nascimento do Autor')
     sexo = models.CharField(max_length=1, choices=SEXO, verbose_name="Sexo do Autor")
-    nacionalidade = models.CharField(max_length=3, choices=NACIONALIDADES, verbose_name='Nacionalidade')                # type: ignore
-    sexo = models.CharField(max_length=1, choices=SEXO, verbose_name='Sexo')                                            # type: ignore
+    nacionalidade = models.CharField(max_length=3, choices=NACIONALIDADES, verbose_name='Nacionalidade')    # type: ignore
     
     def __str__(self):
         return f'{self.nome}'                                                                                            # type: ignore
