@@ -22,7 +22,7 @@ def listar_livros(request: HttpRequest) -> HttpResponse:
         template_name = "livro/livros.html"
         itens_por_pagina = 21
         termo_pesquisa = request.GET.get("pesquisa", "").strip()
-        
+        pesquisa_categoria = request.GET.get("categoria", "").strip()
         livros_queryset = Livro.objects.select_related(
             'categoria'
         ).prefetch_related(
@@ -37,6 +37,9 @@ def listar_livros(request: HttpRequest) -> HttpResponse:
                 Q(autores__nome__icontains=termo_pesquisa)
             ).distinct()  # distinct() necessário por causa do ManyToMany com autores
         
+        if pesquisa_categoria:
+            livros_queryset = livros_queryset.filter(categoria__id=pesquisa_categoria)
+        
         # Ordenação consistente (importante para paginação)
         livros_queryset = livros_queryset.order_by('-id')
         
@@ -48,6 +51,7 @@ def listar_livros(request: HttpRequest) -> HttpResponse:
         context = {
             "livros": page_obj,
             "termo_busca": termo_pesquisa,
+            "pesquisa_categoria": pesquisa_categoria,
             "total_resultados": paginator.count,
             'user_context': user_context,
         }
@@ -95,7 +99,41 @@ def listar_autores(request:HttpRequest) -> HttpResponse:
         return redirect('usuario:entrar')
 
 def listar_categorias(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("View listar Categorias")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            termo_pesquisa = request.GET.get("pesquisa", "").strip()
+            if termo_pesquisa:
+                categorias_queryset = Categoria.objects.filter(
+                    Q(categoria__icontains=termo_pesquisa) |
+                    Q(descricao__icontains=termo_pesquisa)
+                ).distinct().order_by('categoria')
+                user_context = {
+                    'aluno': user_is_aluno(request.user),
+                    'professor': user_is_professor(request.user),
+                    'funcionario': user_is_funcionario(request.user),
+                }
+                template_name = "livro/listar_categorias.html"
+                if categorias_queryset.exists():
+                    return render(request, template_name=template_name, context={'categorias':categorias_queryset, 'user_context': user_context})
+                else:
+                    messages.add_message(request, messages.ERROR, 'Nenhuma categoria encontrada para o termo de pesquisa informado.')
+                    return render(request, template_name, context={'categoria':True, 'user_context': user_context})
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            template_name = "livro/listar_categorias.html"
+            categorias_existem = Categoria.objects.all().exists()
+            if categorias_existem:
+                categorias = Categoria.objects.all().order_by('categoria')
+                return render(request, template_name=template_name, context={'categorias':categorias, 'user_context': user_context})
+            else:
+                messages.add_message(request, messages.ERROR, 'Não existem categorias cadastradas na biblioteca.')
+                return render(request, template_name, context={'categoria':True, 'user_context': user_context})
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
 
 
 # FUNCAO AUXILIAR
@@ -199,12 +237,12 @@ def reservar_livro(request:HttpRequest, id_livro:int, usuario:str) -> HttpRespon
 def criar_autor(request:HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
             if request.method == 'GET':
-                user_context = {
-                    'aluno': user_is_aluno(request.user),
-                    'professor': user_is_professor(request.user),
-                    'funcionario': user_is_funcionario(request.user),
-                }
                 template_name = "livro/criar_autor.html"
                 formulario_autor = FormularioAutor()
                 return render(request, template_name, context={'form': formulario_autor, 'user_context': user_context})
@@ -250,7 +288,39 @@ def deletar_autor(request:HttpRequest, id_autor:int) -> HttpResponse:
 
 # CRUD para Categoria
 def criar_categoria(request:HttpRequest) -> HttpResponse:
-    return HttpResponse("View criar Categoria")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            if request.method == 'GET':
+                template_name = "livro/criar_categoria.html"
+                formulario_categoria = FormularioCategoria()
+                return render(request, template_name, context={'form': formulario_categoria, 'user_context': user_context})
+            if request.method == 'POST':
+                formulario_categoria = FormularioCategoria(request.POST)
+                if formulario_categoria.is_valid():
+                    categoria = formulario_categoria.cleaned_data['categoria']
+                    descricao = formulario_categoria.cleaned_data['descricao']
+                    nova_categoria = Categoria.objects.create(
+                        categoria=categoria,
+                        descricao=descricao
+                    )
+                    nova_categoria.save()
+                    messages.add_message(request, messages.SUCCESS, 'Categoria criada com sucesso.')
+                    return redirect('livro:listar_categorias')
+                else:
+                    messages.add_message(request, messages.ERROR, 'Erro ao criar a categoria. Verifique os dados informados.')
+                    template_name = "livro/criar_categoria.html"
+                    return render(request, template_name, context={'form': formulario_categoria, 'user_context': user_context})
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
 
 def detalhar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
     return HttpResponse("View detalhar Categoria")
