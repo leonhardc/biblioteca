@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ categoria.nome }} - Biblioteca Acadêmica</title>
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+	<script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+	<link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
+	<link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+	<link rel="stylesheet" href="{% static 'livro/css/styles-detalhar.css' %}">
+</head>
+
+<body>
+	<header>
+		{% if user_context.aluno %}
+			{% include 'usuario/aluno/parciais/_nav.html' %}
+		{% elif user_context.professor %}
+			{% include 'usuario/professor/parciais/_nav.html' %}
+		{% elif user_context.funcionario %}
+			{% include 'usuario/funcionario/parciais/_nav.html' %}
+		{% endif %}
+	</header>
+	{% include 'parciais/_messages.html' %}
+	<main class="book-detail-page">
+		<div class="container-fluid">
+			<!-- Page Header -->
+			<section class="page-header">
+				<div class="page-header-content">
+					<div class="page-breadcrumb">
+						<a href="{% url 'usuario:pagina_inicial_aluno' user.id %}">
+							<i class="fa-solid fa-home"></i> Dashboard
+						</a>
+						<i class="fa-solid fa-chevron-right"></i>
+						<a href="{% url 'livro:listar_categorias' %}">
+							<i class="fa-solid fa-layer-group"></i> Categorias
+						</a>
+						<i class="fa-solid fa-chevron-right"></i>
+						<span>Detalhes da Categoria</span>
+					</div>
+				</div>
+			</section>
+
+			<!-- Categoria Detail Section -->
+			<section class="book-detail-section">
+				<div class="book-detail-card">
+					<!-- Categoria Header -->
+					<div class="book-detail-header">
+						<div class="book-header-top">
+							<div class="book-icon-large">
+								<i class="fa-solid fa-layer-group"></i>
+							</div>
+							<div class="book-header-content">
+								<h1 class="font-display book-detail-title">{{ categoria.categoria }}</h1>
+								{% if categoria.descricao %}
+									<p class="book-detail-subtitle">{{ categoria.descricao }}</p>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+
+					<!-- Categoria Body -->
+					<div class="book-detail-body">
+						<!-- Info Grid -->
+						<div class="book-info-grid">
+							<div class="book-info-card">
+								<div class="book-info-label">
+									<i class="fa-solid fa-book"></i>
+                                    {{ detalhes.contador_livros }} LIVROS NESSA CATEGORIA
+								</div>
+							</div>
+						</div>
+
+						<!-- Livros da Categoria -->
+						<div class="book-summary">
+							<h2 class="summary-title">
+								<i class="fa-solid fa-book"></i>
+								Livros desta Categoria
+							</h2>
+							{% if detalhes.livros %}
+                                <div class="category-books-list">
+                                    <ul class="book-list">
+                                        {% for livro in detalhes.livros %}
+                                            <li class="book-list-item">
+                                                <a href="{% url 'livro:detalhar_livro' livro.id %}" class="book-link">
+                                                    <i class="fa-solid fa-book-open"></i>
+                                                    <span class="book-title">{{ livro.titulo }}</span>
+                                                    {% if livro.autor %}
+                                                        <span class="book-author">por {{ livro.autor }}</span>
+                                                    {% endif %}
+                                                </a>
+                                            </li>
+                                        {% empty %}
+                                            <li class="book-list-item empty">Nenhum livro cadastrado nesta categoria.</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+							{% else %}
+								<p>Nenhum livro cadastrado nesta categoria.</p>
+							{% endif %}
+						</div>
+
+						<!-- Actions -->
+						<div class="book-actions">
+							<a href="{% url 'livro:listar_categorias' %}" class="btn btn-back">
+								<i class="fa-solid fa-arrow-left"></i>
+								Voltar para Categorias
+							</a>
+							{% if user_context.funcionario %}
+								<a href="{% url 'livro:atualizar_categoria' categoria.id %}" class="btn btn-primary">
+									<i class="fa-solid fa-pen-to-square"></i>
+									Atualizar Categoria
+								</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<script>
+	// Mobile menu toggle and user dropdown
+	document.addEventListener('DOMContentLoaded', function() {
+		const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+		const navbarCollapse = document.getElementById('navbarNav');
+		const userMenuBtn = document.getElementById('user-menu-btn');
+		const userDropdown = document.getElementById('user-dropdown');
+
+		if (mobileMenuBtn && navbarCollapse) {
+			mobileMenuBtn.addEventListener('click', function() {
+				navbarCollapse.classList.toggle('show');
+				this.classList.toggle('active');
+			});
+		}
+
+		if (userMenuBtn && userDropdown) {
+			userMenuBtn.addEventListener('click', function(e) {
+				e.stopPropagation();
+				userDropdown.classList.toggle('show');
+			});
+
+			document.addEventListener('click', function() {
+				userDropdown.classList.remove('show');
+			});
+
+			userDropdown.addEventListener('click', function(e) {
+				e.stopPropagation();
+			});
+		}
+	});
+	</script>
+</body>
+
+</html>

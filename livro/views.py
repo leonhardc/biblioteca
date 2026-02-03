@@ -444,7 +444,33 @@ def criar_categoria(request:HttpRequest) -> HttpResponse:
         return redirect('usuario:entrar')
 
 def detalhar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
-    return HttpResponse("View detalhar Categoria")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            categoria_existe = Categoria.objects.filter(id=id_categoria).exists()
+            if categoria_existe:
+                categoria = Categoria.objects.get(id=id_categoria)
+                livros_categoria = Livro.objects.filter(categoria = categoria)
+                contador_livros = len(livros_categoria)
+                detalhes = {
+                    'livros': livros_categoria,
+                    'contador_livros': contador_livros,
+                }
+                template_name = "livro/detalhar_categoria.html"
+                return render(request, template_name, context={'categoria':categoria, 'user_context': user_context, 'detalhes': detalhes})
+            else:
+                messages.add_message(request, messages.ERROR, 'Categoria não encontrada.')
+                return redirect('livro:listar_categorias')
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
 
 def atualizar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
     return HttpResponse("View atualizar Categoria")

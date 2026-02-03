@@ -116,10 +116,14 @@
 										{% endif %}
 									</div>
 								</div>
-								<div class="book-card-footer">
+								<div class="book-card-footer" style="display: flex; justify-content: space-between; flex-direction: row;">
 									<a href="{% url 'livro:listar_livros' %}?categoria={{ categoria.id }}" class="btn btn-outline-primary btn-sm">
 										<i class="fa-solid fa-eye"></i>
 										Ver Livros
+									</a>
+									<a href="{% url 'livro:detalhar_categoria' categoria.id %}" class="btn btn-outline-primary btn-sm">
+										<i class="fa-solid fa-eye"></i>
+										Detalhes da Categoria
 									</a>
 								</div>
 							</div>
