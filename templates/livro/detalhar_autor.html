@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ autor.nome }} {{ autor.sobrenome }} - Biblioteca Acadêmica</title>
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+	<script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+	<link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
+	<link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+	<link rel="stylesheet" href="{% static 'livro/css/styles-detalhar.css' %}">
+</head>
+
+<body>
+	<header>
+		{% if user_context.aluno %}
+			{% include 'usuario/aluno/parciais/_nav.html' %}
+		{% elif user_context.professor %}
+			{% include 'usuario/professor/parciais/_nav.html' %}
+		{% elif user_context.funcionario %}
+			{% include 'usuario/funcionario/parciais/_nav.html' %}
+		{% endif %}
+	</header>
+	{% include 'parciais/_messages.html' %}
+	<main class="book-detail-page">
+		<div class="container-fluid">
+			<!-- Page Header -->
+			<section class="page-header">
+				<div class="page-header-content">
+					<div class="page-breadcrumb">
+						<a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}">
+							<i class="fa-solid fa-home"></i> Dashboard
+						</a>
+						<i class="fa-solid fa-chevron-right"></i>
+						<a href="{% url 'livro:listar_autores' %}">
+							<i class="fa-solid fa-user"></i> Autores
+						</a>
+						<i class="fa-solid fa-chevron-right"></i>
+						<span>Detalhes do Autor</span>
+					</div>
+				</div>
+			</section>
+
+			<!-- Autor Detail Section -->
+			<section class="book-detail-section">
+				<div class="book-detail-card">
+					<!-- Autor Header -->
+					<div class="book-detail-header">
+						<div class="book-header-top">
+							<div class="book-icon-large">
+								<i class="fa-solid fa-user"></i>
+							</div>
+							<div class="book-header-content">
+								<h1 class="font-display book-detail-title">{{ autor.nome }} {{ autor.sobrenome }}</h1>
+								{% if autor.nacionalidade %}
+									<p class="book-detail-subtitle">{{ autor.nacionalidade }}</p>
+								{% endif %}
+								{% if autor.sexo %}
+									<span class="author-badge">
+										<i class="fa-solid fa-venus-mars"></i>
+										{{ autor.get_sexo_display|default:autor.sexo }}
+									</span>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+
+					<!-- Autor Body -->
+					<div class="book-detail-body">
+						<!-- Info Grid -->
+						<div class="book-info-grid">
+							<div class="book-info-card">
+								<div class="book-info-label">
+									<i class="fa-solid fa-calendar"></i>
+									Data de Nascimento
+								</div>
+								<div class="book-info-value">{{ autor.nascimento|date:'d/m/Y'|default:'Não informado' }}</div>
+							</div>
+							<div class="book-info-card">
+								<div class="book-info-label">
+									<i class="fa-solid fa-calendar-check"></i>
+									Data de Falecimento
+								</div>
+								<div class="book-info-value">{{ autor.data_falecimento|date:'d/m/Y'|default:'-' }}</div>
+							</div>
+						</div>
+
+						<!-- Biografia -->
+						{% if autor.biografia %}
+							<div class="book-summary">
+								<h2 class="summary-title">
+									<i class="fa-solid fa-align-left"></i>
+									Biografia
+								</h2>
+								<p class="summary-text">{{ autor.biografia }}</p>
+							</div>
+						{% else %}
+							<div class="alert-info">
+								<i class="fa-solid fa-circle-info"></i>
+								<span>Biografia não disponível para este autor.</span>
+							</div>
+						{% endif %}
+
+						<!-- Livros do Autor -->
+						<!-- <div class="book-summary">
+							<h2 class="summary-title">
+								<i class="fa-solid fa-book"></i>
+								Livros deste Autor
+							</h2>
+							{% if autor.livros.all %}
+								<ul class="author-books-list">
+									{% for livro in autor.livros.all %}
+										<li>
+											<a href="{% url 'livro:detalhar_livro' livro.id %}">
+												{{ livro.titulo }}
+											</a>
+										</li>
+									{% empty %}
+										<li>Nenhum livro cadastrado para este autor.</li>
+									{% endfor %}
+								</ul>
+							{% else %}
+								<p>Nenhum livro cadastrado para este autor.</p>
+							{% endif %}
+						</div> -->
+
+						<!-- Actions -->
+						<div class="book-actions">
+							<a href="{% url 'livro:listar_autores' %}" class="btn btn-back">
+								<i class="fa-solid fa-arrow-left"></i>
+								Voltar para Autores
+							</a>
+							{% if user_context.funcionario %}
+								<a href="{% url 'livro:atualizar_autor' autor.id %}" class="btn btn-primary">
+									<i class="fa-solid fa-pen-to-square"></i>
+									Atualizar Autor
+								</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<script>
+	// Mobile menu toggle and user dropdown
+	document.addEventListener('DOMContentLoaded', function() {
+		const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+		const navbarCollapse = document.getElementById('navbarNav');
+		const userMenuBtn = document.getElementById('user-menu-btn');
+		const userDropdown = document.getElementById('user-dropdown');
+
+		if (mobileMenuBtn && navbarCollapse) {
+			mobileMenuBtn.addEventListener('click', function() {
+				navbarCollapse.classList.toggle('show');
+				this.classList.toggle('active');
+			});
+		}
+
+		if (userMenuBtn && userDropdown) {
+			userMenuBtn.addEventListener('click', function(e) {
+				e.stopPropagation();
+				userDropdown.classList.toggle('show');
+			});
+
+			document.addEventListener('click', function() {
+				userDropdown.classList.remove('show');
+			});
+
+			userDropdown.addEventListener('click', function(e) {
+				e.stopPropagation();
+			});
+		}
+	});
+	</script>
+</body>
+
+</html>

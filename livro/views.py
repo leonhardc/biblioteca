@@ -330,10 +330,79 @@ def criar_autor(request:HttpRequest) -> HttpResponse:
         return redirect('usuario:entrar')
 
 def detalhar_autor(request:HttpRequest, id_autor:int) -> HttpResponse:
-    return HttpResponse("View detalhar Autor")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            autor_existe = Autor.objects.filter(id=id_autor).exists()
+            if autor_existe:
+                autor = Autor.objects.get(id=id_autor)
+                template_name = "livro/detalhar_autor.html"
+                return render(request, template_name, context={'autor':autor, 'user_context': user_context})
+            else:
+                messages.add_message(request, messages.ERROR, 'Autor não encontrado.')
+                return redirect('livro:listar_autores')
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
 
 def atualizar_autor(request:HttpRequest, id_autor:int) -> HttpResponse:
-    return HttpResponse("View atualizar Autor")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            user_context = {
+                        'aluno': user_is_aluno(request.user),
+                        'professor': user_is_professor(request.user),
+                        'funcionario': user_is_funcionario(request.user),
+            }
+            template_name = "livro/atualizar_autor.html"
+            if request.method == 'GET':
+                autor_existe = Autor.objects.filter(id=id_autor).exists()
+                if autor_existe:
+                    autor = Autor.objects.get(id=id_autor)
+                    formulario_atualizar_autor = FormularioAtualizarAutor(
+                        initial={
+                            'nome': autor.nome,
+                            'sobrenome': autor.sobrenome,
+                            'email_de_contato': autor.email_de_contato,
+                            'nascimento': autor.nascimento,
+                            'sexo': autor.sexo,
+                            'nacionalidade': autor.nacionalidade,
+                        }
+                    )
+                    return render(request, template_name, context={'form': formulario_atualizar_autor, 'user_context': user_context, 'autor': autor})
+                else:
+                    messages.add_message(request, messages.ERROR, 'Autor não encontrado.')
+                    return redirect('livro:listar_autores')
+            if request.method == 'POST':
+                formulario_atualizar_autor = FormularioAtualizarAutor(request.POST)
+                if formulario_atualizar_autor.is_valid():
+                    autor = Autor.objects.get(id=id_autor)
+                    autor.nome = formulario_atualizar_autor.cleaned_data['nome']
+                    autor.sobrenome = formulario_atualizar_autor.cleaned_data['sobrenome']
+                    autor.email_de_contato = formulario_atualizar_autor.cleaned_data['email_de_contato']
+                    autor.nascimento = formulario_atualizar_autor.cleaned_data['nascimento']
+                    autor.sexo = formulario_atualizar_autor.cleaned_data['sexo']
+                    autor.nacionalidade = formulario_atualizar_autor.cleaned_data['nacionalidade']
+                    autor.save()
+                    messages.add_message(request, messages.SUCCESS, 'Autor atualizado com sucesso.')
+                    return redirect('livro:detalhar_autor', id_autor=autor.id)
+                else:
+                    pprint(formulario_atualizar_autor.errors)
+                    messages.add_message(request, messages.ERROR, 'Erro ao atualizar o autor. Verifique os dados informados.')
+                    autor = Autor.objects.get(id=id_autor)
+                    return render(request, template_name, context={'form': formulario_atualizar_autor, 'autor': autor, 'user_context': user_context})
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
 
 def deletar_autor(request:HttpRequest, id_autor:int) -> HttpResponse:
     return HttpResponse("View deletar Autor")

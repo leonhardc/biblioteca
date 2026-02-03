@@ -98,6 +98,14 @@ class FormularioAutor(forms.Form):
     nacionalidade = forms.ChoiceField(label='Nacionalidade', choices=NACIONALIDADES, widget=forms.Select())
     sexo = forms.ChoiceField(label='Sexo', choices=SEXO, widget=forms.Select())
 
+class FormularioAtualizarAutor(forms.Form):
+    nome = forms.CharField(label='Nome', max_length=100, widget=forms.TextInput())
+    sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput())
+    email_de_contato = forms.EmailField(label='Email de Contato', widget=forms.EmailInput())
+    nascimento = forms.DateField(label='Data de Nascimento', widget=forms.DateInput(attrs={'type':'date'}))
+    nacionalidade = forms.ChoiceField(label='Nacionalidade', choices=NACIONALIDADES, widget=forms.Select())
+    sexo = forms.ChoiceField(label='Sexo', choices=SEXO, widget=forms.Select())
+
 class FormularioCategoria(forms.Form):
     categoria = forms.CharField(label='Categoria', max_length=100, widget=forms.TextInput())
     descricao = forms.CharField(label='Descrição', max_length=2000, widget=forms.Textarea())
