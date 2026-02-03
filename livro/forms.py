@@ -79,6 +79,17 @@ class FormularioLivro(forms.Form):
     #         raise forms.ValidationError('Categoria não existe na base de dados.')
     #     return categoria
 
+class FormularioAtualizarLivro(forms.Form):
+    isbn = forms.CharField(label='ISBN', max_length=6, widget=forms.TextInput(attrs={'disabled':False}))
+    titulo = forms.CharField(label='Titulo', max_length=100, widget=forms.TextInput())
+    resumo = forms.CharField(label='Resumo', max_length=2000, widget=forms.Textarea())
+    subtitulo = forms.CharField(label='Subtitulo', max_length=100, widget=forms.TextInput())
+    lancamento = forms.DateField(label='Ano de Lançamento', widget=forms.DateInput(attrs={'type':'date'}))
+    editora = forms.CharField(label='Editora', widget=forms.TextInput())
+    copias = forms.IntegerField(label='Quantidade de cópias', max_value=999, min_value=0)
+    autores = forms.MultipleChoiceField(label='Autores', choices=AUTORES, widget=forms.SelectMultiple())    # type: ignore
+    categoria = forms.ChoiceField(label='Categoria', choices=CATEGORIAS, widget=forms.Select())              # type: ignore
+
 class FormularioAutor(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100, widget=forms.TextInput())
     sobrenome = forms.CharField(label='Sobrenome', max_length=100, widget=forms.TextInput())

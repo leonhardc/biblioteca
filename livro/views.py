@@ -1,3 +1,4 @@
+from pprint import pprint
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 from django.core.paginator import Paginator
@@ -223,7 +224,58 @@ def detalhar_livro(request: HttpRequest, id_livro:int) -> HttpResponse:
         return redirect('usuario:entrar')
 
 def atualizar_livro(request:HttpRequest, id_livro:int) -> HttpResponse:
-    return HttpResponse("View Atualizar Livro")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            template_name = "livro/atualizar_livro.html"
+            if request.method == 'GET':
+                livro_existe = Livro.objects.filter(id=id_livro).exists()
+                if livro_existe:
+                    livro = Livro.objects.get(id=id_livro)
+                    formulario_atualizar_livro = FormularioAtualizarLivro(
+                        initial={
+                            'isbn': livro.isbn,
+                            'titulo': livro.titulo,
+                            'resumo': livro.resumo,
+                            'subtitulo': livro.subtitulo,
+                            'lancamento': livro.lancamento,
+                            'editora': livro.editora,
+                            'copias': livro.copias,
+                            'autores': livro.autores.all().values_list('id', flat=True),
+                            'categoria': livro.categoria.id,
+                        }
+                    )
+                    return render(request, template_name, context={'form': formulario_atualizar_livro, 'livro': livro, 'user_context': user_context})
+            if request.method == 'POST':
+                formulario_atualizar_livro = FormularioAtualizarLivro(request.POST)
+                if formulario_atualizar_livro.is_valid():
+                    livro = Livro.objects.get(id=id_livro)
+                    livro.titulo = formulario_atualizar_livro.cleaned_data['titulo']
+                    livro.resumo = formulario_atualizar_livro.cleaned_data['resumo']
+                    livro.subtitulo = formulario_atualizar_livro.cleaned_data['subtitulo']
+                    livro.lancamento = formulario_atualizar_livro.cleaned_data['lancamento']
+                    livro.editora = formulario_atualizar_livro.cleaned_data['editora']
+                    livro.copias = formulario_atualizar_livro.cleaned_data['copias']
+                    livro.categoria = Categoria.objects.get(id=formulario_atualizar_livro.cleaned_data['categoria'])
+                    livro.autores.set(formulario_atualizar_livro.cleaned_data['autores'])
+                    livro.save()
+                    messages.add_message(request, messages.SUCCESS, 'Livro atualizado com sucesso.')
+                    return redirect('livro:detalhar_livro', id_livro=livro.id)
+                else:
+                    pprint(formulario_atualizar_livro.errors)
+                    messages.add_message(request, messages.ERROR, 'Erro ao atualizar o livro. Verifique os dados informados.')
+                    livro = Livro.objects.get(id=id_livro)
+                    return render(request, template_name, context={'form': formulario_atualizar_livro, 'livro': livro, 'user_context': user_context})
+        else:
+            messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
+        return redirect('usuario:entrar')
 
 def deletar_livro(request:HttpRequest, id_livro:int) -> HttpResponse:
     return HttpResponse("View Deletar Livro")
