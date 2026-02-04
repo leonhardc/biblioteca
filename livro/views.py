@@ -902,8 +902,6 @@ def emprestar_livro(request:HttpResponse) -> HttpResponse:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
 
-# TODO: Implementar view de registrar devolucao de livros emprestados
-
 def devolver_livro(request, emprestimo_id):
     if request.user.is_authenticated:
         if user_is_funcionario(request.user):
@@ -956,7 +954,6 @@ def registrar_devolucao_livro(request: HttpRequest) -> HttpResponse:
             messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
             return redirect('usuario:entrar')
 
-# TODO: Implementar view para transformar reserva em emprestimo
 def emprestar_livro_reserva(request, reserva_id):
     if request.user.is_authenticated:
         if user_is_funcionario(request.user):
