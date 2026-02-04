@@ -259,7 +259,7 @@
                                 </a>
 
                                 <!-- Relatórios -->
-                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                <a href="#" class="quick-link-item">
                                     <div class="quick-link-icon" style="background-color: #795548;">
                                         <i class="fa-solid fa-chart-line"></i>
                                     </div>
@@ -355,13 +355,13 @@
                                     </div>
                                 </a>
                                 <!-- Deletar categorias Existentes -->
-                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                <a href="{% url 'livro:listar_livros' %}" class="quick-link-item">
                                     <div class="quick-link-icon" style="background-color: #F44336;">
                                         <i class="fa-solid fa-ban"></i>
                                     </div>
                                     <div class="quick-link-content">
-                                        <h4>Deletar Categoria</h4>
-                                        <p>Remover categoria do Sistema</p>
+                                        <h4>Deletar Livro</h4>
+                                        <p>Remover livro do Sistema</p>
                                     </div>
                                 </a>
                                 <!-- Buscar categorias Existentes -->
@@ -375,13 +375,13 @@
                                     </div>
                                 </a>
                                 <!-- Deletar categorias Existentes -->
-                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                <a href="{% url 'livro:listar_categorias' %}" class="quick-link-item">
                                     <div class="quick-link-icon" style="background-color: #F44336;">
                                         <i class="fa-solid fa-ban"></i>
                                     </div>
                                     <div class="quick-link-content">
-                                        <h4>Deletar Livro</h4>
-                                        <p>Remover livro do Sistema</p>
+                                        <h4>Deletar Categoria</h4>
+                                        <p>Remover categoria do Sistema</p>
                                     </div>
                                 </a>
                                 <!-- Buscar Autores Existentes -->
@@ -395,7 +395,7 @@
                                     </div>
                                 </a>
                                 <!-- Deletar Autores Existentes -->
-                                <a href="#" class="quick-link-item" onclick="alert('Funcionalidade em desenvolvimento: Relatórios'); return false;">
+                                <a href="{% url 'livro:listar_autores' %}" class="quick-link-item">
                                     <div class="quick-link-icon" style="background-color: #F44336;">
                                         <i class="fa-solid fa-ban"></i>
                                     </div>

@@ -38,6 +38,24 @@
     margin: 0;
 }
 
+/* Botão de perigo/vermelho */
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 0.5em 1.2em;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-danger:hover,
+.btn-danger:focus {
+    background-color: #b52a37;
+    color: #fff;
+    outline: none;
+}
+
 /* Page Breadcrumb */
 .page-breadcrumb {
     display: inline-flex;

@@ -139,6 +139,10 @@
 									<i class="fa-solid fa-pen-to-square"></i>
 									Atualizar Autor
 								</a>
+								<a href="{% url 'livro:deletar_autor' autor.id %}" class="btn btn-danger">
+									<i class="fa-solid fa-trash"></i>
+									Excluir Autor
+								</a>
 							{% endif %}
 						</div>
 					</div>

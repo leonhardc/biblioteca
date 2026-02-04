@@ -115,6 +115,10 @@
 									<i class="fa-solid fa-pen-to-square"></i>
 									Atualizar Categoria
 								</a>
+								<a href="{% url 'livro:deletar_categoria' categoria.id %}" class="btn btn-danger">
+									<i class="fa-solid fa-trash"></i>
+									Excluir Categoria
+								</a>
 							{% endif %}
 						</div>
 					</div>

@@ -278,7 +278,25 @@ def atualizar_livro(request:HttpRequest, id_livro:int) -> HttpResponse:
         return redirect('usuario:entrar')
 
 def deletar_livro(request:HttpRequest, id_livro:int) -> HttpResponse:
-    return HttpResponse("View Deletar Livro")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            livro_existe = Livro.objects.filter(id=id_livro).exists()
+            if livro_existe:
+                livro = Livro.objects.get(id=id_livro)
+                livro.delete()
+                messages.add_message(request, messages.SUCCESS, 'Livro deletado com sucesso.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+            else:
+                messages.add_message(request, messages.ERROR, 'Livro não encontrado.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+        else:
+            messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
+        return redirect('usuario:entrar')
 
 # Implementação de Emprestimo e Reserva de Livros
 def reservar_livro(request:HttpRequest, id_livro:int, usuario:str) -> HttpResponse:
@@ -405,7 +423,25 @@ def atualizar_autor(request:HttpRequest, id_autor:int) -> HttpResponse:
         return redirect('usuario:entrar')
 
 def deletar_autor(request:HttpRequest, id_autor:int) -> HttpResponse:
-    return HttpResponse("View deletar Autor")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            autor_existe = Autor.objects.filter(id=id_autor).exists()
+            if autor_existe:
+                autor = Autor.objects.get(id=id_autor)
+                autor.delete()
+                messages.add_message(request, messages.SUCCESS, 'Autor deletado com sucesso.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+            else:
+                messages.add_message(request, messages.ERROR, 'Autor não encontrado.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
 
 # CRUD para Categoria
 def criar_categoria(request:HttpRequest) -> HttpResponse:
@@ -511,7 +547,25 @@ def atualizar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
         return redirect('usuario:entrar')
 
 def deletar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
-    return HttpResponse("View deletar Categoria")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            categoria_existe = Categoria.objects.filter(id=id_categoria).exists()
+            if categoria_existe:
+                categoria = Categoria.objects.get(id=id_categoria)
+                categoria.delete()
+                messages.add_message(request, messages.SUCCESS, 'Categoria deletada com sucesso.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+            else:
+                messages.add_message(request, messages.ERROR, 'Categoria não encontrada.')
+                pagina_anterior = request.META.get('HTTP_REFERER')
+                return redirect(pagina_anterior)
+        else:
+            messages.add_message(request, messages.ERROR, f'Usuário não é funcionário.')
+            return redirect('usuario:entrar')
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
 
 
 # Views de Reserva
