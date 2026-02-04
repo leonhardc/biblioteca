@@ -110,6 +110,10 @@ class FormularioCategoria(forms.Form):
     categoria = forms.CharField(label='Categoria', max_length=100, widget=forms.TextInput())
     descricao = forms.CharField(label='Descrição', max_length=2000, widget=forms.Textarea())
 
+class FormularioAtualizarCategoria(forms.Form):
+    categoria = forms.CharField(label='Categoria', max_length=100, widget=forms.TextInput())
+    descricao = forms.CharField(label='Descrição', max_length=2000, widget=forms.Textarea())
+
 class FormularioReserva(forms.Form):
     usuario = forms.ChoiceField(label='Usuário', choices=USUARIOS,widget=forms.Select())                                # type: ignore
     livro = forms.ChoiceField(label='Livro', choices=LIVROS, widget=forms.Select())                                     # type: ignore

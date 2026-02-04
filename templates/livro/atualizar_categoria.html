@@ -1,0 +1,50 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Categoria - Biblioteca Acadêmica</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'livro/css/styles-livro.css' %}">
+</head>
+
+<body>
+    <header>
+        {% if user_context.aluno %}
+            {% include 'usuario/aluno/parciais/_nav.html' %}
+        {% elif user_context.professor %}
+            {% include 'usuario/professor/parciais/_nav.html' %}
+        {% elif user_context.funcionario %}
+            {% include 'usuario/funcionario/parciais/_nav.html' %}
+        {% endif %}
+    </header>
+    <main class="form-page" style="padding: 10px 18rem 18rem; min-height: calc(100vh - 60px);">
+        {% if messages %}
+        <div style="margin-top: 200px;">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form action="{% url 'livro:atualizar_categoria' categoria.id %}" method="POST" style="margin-top: 100px;">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div style="display: flex; flex-direction: row; justify-content: end; gap: 10px;">
+                <button type="submit" class="btn btn-primary">Atualizar Categoria</button>
+                <a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}" class="btn btn-secondary">Voltar</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

@@ -473,7 +473,42 @@ def detalhar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
         return redirect('usuario:entrar')
 
 def atualizar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
-    return HttpResponse("View atualizar Categoria")
+    if request.user.is_authenticated:
+        if user_is_funcionario(request.user):
+            user_context = {
+                'aluno': user_is_aluno(request.user),
+                'professor': user_is_professor(request.user),
+                'funcionario': user_is_funcionario(request.user),
+            }
+            template_name = "livro/atualizar_categoria.html"
+            if request.method == 'GET':
+                categoria_existe = Categoria.objects.filter(id=id_categoria).exists()
+                if categoria_existe:
+                    categoria = Categoria.objects.get(id=id_categoria)
+                    formulario_atualizar_categoria = FormularioAtualizarCategoria(
+                        initial={
+                            'categoria': categoria.categoria,
+                            'descricao': categoria.descricao,
+                        }
+                    )
+                    return render(request, template_name, context={'form': formulario_atualizar_categoria, 'user_context': user_context, 'categoria': categoria})
+            if request.method == 'POST':
+                formulario_atualizar_categoria = FormularioAtualizarCategoria(request.POST)
+                if formulario_atualizar_categoria.is_valid():
+                    categoria = Categoria.objects.get(id=id_categoria)
+                    categoria.categoria = formulario_atualizar_categoria.cleaned_data['categoria']
+                    categoria.descricao = formulario_atualizar_categoria.cleaned_data['descricao']
+                    categoria.save()
+                    messages.add_message(request, messages.SUCCESS, 'Categoria atualizada com sucesso.')
+                    return redirect('livro:detalhar_categoria', id_categoria=categoria.id)
+                else:
+                    pprint(formulario_atualizar_categoria.errors)
+                    messages.add_message(request, messages.ERROR, 'Erro ao atualizar a categoria. Verifique os dados informados.')
+                    categoria = Categoria.objects.get(id=id_categoria)
+                    return render(request, template_name, context={'form': formulario_atualizar_categoria, 'categoria': categoria, 'user_context': user_context})
+    else:
+        messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
+        return redirect('usuario:entrar')
 
 def deletar_categoria(request:HttpRequest, id_categoria:int) -> HttpResponse:
     return HttpResponse("View deletar Categoria")
