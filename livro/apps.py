@@ -6,4 +6,8 @@ class LivroConfig(AppConfig):
     name = 'livro'
 
     def ready(self):
-        import livro.signals  # noqa
+        import livro.signals.emprestimo
+        import livro.signals.reserva
+        import livro.signals.livro
+        import livro.signals.autor
+        import livro.signals.categoria
