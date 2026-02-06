@@ -3,7 +3,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 from livro.models import Emprestimo
-from notificacao.models import Notificacao
+from notificacao.models import Notificacao, NotificationType
 
 @receiver(pre_save, sender=Emprestimo)
 def emprestimo_devolvido(sender, instance, **kwargs):
@@ -19,6 +19,7 @@ def emprestimo_devolvido(sender, instance, **kwargs):
         instance.data_devolucao = timezone.now()
         Notificacao.objects.create(
             user=instance.usuario,
+            type=NotificationType.EMPRESTIMO_DEVOLVIDO,
             title='Livro devolvido 📚',
             message=(
                 f'O livro "{instance.livro}" '
