@@ -175,3 +175,32 @@ MESSAGE_TAGS = {
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} — {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {
+        'livro_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/livro.log',
+            'formatter': 'verbose',
+        },
+    },
+
+    'loggers': {
+        'livro': {
+            'handlers': ['livro_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
