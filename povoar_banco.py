@@ -178,9 +178,7 @@ def get_data_autor() -> dict[str, str]:
         data['nome'] = fake.first_name_female()
         data["sobrenome"] = fake.last_name_female()
     data['nacionalidade'] = random.choice(NACIONALIDADES)[0]
-    data['email_de_contato'] = f'{data['nome'].replace(' ', '.')}_{data['sobrenome'].replace(' ', '.')}@email.com'
-    # FIXME: Consertar erro abaixo:
-    # django.core.exceptions.ValidationError: ['O valor “14/07/1970” tem um formato inválido. Deve estar no formato YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ].']
+    data['email_de_contato'] = f'{data["nome"].lower().replace(" ", ".")}_{data["sobrenome"].lower().replace(" ", ".")}@email.com'
     data['nascimento'] = gera_data_nascimento(random.randint(30, 100)) # type: ignore
     return data
 
@@ -306,9 +304,6 @@ def script_povoar_banco() -> None:
     criar_categorias(['Calculo', 'Fisica', 'Desenho Técnico', 'Inteligencia Artificial', 'Algebra', 'Programação'])
     print("Criando Livros ...")
     criar_n_livros(1000)
-
-    # TODO: Criar Script para apagar todos os dados do banco de dados
-    # COLOCAR EM OUTRO SCRIPT O CODIGO ABAIXO
 
 def deletar_dados_banco() -> None:
     # TODO: Testar essa função

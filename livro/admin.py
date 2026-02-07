@@ -87,5 +87,6 @@ class EmprestimoAdmin(admin.ModelAdmin): # type: ignore
 # admin.site.register(Autor, AutorAdmin)
 admin.site.register(Categoria, CategoriaAdmin)
 admin.site.register(Livro, LivroAdmin)
+admin.site.register(Autor, AutorAdmin)
 admin.site.register(Reserva, ReservaAdmin)
 admin.site.register(Emprestimo, EmprestimoAdmin)
