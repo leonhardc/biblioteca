@@ -22,14 +22,14 @@ def emprestimo_criado(sender, instance, created, **kwargs):
 
     notificacao = Notificacao(
         user=instance.usuario,
-        # type=NotificationType.EMPRESTIMO_CRIADO,
+        type=NotificationType.EMPRESTIMO_CRIADO,
         title=f'Livro "{instance.livro.titulo}" emprestado',
         message=f'Você fez um empréstimo do livro "{instance.livro.titulo}".'
     )
     notificacao.save()
 
-@receiver(post_save, sender=Emprestimo)
-def emprestimo_devolvido(sender, instance, created, **kwargs):
+@receiver(pre_save, sender=Emprestimo)
+def emprestimo_devolvido(sender, instance, **kwargs):
     if not instance.pk:
         return
     
@@ -46,7 +46,7 @@ def emprestimo_devolvido(sender, instance, created, **kwargs):
 
         notificacao = Notificacao(
             user=instance.usuario,
-            # type=NotificationType.EMPRESTIMO_DEVOLVIDO,
+            type=NotificationType.EMPRESTIMO_DEVOLVIDO,
             title=f'Livro "{instance.livro.titulo}" devolvido',
             message=f'Você devolveu o livro "{instance.livro.titulo}".'
         )
@@ -69,7 +69,7 @@ def emprestimo_pendente(sender, instance, **kwargs):
 
         Notificacao.objects.create(
             user=instance.usuario,
-            # type=NotificationType.EMPRESTIMO_ATRASADO,
+            type=NotificationType.EMPRESTIMO_ATRASADO,
             title='Empréstimo pendente ⚠️',
             message=(
                 f'O empréstimo do livro "{instance.livro}" '
@@ -95,7 +95,7 @@ def emprestimo_renovado(sender, instance, **kwargs):
 
         Notificacao.objects.create(
             user=instance.usuario,
-            # type=NotificationType.EMPRESTIMO_RENOVADO,
+            type=NotificationType.EMPRESTIMO_RENOVADO,
             title='Empréstimo renovado 🔄',
             message=(
                 f'O empréstimo do livro "{instance.livro}" '

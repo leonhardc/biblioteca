@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Notificacao
 from utils.usuarios.utils import user_is_aluno, user_is_professor, user_is_funcionario
 
@@ -24,3 +24,9 @@ def detalhe_notificacao(request, id_notificacao):
         notificacao.is_read = True
         notificacao.save()
         return render(request, 'usuario/detalhe_notificacao.html', {'notificacao': notificacao, 'user_context': user_context})
+    
+def deletar_notificacao(request, id_notificacao):
+    if request.user.is_authenticated:
+        notificacao = Notificacao.objects.get(id=id_notificacao)
+        notificacao.delete()
+        return redirect('notificacao:notificacoes', id_usuario=request.user.id)

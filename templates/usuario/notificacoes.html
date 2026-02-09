@@ -9,7 +9,9 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=notifications,book,person" />
 	<script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
-	<link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'livro/css/styles-emprestimos.css' %}">
 </head>
 <body>
 	<!-- Header -->
@@ -40,7 +42,7 @@
 								margin-bottom: 1.2rem;
 								padding: 1.5rem 1.2rem;
 								transition: box-shadow 0.2s, transform 0.2s;
-								border: none;
+								border: 1.5px solid #c7d2fe;
 								position: relative;
 								display: flex;
 								align-items: flex-start;
@@ -118,7 +120,6 @@
 								<ul class="list-unstyled">
 									{% for notificacao in notificacoes %}
 									<li class="notification-card">
-										<!-- <span class="material-symbols-outlined notification-icon">notifications</span> -->
 										<div class="notification-content">
 											<div class="notification-title">{{ notificacao.title }}
 												{% if notificacao.is_read %}
@@ -132,13 +133,14 @@
 											<a href="{% url 'notificacao:detalhe_notificacao' notificacao.id %}" class="btn btn-link p-0 mt-2" style="font-size:0.97rem; color:#2563eb; text-decoration:underline; font-weight:500;">
 												Ver detalhes
 											</a>
+											<a href="{% url 'notificacao:deletar_notificacao' notificacao.id %}" class="btn btn-link p-0 mt-2" style="font-size:0.97rem; color:#dc2626; text-decoration:underline; font-weight:500;">
+												Excluir
 										</div>
 									</li>
 									{% endfor %}
 								</ul>
 							{% else %}
 								<div class="alert alert-info text-center py-4" style="background: rgba(249,248,245,0.92); border-radius: 12px;">
-									<!-- <span class="material-symbols-outlined" style="font-size: 2.2rem; color: #3b82f6;">notifications</span> -->
 									<div class="mt-2">Nenhuma notificação encontrada.</div>
 								</div>
 							{% endif %}
@@ -146,64 +148,58 @@
 					</section>
 				</div>
 			</div>
-		<!-- Footer -->
-		<footer class="footer-dark">
-			<div class="container-fluid py-5">
-				<div class="row g-5" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
-					<div>
-						<div class="d-flex align-items-center gap-3 mb-3">
-							<div class="footer-logo">
-								<span class="material-symbols-outlined">book</span>
-							</div>
-							<div>
-								<h3 class="font-display fw-semibold mb-0" style="font-size: 1.125rem;">Biblioteca</h3>
-								<p class="small mb-0" style="color: rgba(249, 248, 245, 0.6);">Acadêmica</p>
-							</div>
-						</div>
-						<p class="small lh-lg" style="color: rgba(249, 248, 245, 0.7);">
-							Promovendo o acesso ao conhecimento e à pesquisa acadêmica desde 1979.
-						</p>
-					</div>
-					<div>
-						<h4 class="fw-semibold mb-3">Links Rápidos</h4>
-						<ul class="list-unstyled d-flex flex-column gap-2">
-							<li><a href="#" class="footer-link small">Acervo Digital</a></li>
-							<li><a href="#" class="footer-link small">Reservas Online</a></li>
-							<li><a href="#" class="footer-link small">Renovar Empréstimo</a></li>
-							<li><a href="#" class="footer-link small">Minha Conta</a></li>
-							<li><a href="#" class="footer-link small">Regulamento</a></li>
-						</ul>
-					</div>
-					<div>
-						<h4 class="fw-semibold mb-3">Contato</h4>
-						<ul class="list-unstyled d-flex flex-column gap-3">
-							<li class="d-flex align-items-start gap-2 small" style="color: rgba(249, 248, 245, 0.7);">
-								<span>Av. Universitária, 1000 - Campus Central</span>
-							</li>
-							<li class="d-flex align-items-center gap-2 small" style="color: rgba(249, 248, 245, 0.7);">
-								<span>(11) 3000-0000</span>
-							</li>
-							<li class="d-flex align-items-center gap-2 small" style="color: rgba(249, 248, 245, 0.7);">
-								<span>biblioteca@universidade.edu.br</span>
-							</li>
-						</ul>
-					</div>
-					<div>
-						<h4 class="fw-semibold mb-3">Horário de Funcionamento</h4>
-						<ul class="list-unstyled d-flex flex-column gap-2 small" style="color: rgba(249, 248, 245, 0.7);">
-							<li class="d-flex justify-content-between"><span>Segunda - Sexta</span><span>8h - 20h</span></li>
-							<li class="d-flex justify-content-between"><span>Sábado</span><span>9h - 17h</span></li>
-							<li class="d-flex justify-content-between"><span>Domingo</span><span>Fechado</span></li>
-						</ul>
-					</div>
-				</div>
-				<div class="border-top mt-5 pt-5 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
-					<p class="small mb-0" style="color: rgba(249, 248, 245, 0.5);">
-						© <span id="year"></span> Biblioteca Acadêmica. Todos os direitos reservados.
-					</p>
-				</div>
-			</div>
-		</footer>
 	</main>
+	    <script>
+    // Mobile menu toggle and stats calculation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Calculate stats
+        const loanCards = document.querySelectorAll('.loan-card');
+        let ativos = 0;
+        let devolvidos = 0;
+        
+        loanCards.forEach(card => {
+            const status = card.querySelector('.loan-status');
+            if (status && status.classList.contains('active')) {
+                ativos++;
+            } else if (status && status.classList.contains('inactive')) {
+                devolvidos++;
+            }
+        });
+        
+        const ativosCount = document.getElementById('ativos-count');
+        const devolvidosCount = document.getElementById('devolvidos-count');
+        
+        if (ativosCount) ativosCount.textContent = ativos;
+        if (devolvidosCount) devolvidosCount.textContent = devolvidos;
+
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
 </body>
 </html>
