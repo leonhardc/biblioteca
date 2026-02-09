@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes da Notificação</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f7f7f7; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 40px auto; background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);}
+        h1 { font-size: 2em; margin-bottom: 16px; }
+        .notificacao-info { margin-bottom: 24px; }
+        .label { font-weight: bold; color: #555; }
+        .voltar { display: inline-block; margin-top: 24px; text-decoration: none; color: #1976d2; }
+        .voltar:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Detalhes da Notificação</h1>
+        <div class="notificacao-info">
+            <p><span class="label">Título:</span> {{ notificacao.title }}</p>
+            <p><span class="label">Mensagem:</span> {{ notificacao.message  }}</p>
+            <p><span class="label">Data:</span> {{ notificacao.created_at|date:"d/m/Y H:i" }}</p>
+            <p><span class="label">Status:</span> 
+                {% if notificacao.is_read %}
+                    Lida
+                {% else %}
+                    Não lida
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

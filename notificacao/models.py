@@ -20,10 +20,11 @@ class Notificacao(models.Model):
         on_delete=models.CASCADE,
         related_name='notificacoes'
     )
-    # type = models.CharField(
-    #     max_length=50,
-    #     choices=NotificationType.choices
-    # )
+    type = models.CharField(
+        max_length=50,
+        choices=NotificationType.choices,
+        default=NotificationType.EMPRESTIMO_CRIADO
+    )
     title = models.CharField(max_length=100)
     message = models.TextField()
     is_read = models.BooleanField(default=False)
