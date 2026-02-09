@@ -20,10 +20,11 @@ def detalhe_notificacao(request, id_notificacao):
             'professor': user_is_professor(request.user),
             'funcionario': user_is_funcionario(request.user)
         }
+        todas_notificacoes = Notificacao.objects.filter(user_id=request.user.id)
         notificacao = Notificacao.objects.get(id=id_notificacao)
         notificacao.is_read = True
         notificacao.save()
-        return render(request, 'usuario/detalhe_notificacao.html', {'notificacao': notificacao, 'user_context': user_context})
+        return render(request, 'usuario/notificacoes.html', {'notificacoes': todas_notificacoes, 'notificacao_detalhes': notificacao, 'user_context': user_context})
     
 def deletar_notificacao(request, id_notificacao):
     if request.user.is_authenticated:

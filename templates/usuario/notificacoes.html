@@ -1,205 +1,224 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Notificações - Biblioteca Acadêmica</title>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=notifications,book,person" />
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=notifications,book,person" />
 	<script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
-    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
-    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
-    <link rel="stylesheet" href="{% static 'livro/css/styles-emprestimos.css' %}">
+	<link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+	<link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+	<link rel="stylesheet" href="{% static 'livro/css/styles-emprestimos.css' %}">
+	<style>
+		.container-notificacoes {
+			width: 100%;
+			height: 80vh;
+			display: grid;
+			grid-template-columns: 1fr 3fr;
+			padding: 30px;
+			background-color: #f8f9fa;
+			/* Alterado para combinar com o design geral */
+		}
+		.notificacoes {
+			border: 1px solid #dee2e6;
+			border-radius: 5px;
+			padding: 15px;
+			background-color: #ffffff;
+			/* Fundo branco para contraste */
+			max-height: 80vh;
+			overflow-y: auto;
+		}
+		.notificacao {
+			border: 1px solid #dee2e6;
+			/* Adicionado para melhor definição */
+			border-radius: 5px;
+			padding: 15px;
+			margin-bottom: 20px;
+			background-color: #ffffff;
+			/* Fundo branco para contraste */
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+		.notificacao:hover {
+			background-color: #e9ecef;
+			/* Efeito hover para melhor UX */
+			border-color: #adb5bd;
+			/* Destaca a borda ao passar o mouse */
+			transition: background-color 0.3s, border-color 0.3s
+		}
+		.link-notificacao {
+			text-decoration: none;
+			color: inherit;
+		}
+
+		#detalhes {
+			border: 1px solid #ccc;
+			border-radius: 10px;
+			padding: 20px;
+			margin-left: 20px;
+			display: flex;
+			flex-direction: column;
+			background-color: #ffffff;
+			 /* Fundo branco para contraste */
+			justify-content: space-between;
+		}
+
+		.titulo {
+			border-bottom: 1px solid #ccc;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			padding-bottom: 10px;
+		}
+
+		.titulo-notificacao {
+			font-size: 1.5em;
+			font-weight: bold;
+			margin-bottom: 10px;
+			color: #333;
+		}
+
+		.acoes {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-end;
+			gap: 15px;
+			margin-top: 20px;
+		}
+
+		.acoes a {
+			text-decoration: none;
+			color: #007bff;
+			font-weight: 500;
+		}
+		.ativa {
+			background-color: #333;
+			color: #fff;
+		}
+		.ativa:hover {
+			background-color: #333;
+			color: #fff;
+		}
+	</style>
 </head>
+
 <body>
 	<!-- Header -->
 	<header class="header-backdrop border-bottom">
 		{% if user_context.aluno %}
-            {% include 'usuario/aluno/parciais/_nav.html' %}
-        {% elif user_context.professor %}
-            {% include 'usuario/professor/parciais/_nav.html' %}
-        {% elif user_context.funcionario %}
-            {% include 'usuario/funcionario/parciais/_nav.html' %}
-        {% endif %}
+		{% include 'usuario/aluno/parciais/_nav.html' %}
+		{% elif user_context.professor %}
+		{% include 'usuario/professor/parciais/_nav.html' %}
+		{% elif user_context.funcionario %}
+		{% include 'usuario/funcionario/parciais/_nav.html' %}
+		{% endif %}
 	</header>
 
 	<main>
-			<div class="container-fluid py-5 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-				<div class="row w-100 justify-content-center">
-					<section class="col-lg-8 col-md-10 col-12 mx-auto">
-						<div class="section-header mb-4 text-center"style='display: flex; flex-direction: column; align-items: center; gap: 0.5rem;'>
-							<span class="section-label">Central de Notificações</span>
-							<h2 class="font-display section-title">Minhas Notificações</h2>
-							<p class="section-subtitle">Acompanhe avisos importantes, reservas, devoluções e novidades.</p>
-						</div>
-						<style>
-							.notification-card {
-								background: linear-gradient(90deg, #f9f8f5 80%, #e3e9f7 100%);
-								border-radius: 14px;
-								box-shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
-								margin-bottom: 1.2rem;
-								padding: 1.5rem 1.2rem;
-								transition: box-shadow 0.2s, transform 0.2s;
-								border: 1.5px solid #c7d2fe;
-								position: relative;
-								display: flex;
-								align-items: flex-start;
-								gap: 1.2rem;
-							}
-							.notification-card:hover {
-								box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
-								transform: translateY(-2px) scale(1.01);
-							}
-							.notification-icon {
-								font-size: 2.2rem;
-								color: #3b82f6;
-								margin-right: 0.5rem;
-								flex-shrink: 0;
-								background: #e3e9f7;
-								border-radius: 50%;
-								padding: 0.5rem;
-								display: flex;
-								align-items: center;
-								justify-content: center;
-								box-shadow: 0 1px 4px rgba(59,130,246,0.08);
-							}
-							.notification-content {
-								flex: 1;
-								min-width: 0;
-							}
-							.notification-title {
-								font-weight: 600;
-								font-size: 1.08rem;
-								color: #222;
-								margin-bottom: 0.2rem;
-								display: flex;
-								align-items: center;
-								gap: 0.5rem;
-								flex-wrap: wrap;
-							}
-							.notification-message {
-								font-size: 0.98rem;
-								color: #555;
-								margin-bottom: 0.3rem;
-								word-break: break-word;
-							}
-							.notification-badge {
-								font-size: 0.85rem;
-								border-radius: 8px;
-								padding: 0.3em 0.8em;
-								font-weight: 500;
-								margin-left: 0.5rem;
-								letter-spacing: 0.02em;
-								box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-							}
-							.notification-badge.nova {
-								background: #ffe066;
-								color: #7a5c00;
-								border: 1px solid #ffe066;
-							}
-							.notification-badge.lida {
-								background: #d1f7c4;
-								color: #256029;
-								border: 1px solid #b6e7a7;
-							}
-							.notification-date {
-								font-size: 0.85rem;
-								color: #888;
-								margin-top: 0.2rem;
-							}
-							@media (max-width: 600px) {
-								.notification-card { padding: 1.1rem 0.7rem; gap: 0.7rem; }
-								.notification-title { font-size: 1rem; }
-								.notification-message { font-size: 0.93rem; }
-							}
-						</style>
-						<div class="notifications-list" style="max-width: 700px; margin: 0 auto;">
-							{% if notificacoes %}
-								<ul class="list-unstyled">
-									{% for notificacao in notificacoes %}
-									<li class="notification-card">
-										<div class="notification-content">
-											<div class="notification-title">{{ notificacao.title }}
-												{% if notificacao.is_read %}
-													<span class="notification-badge lida">Lida</span>
-												{% else %}
-													<span class="notification-badge nova">Nova</span>
-												{% endif %}
-											</div>
-											<div class="notification-message">{{ notificacao.message }}</div>
-											<div class="notification-date">{{ notificacao.created_at|date:'d/m/Y H:i' }}</div>
-											<a href="{% url 'notificacao:detalhe_notificacao' notificacao.id %}" class="btn btn-link p-0 mt-2" style="font-size:0.97rem; color:#2563eb; text-decoration:underline; font-weight:500;">
-												Ver detalhes
-											</a>
-											<a href="{% url 'notificacao:deletar_notificacao' notificacao.id %}" class="btn btn-link p-0 mt-2" style="font-size:0.97rem; color:#dc2626; text-decoration:underline; font-weight:500;">
-												Excluir
-										</div>
-									</li>
-									{% endfor %}
-								</ul>
-							{% else %}
-								<div class="alert alert-info text-center py-4" style="background: rgba(249,248,245,0.92); border-radius: 12px;">
-									<div class="mt-2">Nenhuma notificação encontrada.</div>
-								</div>
-							{% endif %}
-						</div>
-					</section>
-				</div>
+		{%if notificacoes %}
+		<div class="container-notificacoes">
+			<div class="notificacoes">
+				{% for notificacao in notificacoes %}
+				<a href="{% url  'notificacao:detalhe_notificacao' notificacao.id %}" class="link-notificacao">
+					<div class="notificacao {% if notificacao.id == notificacao_detalhes.id %}ativa{%endif%}">
+						<span>{{notificacao.title}}</span>
+						{% if notificacao.is_read %}
+						<span></span>
+						{% elif not notificacao.is_read %}
+							<span>🔴</span>
+						{% endif %}
+					</div>
+				</a>
+				{% endfor %}
 			</div>
+			<div id="detalhes">
+				{% if notificacao_detalhes %}
+				<div class="titulo">
+					<span class="titulo-notificacao">{{notificacao_detalhes.title}}</span>
+					{% if notificacao_detalhes.is_read %}
+					<span class="" style="color: green;">Lida</span>
+					{% elif not notificacao_detalhes.is_read %}
+					<span class="" style="color: red;">Nao Lida</span>
+					{% endif %}
+				</div>
+				<div class="corpo">
+					<p>{{notificacao_detalhes.message}}</p>
+					<p>Recebida em: {{notificacao_detalhes.created_at}}</p>
+				</div>
+				<div class="acoes">
+					<a class="btn btn-secondary" href="{% url 'notificacao:notificacoes' user.id %}" style="background-color: #6c757d; color: #fff; padding: 8px 18px; border-radius: 5px; border: none; transition: background 0.2s; font-weight: 500;">Voltar</a>
+					<a class="btn btn-danger" href="{% url 'notificacao:deletar_notificacao' notificacao_detalhes.id %}" style="background-color: #dc3545; color: #fff; padding: 8px 18px; border-radius: 5px; border: none; transition: background 0.2s; font-weight: 500;">Excluir Notificação</a>
+				</div>
+				{% else %}
+					<p>Selecione uma notificação para ver os detalhes.</p>
+				{% endif %}
+			</div>
+		</div>
+		{% else %}
+		<p>Você não tem notificações.</p>
+		{% endif %}
 	</main>
-	    <script>
-    // Mobile menu toggle and stats calculation
-    document.addEventListener('DOMContentLoaded', function() {
-        // Calculate stats
-        const loanCards = document.querySelectorAll('.loan-card');
-        let ativos = 0;
-        let devolvidos = 0;
-        
-        loanCards.forEach(card => {
-            const status = card.querySelector('.loan-status');
-            if (status && status.classList.contains('active')) {
-                ativos++;
-            } else if (status && status.classList.contains('inactive')) {
-                devolvidos++;
-            }
-        });
-        
-        const ativosCount = document.getElementById('ativos-count');
-        const devolvidosCount = document.getElementById('devolvidos-count');
-        
-        if (ativosCount) ativosCount.textContent = ativos;
-        if (devolvidosCount) devolvidosCount.textContent = devolvidos;
+	<!-- Script da pagina - toggle menu -->
+	<script>
+		// Mobile menu toggle and stats calculation
+		document.addEventListener('DOMContentLoaded', function () {
+			// Calculate stats
+			const loanCards = document.querySelectorAll('.loan-card');
+			let ativos = 0;
+			let devolvidos = 0;
 
-        // Mobile menu
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const navbarCollapse = document.getElementById('navbarNav');
-        const userMenuBtn = document.getElementById('user-menu-btn');
-        const userDropdown = document.getElementById('user-dropdown');
+			loanCards.forEach(card => {
+				const status = card.querySelector('.loan-status');
+				if (status && status.classList.contains('active')) {
+					ativos++;
+				} else if (status && status.classList.contains('inactive')) {
+					devolvidos++;
+				}
+			});
 
-        if (mobileMenuBtn && navbarCollapse) {
-            mobileMenuBtn.addEventListener('click', function() {
-                navbarCollapse.classList.toggle('show');
-                this.classList.toggle('active');
-            });
-        }
+			const ativosCount = document.getElementById('ativos-count');
+			const devolvidosCount = document.getElementById('devolvidos-count');
 
-        if (userMenuBtn && userDropdown) {
-            userMenuBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userDropdown.classList.toggle('show');
-            });
+			if (ativosCount) ativosCount.textContent = ativos;
+			if (devolvidosCount) devolvidosCount.textContent = devolvidos;
 
-            document.addEventListener('click', function() {
-                userDropdown.classList.remove('show');
-            });
+			// Mobile menu
+			const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+			const navbarCollapse = document.getElementById('navbarNav');
+			const userMenuBtn = document.getElementById('user-menu-btn');
+			const userDropdown = document.getElementById('user-dropdown');
 
-            userDropdown.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-    });
-    </script>
+			if (mobileMenuBtn && navbarCollapse) {
+				mobileMenuBtn.addEventListener('click', function () {
+					navbarCollapse.classList.toggle('show');
+					this.classList.toggle('active');
+				});
+			}
+
+			if (userMenuBtn && userDropdown) {
+				userMenuBtn.addEventListener('click', function (e) {
+					e.stopPropagation();
+					userDropdown.classList.toggle('show');
+				});
+
+				document.addEventListener('click', function () {
+					userDropdown.classList.remove('show');
+				});
+
+				userDropdown.addEventListener('click', function (e) {
+					e.stopPropagation();
+				});
+			}
+		});
+	</script>
 </body>
+
 </html>
