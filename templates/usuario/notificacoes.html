@@ -23,34 +23,36 @@
 			grid-template-columns: 1fr 3fr;
 			padding: 30px;
 			background-color: #f8f9fa;
-			/* Alterado para combinar com o design geral */
+			gap: 20px;
 		}
 		.notificacoes {
 			border: 1px solid #dee2e6;
 			border-radius: 5px;
 			padding: 15px;
 			background-color: #ffffff;
-			/* Fundo branco para contraste */
 			max-height: 80vh;
 			overflow-y: auto;
 		}
 		.notificacao {
 			border: 1px solid #dee2e6;
-			/* Adicionado para melhor definição */
-			border-radius: 5px;
 			padding: 15px;
 			margin-bottom: 20px;
 			background-color: #ffffff;
-			/* Fundo branco para contraste */
 			display: flex;
+			border-radius: 5px;
 			flex-direction: row;
 			justify-content: space-between;
+			align-items: center;
+			transition: background-color 0.3s, border-color 0.3s;
+			font-weight: 500;
+			color: #333;
+			border-left: 5px solid transparent;
+			gap: 15px;
+			min-height: 70px;
 		}
 		.notificacao:hover {
 			background-color: #e9ecef;
-			/* Efeito hover para melhor UX */
-			border-color: #adb5bd;
-			/* Destaca a borda ao passar o mouse */
+			border-color: #1e3a5f;
 			transition: background-color 0.3s, border-color 0.3s
 		}
 		.link-notificacao {
@@ -62,11 +64,9 @@
 			border: 1px solid #ccc;
 			border-radius: 10px;
 			padding: 20px;
-			margin-left: 20px;
 			display: flex;
 			flex-direction: column;
 			background-color: #ffffff;
-			 /* Fundo branco para contraste */
 			justify-content: space-between;
 		}
 
@@ -77,6 +77,8 @@
 			align-items: center;
 			justify-content: space-between;
 			padding-bottom: 10px;
+			flex-wrap: wrap;
+			gap: 10px;
 		}
 
 		.titulo-notificacao {
@@ -92,6 +94,7 @@
 			justify-content: flex-end;
 			gap: 15px;
 			margin-top: 20px;
+			flex-wrap: wrap;
 		}
 
 		.acoes a {
@@ -100,12 +103,166 @@
 			font-weight: 500;
 		}
 		.ativa {
-			background-color: #333;
+			background-color: #1e3a5f;
 			color: #fff;
 		}
 		.ativa:hover {
-			background-color: #333;
+			background-color: #1e3a5f;
 			color: #fff;
+		}
+		.icone {
+			width: 24px; 
+			height: 24px; 
+			border-radius: 1000px; 
+			padding: 5px; 
+			display: inline-flex; 
+			align-items: center; 
+			justify-content: center;
+			flex-shrink: 0;
+		}
+		.icone-info {
+			background-color: #007bff; 
+			color: #fff; 
+		}
+		.icone-atencao {
+			background-color: #D4A734; 
+			color: #fff; 
+		}
+
+		/* Responsividade para Tablets (768px - 1024px) */
+		@media (max-width: 1024px) {
+			.container-notificacoes {
+				grid-template-columns: 1fr 2fr;
+				margin-top: 150px;
+				padding: 20px;
+			}
+
+			.titulo-notificacao {
+				font-size: 1.3em;
+			}
+
+			#detalhes {
+				padding: 15px;
+			}
+		}
+
+		/* Responsividade para Tablets pequenos e celulares grandes (481px - 768px) */
+		@media (max-width: 768px) {
+			.container-notificacoes {
+				grid-template-columns: 1fr;
+				/* margin-top: 1000px; */
+				padding: 15px;
+				height: auto;
+				min-height: 80vh;
+			}
+
+			.notificacoes {
+				max-height: 50vh;
+				margin-bottom: 20px;
+			}
+
+			#detalhes {
+				margin-left: 0;
+				max-height: none;
+			}
+
+			.titulo {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.titulo-notificacao {
+				font-size: 1.2em;
+			}
+
+			.acoes {
+				flex-direction: column;
+				gap: 10px;
+			}
+
+			.acoes a {
+				width: 100%;
+				text-align: center;
+			}
+
+			.notificacao {
+				gap: 10px;
+				padding: 12px;
+				min-height: 60px;
+			}
+		}
+
+		/* Responsividade para Celulares (até 480px) */
+		@media (max-width: 480px) {
+			.container-notificacoes {
+				padding: 10px;
+			}
+
+			.notificacoes {
+				padding: 10px;
+				max-height: 40vh;
+			}
+
+			.notificacao {
+				padding: 10px;
+				gap: 8px;
+				min-height: auto;
+				font-size: 0.9em;
+			}
+
+			#detalhes {
+				padding: 12px;
+			}
+
+			.titulo-notificacao {
+				font-size: 1.1em;
+			}
+
+			.icone {
+				width: 20px;
+				height: 20px;
+				padding: 4px;
+			}
+
+			.acoes a {
+				padding: 10px 15px !important;
+				font-size: 0.9em;
+			}
+
+			.corpo p {
+				font-size: 0.9em;
+			}
+		}
+
+		/* Ajustes para telas muito pequenas (até 360px) */
+		@media (max-width: 360px) {
+			.container-notificacoes {
+				padding: 8px;
+			}
+
+			.notificacoes {
+				padding: 8px;
+			}
+
+			.notificacao {
+				padding: 8px;
+				gap: 6px;
+				font-size: 0.85em;
+			}
+
+			#detalhes {
+				padding: 10px;
+			}
+
+			.titulo-notificacao {
+				font-size: 1em;
+			}
+
+			.icone {
+				width: 18px;
+				height: 18px;
+				padding: 3px;
+			}
 		}
 	</style>
 </head>
@@ -129,6 +286,37 @@
 				{% for notificacao in notificacoes %}
 				<a href="{% url  'notificacao:detalhe_notificacao' notificacao.id %}" class="link-notificacao">
 					<div class="notificacao {% if notificacao.id == notificacao_detalhes.id %}ativa{%endif%}">
+						<span>
+							{% if notificacao.type == 'EMPRESTIMO_CRIADO' %}
+								<span class="icone icone-info">
+									<i class="fa-solid fa-info"></i>
+								</span>
+							{% elif notificacao.type == 'EMPRESTIMO_DEVOLVIDO' %}
+								<span class="icone icone-info">
+									<i class="fa-solid fa-info"></i>
+								</span>
+							{% elif notificacao.type == 'EMPRESTIMO_RENOVADO' %}
+								<span class="icone icone-info">
+									<i class="fa-solid fa-info"></i>
+								</span>
+							{% elif notificacao.type == 'EMPRESTIMO_ATRASADO' %}
+								<span class="icone icone-atencao">
+									<i class="fa-solid fa-exclamation"></i>
+								</span>
+							{% elif notificacao.type == 'RESERVA_CRIADA' %}
+								<span class="icone icone-info">
+									<i class="fa-solid fa-info"></i>
+								</span>
+							{% elif notificacao.type == 'RESERVA_CANCELADA' %}
+								<span class="icone icone-atencao">
+									<i class="fa-solid fa-exclamation"></i>
+								</span>
+							{% else %}
+								<span class="icone icone-atencao">
+									<i class="fa-solid fa-question"></i>
+								</span>
+							{% endif %}
+						</span>
 						<span>{{notificacao.title}}</span>
 						{% if notificacao.is_read %}
 						<span></span>
