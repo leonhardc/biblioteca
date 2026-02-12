@@ -293,17 +293,17 @@ def script_povoar_banco() -> None:
     print("Criando Cursos ...")
     criar_n_cursos()
     print("Criando Alunos ...")
-    criar_n_alunos(200)
+    criar_n_alunos(50)
     print("Criando Professores ...")
-    criar_n_professores(20)
+    criar_n_professores(10)
     print("Criando Funcionarios ...")
-    criar_n_funcionarios(100)
+    criar_n_funcionarios(10)
     print("Criando Autores ...")
-    criar_n_autores(500)
+    criar_n_autores(20)
     print("Criando Categorias ...")
     criar_categorias(['Calculo', 'Fisica', 'Desenho Técnico', 'Inteligencia Artificial', 'Algebra', 'Programação'])
     print("Criando Livros ...")
-    criar_n_livros(1000)
+    criar_n_livros(100)
 
 def deletar_dados_banco() -> None:
     # TODO: Testar essa função
