@@ -12,9 +12,9 @@ def categoria_criada(sender, instance, created, **kwargs):
         return
 
     logger.info(
-        'Categoria criada | id=%s | nome="%s"',
+        'Categoria criada | id=%s | categoria="%s"',
         instance.id,
-        instance.nome
+        instance.categoria
     )
 
 @receiver(post_save, sender=Categoria)
@@ -23,9 +23,9 @@ def categoria_atualizada(sender, instance, created, **kwargs):
         return
 
     logger.info(
-        'Categoria atualizada | id=%s | nome="%s"',
+        'Categoria atualizada | id=%s | categoria="%s"',
         instance.id,
-        instance.nome
+        instance.categoria
     )
 
 @receiver(pre_save, sender=Categoria)
@@ -37,7 +37,7 @@ def categoria_excluida(sender, instance, **kwargs):
 
     if antigo.ativo and not instance.ativo:
         logger.info(
-            'Categoria excluída | id=%s | nome="%s"',
+            'Categoria excluída | id=%s | categoria="%s"',
             instance.id,
-            instance.nome
+            instance.categoria
         )
