@@ -6,7 +6,7 @@
 
 Biblioteca Universitária é uma aplicação web para gerenciamento do acervo de livros de uma instituição de ensino fictícia. Desenvolvida em **Django** (framework Python para web), o projeto oferece um sistema completo de empréstimo e reserva de livros com suporte a múltiplos tipos de usuários.
 
-Veja a aplicacão rodando em [biblioteca-academica](biblioteca.leonardorcosta.com)
+Veja a aplicacão rodando em [biblioteca-academica](http://biblioteca.leonardorcosta.com)
 
 ### Credenciais de acesso
 
