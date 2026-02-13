@@ -390,4 +390,4 @@ def deletar_todos_livros() -> None:
         livro.delete()
 
 if __name__ == '__main__':
-    pass
+    script_povoar_banco()
