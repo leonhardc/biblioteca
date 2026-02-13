@@ -2,129 +2,132 @@
 
 > **📌 Nota sobre Contribuições:** Se suas contribuições para este projeto não estão aparecendo no seu perfil do GitHub, execute `./check-contributions.sh` ou consulte [CONTRIBUTING.md](CONTRIBUTING.md) para diagnóstico e soluções.
 
-## Sobre o projeto
+## 📋 Sobre o Projeto
 
-<p align='justify' style='text-indent: 40px;'>
-Biblioteca universitária foi o projeto final na disciplina de banco de dados quando cursei Engenharia de Computação e segue uma descrição de requisitos específica da disciplina. Porém, por mais que este projeto tenha muito daquele que foi desenvolvido na época, o que vos aprosento é um projeto pessoal, pensado e estruturado inteiramente por mim levando em consideração o que aprendi na época e também o que aprendi posteriormente.</p>
+Biblioteca Universitária é uma aplicação web para gerenciamento do acervo de livros de uma instituição de ensino fictícia. Desenvolvida em **Django** (framework Python para web), o projeto oferece um sistema completo de empréstimo e reserva de livros com suporte a múltiplos tipos de usuários.
 
-<p align='justify' style='text-indent: 40px;'>
-A primeira vez que desenvolvi essa aaplicação ainda estava aprendendo sobre banco de dados e o foco principal era o banco de dados. Na época não pude utilizar estruturas que usei para desenvolver este projeto (como o ORM do django, por exemplo). Infelizmente, não salvei o projeto que desenvolvi na disciplina por não ter noções de versionamento de código com o git.</p>
+Veja a aplicacão rodando em [biblioteca-academica](biblioteca.leonardorcosta.com)
 
-<p align='justify' style='text-indent: 40px;'>
-Neste projeto fiz desde a modelagem do banco de dados até o design das janelas. Desde a configuração dos apps, até a implementação das views de cada app django. Aqui usei tudo o que sei até o momento sobre desenvolvimento, sobre aplicações web, sobre django e sobre banco de dados.</p>
+### Credenciais de acesso
 
-<p align='justify' style='text-indent: 40px;'>
-Mas enfim, o que é o projeto? Do que se trata toda essa codificação? Biblioteca universitária, ou biblioteca acadêmica, é uma aplicação web, desenvolvida em django (framework python para web) e que tem como idéia principal o gerenciamento do acervo de livros por uma instituição de ensino fictícia e que conta com três tipos de usuários principais (fora os administradores), que são os alunos, os professores e os funcionários. Todos esses usuários serão descritos com mais detalhes posteriormente. Cada um desses usuários pode reservar ou alugar um ou mais livros, por um determinado tempo.</p>
+|Tipo de Usuario|Usuario|Senha|
+|---------------|-------|-----|
+|Aluno|hellena_da.cruz781|1234|
+|Professor|mathias_marques994|1234|
+|Funcionario|caio_garcia522|1234|
 
-<p align='justify' style='text-indent: 40px;'>
-Todas as entidades serão descrita com detalhes nas seções seguintes onde primeiro será descrito o app em sí e o que ele representa na aplicação. Depois de abordarmos o sentido geral de um app navegaremos por cada arquivo e o que ele representa dentro de cada contexto. Por fim, o projeto também contará com uma seção contando como rodar a aplicação localmente com demonstrações de comandos e um vídeo mostrando como a aplicação roda na minha máquina e como deveria rodar na máquina de quem está lendo.</p>
+### Contexto
 
-## Estrutura do Projeto
+Este projeto iniciou como trabalho final na disciplina de Banco de Dados durante o curso de Engenharia de Computação. Embora tenha inspiração naquele trabalho original, representa um desenvolvimento pessoal totalmente reestrutado, aplicando conhecimentos adquiridos desde então e implementando boas práticas modernas de desenvolvimento.
 
-<p align='justify' style='text-indent: 40px;'>
-O projeto conta com 4 apps até o momento, cada um tem um sentido por existir e claro, contém também o app principal onde estão as configurações gerais do projeto. A estrutura de pastas do projeto é a seguinte:</p>
+### Objetivo
 
-```
-- biblioteca/
-    |-biblioteca/
-    |-administrador/
-    |-usuario/
-    |-livro/
-    |-curso/
-    |-static/
-    |-templates/
-    |-utils/
-```
+Criar uma plataforma robusta para:
+- Gerenciar o acervo de livros, autores e categorias
+- Controlar empréstimos e reservas de livros
+- Gerenciar diferentes tipos de usuários (alunos, professores, funcionários)
+- Fornecer um painel administrativo completo
+- Manter histórico de transações e operações
 
-### O primeiro app, o app biblioteca
+## 🏗️ Estrutura do Projeto
 
-<p align='justify' style='text-indent: 40px;'>
-O primeiro app é o app principal da aplicação onde estão principalmente as  configurações do projeto. Sua estrutura é a seguinte:</p>
+O projeto conta com 5 aplicações principais, cada uma com responsabilidades específicas:
 
 ```
-|-biblioteca/
-    asgi.py
-    settings.py
-    urls.py
-    wsgi.py
+biblioteca/                 # Configurações gerais da aplicação
+├── settings.py             # Configuração de BD, apps, templates
+├── urls.py                 # Roteamento principal
+├── asgi.py
+└── wsgi.py
+
+administrador/              # Painel administrativo personalizado
+├── models.py
+├── views.py
+├── urls.py
+├── forms.py
+├── admin.py
+└── tests.py
+
+usuario/                    # Gerenciamento de usuários (alunos, professores, funcionários)
+├── models.py               # Models: Aluno, Professor, Funcionário
+├── views.py                # Views e controladores
+├── urls.py
+├── forms.py
+├── admin.py
+└── tests.py
+
+livro/                      # Gerenciamento de livros, autores, categorias
+├── models.py               # Models: Livro, Autor, Categoria, Empréstimo, Reserva
+├── views.py
+├── urls.py
+├── forms.py
+├── admin.py
+├── tests.py
+├── signals/                # Sinais Django para operações automáticas
+└── migrations/
+
+curso/                      # Gerenciamento de cursos
+├── models.py
+├── views.py
+├── urls.py
+├── forms.py
+├── admin.py
+└── tests.py
+
+notificacao/                # Sistema de notificações
+├── models.py
+├── views.py
+└── urls.py
+
+static/                     # Arquivos estáticos (CSS, JS, imagens)
+templates/                  # Templates HTML
+utils/                      # Utilitários e helpers
 ```
 
-<p align='justify' style='text-indent: 40px;'>
-Como dito anteriormente, nesse app são guardadas as configurações gerais e primeiras da aplicação como um todo. Por exemplo, no arquivo "settings.py" estão configurações de bancos de dados (sqlite, mysql, mogodb, mariadb etc.), configurações de como a aplicação enxerga os apps, configurações de qual será o diretório principal de templates e até configurações do framework de mensagens do django.</p>
+### App Biblioteca (Configuração Principal)
 
-<p align='justify' style='text-indent: 40px;'>
-No arquivo "urls.py" estão as urls dos apps da aplicação. Neste projeto está configurado da seguinte maneira:</p>
+O app principal centraliza as configurações gerais da aplicação:
+
+- **settings.py**: Configuração de banco de dados, apps instalados, templates, autenticação
+- **urls.py**: Roteamento principal da aplicação
+- **asgi.py e wsgi.py**: Configuração para deploy
+
+### App Administrador
+
+Um painel administrativo personalizado com funcionalidades completas:
+
+- ✅ CRUD completo para todas as entidades
+- ✅ Operações personalizadas em usuários, livros e cursos
+- ✅ Controle granular de permissões
+- ✅ Gerenciamento de empréstimos e reservas
+- ✅ Visualização de histórico de transações
+
+### App Usuário
+
+Gerencia os três tipos principais de usuários do sistema:
+
+#### 👤 Aluno
+- Usuário mais populoso do sistema
+- Pode visualizar seus dados pessoais
+- Pode visualizar e filtrar livros disponíveis
+- Pode reservar e alugar livros (quantidade limitada)
+- Pode visualizar seus empréstimos e reservas ativas
+
+#### 👨‍🏫 Professor
+- Mesmas funcionalidades do aluno
+- Limite maior de livros para empréstimo
+- Prazo maior para devoluções
+
+#### 👨‍💼 Funcionário
+- Pode alugar livros para si e para outros usuários
+- Pode visualizar e atualizar informações de livros
+- Acesso a funcionalidades administrativas básicas
+- Não pode alterar informações de outros usuários
+
+**Modelos de Dados:**
 
 ```python
-urlpatterns = [
-    path('admin/', admin.site.urls), # admin padrão do django
-    path('administrador/', include('administrador.urls')), # admin personalizado
-    path('usuario/', include('usuario.urls')),
-    path('livro/', include('livro.urls')),
-    path('curso/', include('curso.urls')),
-]
-```
-
-<p align='justify' style='text-indent: 40px;'>
-Todas as urls mostradas acima serão explicadas com mais detalhes posteriormente quando de fato estivermos navegado em seu respectivo app. O bloco acima só foi um exemplo sobre o que existe dentro desse arquivo.</p>
-
-<!-- TODO: Pesquisar sobre as funções dos arquivos asgi.py e wsgi.py no app principal de uma aplicação django. -->
-<p align='justify' style='text-indent: 40px;'>
-Os arquivos "asgi.py" e "wsgi.py" não serão abordados nesta explicação por enquanto.</p>
-
-### O app administrador
-
-<p align='justify' style='text-indent: 40px;'>
-O app administrador é uma maneira de me forçar a pensar e implementar todas as funções da aplicação, aquelas que estão acessíveis para outros usuários e aquelas que não. Em tese, depois que este app estiver pronto, a implementação dos apps seguintes se tornará mais fácil.</p>
-
-<p align='justify' style='text-indent: 40px;'>
-Vale lembrar que o próprio django já implementa uma página de administrador por padrão e eu sei que reinventar a roda não é uma idéia muito prática, porém, estou aprendendo e todo esforço é bem vindo desde que isso se converta em aprendizado posteriormente. Por isso, implementei um app que, teoricamente contém todas as funcionalidades de administrador do sistema. Com CRUD completo e com operações personalidas sobre todas as entidades do sistema tanto usuários quanto livros ou cursos.</p>
-
-<p align='justify' style='text-indent: 40px;'>
-A estrutura desse app é como a estrutura dos apps seguintes e conta com os mesmos arquivos. Sendo assim a estrutura desse app é como mostrada abaixo:</p>
-
-```
-|-administrador/
-    admin.py
-    apps.py
-    forms.py
-    models.py
-    tests.py
-    urls.py
-    views.py
-```
-
-<p align='justify' style='text-indent: 40px;'>
-É importante esclarecer que esses arquivos contém implementações de algumas das muitas funcionalidades da aplicação e não vale muito a pena mostrar, a você leitor, tudo que contém dentro de cada um, porque isso irá se tornar cansativo, tanto pra mim quanto pra você. Então vamos para algumas explicações básicas sobre cada um:</p>
-
-1. <p align='justify'><strong>admin.py</strong>: Aqui você configura como app vai se comportar na página de administração padrão do django e como os models serão mostrados e que informações serão mostradas em cada model.</p>
-2. <p align='justify'><strong>apps.py</strong>: Particularmente até hoje não tive que mecher nesse arquivo e até hoje não sei bem pra que ele funciona, porém é para ele que você aponta (lá em biblioteca/settings.py por exemplo) quando inicia um novo app na aplicação e quer que ele seja reconhecido pelo django.</p>
-3. <p align='justify'><strong>forms.py</strong>: Sinceramente esse arquivo aqui não vem por padrão quando você inicia um novo app no django, porém é recomendado criar esse arquivo quando seu app vai gerenciar formulários, como formulários de informações usuários ou formulários de cadastro de livros, por exemplo.</p>
-4. <p align='justify'><strong>models.py</strong>: É aqui onde são declarados todos os seus models. Ou seja, classes que serão interpretadas e transformadas em tabelas no seu banco de dados. Aconselho ter bastante cuidado, porque editar os models.py dá trabalho e se não for bem pensado e estruturado desde o começo pode dar uma dor de cabeça lá na frente.</p>
-5. <p align='justify'><strong>tests.py</strong>: O django também conta com um mecanismo pra você implementar testes e executá-los de maneira simples e semântica e é nesse arquivo onde você irá implementá-los.</p>
-6. <p align='justify'><strong>urls.py</strong>: Nesse arquivo aqui irão ficar todas as suas urls, ou pelo menos todas as urls do seu app se você pensar bem. Falo mais sobre isso depois, mas no fim, são sempre os meios de você chamar as funcionalidades da sua aplicação.</p>
-7. <p align='justify'><strong>views.py</strong>: É aqui onde o filho chora e a mãe não vê. É aqui onde a mágica acontece. É aqui onde todas as vontades de desistir irão vir a tona (ou pelo menos boa partes delas). Como o nome deixa bem claro, é aqui onde suas views estão, em resumo, onde todas as funções ou regras de negócios vão atuar. É aqui onde você mostra o que seu app faz, como faz, porque faz e quando faz. É aqui onde você vai implementar seu CRUD, onde vai direcionar tudo para os mais variados endpoints e onde você vai chorar, e chorar muito.</p>
-
-<p align='justify' style='text-indent: 40px;'>
-Bem, até agora eu não expliquei muito sobre minha solução em si, mas prometo, vamos chegar lá. Nas próximas três subseções irei mostrar o que forma basicamente o nucleo do projeto, os apps de usuários, livros e cursos.</p>
-
-### O app usuario
-
-<p align='justify' style='text-indent: 40px'>
-Falamos anteriormente do app que representa o nosso usuário administrador, aquele que pode, teoricamente, fazer qualquer coisa no nosso sistema. Agora, vamos falar do app que representa os outros usuários da aplicação. Aqueles que de fato são usuários, os que não vão fazer nada além do permitido a eles fazer.</p>
-
-<p align='justify' style='text-indent: 40px'>
-Falar assim é um pouco estranho eu sei, mas é basicamente isso. Cada um dos seguintes usuários vai contar com um numero limitado de informações e funcionalidades as quais vai conseguir cisualizar e acessar. Estes usuários são descritos logo abaixo:</p>
-
--   <p align='justify'>O usuário <strong>aluno</strong>: Esse é o tipo de usuário mais populoso na nossa aplicação mas que terá menos poder nas mãos. O usuário aluno é uma abstração dos alunos da nossa instituição de ensino ficticia. Ele pode basicamente visualizar suas proprias informações, ver uma lista de livros os quais ele pode ver suas informações básicas, pode reservar um exemplar que será posteriormente alugado e claro, ele tem acesso à todas as reservas e emprestimos que ele tem ativos. De todos os usuários, ele é quem pode alugar menos livros.</p>
--   <p align='justify'>O usuário <strong>professor</strong>: O usuário professor pode fazer basicamente as mesmas coisas que um aluno porém ele pode alugar uma quantidade maior de livros e por um tempo maior.</p>
--   <p align='justify'>O usuário <strong>funcionário</strong>: Este tipo de usuário pode fazer tudo que os outros usuários pode fazer. Sim, ele também pode alugar livros para si. Em adicional, o funcionário também pode alugar livros para outros funcionários e outros usuários, tanto professores quanto alunos. O funcionário pode ver e alterar informações de livros, atualizando-os no banco de dados. Lembrando que o funcionário não deve ser capaz de alterar informações de outros usuários, tanto professores quanto alunos.</p>
-
-<p align='justify' style='text-indent: 40px'>
-Agora que você leitor já sabe um pouco sobre cada tipo de usuário que a nossa aplicação tem, você pode talvez estar curioso sobre como cada um deles está implementado na base de dados. Hoje, no dia que estou escrevendo esta descrição, a implementação não está totalmente completa. Existem algumas coisas que podem ser implementadas para deixar os models desses usuários mais completa. Mas aqui vai uma palhinha de como as coisas estão ficando.</p>
-
-```python
-# Model do usuário 'aluno'
+# Aluno
 class Aluno(models.Model):
     usuario = models.ForeignKey(User, ...)
     matricula = models.CharField(...)
@@ -134,14 +137,7 @@ class Aluno(models.Model):
     ingresso = models.DateField(...)
     conclusao_prevista = models.DateField(...)
 
-    def __str__(self):
-        return f'<{self.usuario}>'
-
-    class Meta:
-        verbose_name = 'Aluno'
-        verbose_name_plural = 'Alunos'
-
-# Model do usuário 'professor'
+# Professor
 class Professor(models.Model):
     usuario = models.ForeignKey(User, ...)
     matricula = models.CharField(...)
@@ -150,164 +146,308 @@ class Professor(models.Model):
     regime = models.CharField(...)
     contratacao = models.DateField(...)
 
-    def __str__(self):
-        return f'{self.usuario.first_name} {self.usuario.last_name}'
-
-    class Meta:
-        verbose_name = 'Professor'
-        verbose_name_plural = 'Professores'
-
-# Model do usuário 'funcionario'
+# Funcionário
 class Funcionario(models.Model):
     usuario = models.ForeignKey(User, ...)
     matricula = models.CharField(...)
     cpf = models.CharField(...)
-
-    def __str__(self):
-        return f'<{self.usuario}>'
-
-    class Meta:
-        verbose_name = 'Funcionário'
-        verbose_name_plural = 'Funcionários'
 ```
 
-<p align='justify' style='text-indent: 40px'>
-Se você é um desenvolvedor mais experiente, facilmente vai olhar para essas classes e notar que está faltando algumas informações. Quer um exemplo? Todo usuário poderia ter uma variável booleana que indica de aquele aluno está ativo ou não, o que significaria que ele foi desligado da instituição. Eu sei, esse projeto tem falhas e problemas que podem ou não ser corrigidos posteriormente para se parecer com uma aplicação mais robusta mas tenha um pouco de paciência.</p>
+### App Livro
 
-    "Ah Leonardo, todos esses models poderiam herdar de um outro model que tem informações comuns a todos. Um model 'usuário' por exemplo."
+Núcleo do sistema, gerenciando toda a coleção:
 
-<p align='justify' style='text-indent: 40px'>
-Sim gafanhoto, eu sei. Nem tudo aqui foi tão bem pensado quanto eu queria que fosse, mas foi pensado e tem um porquê de existir. Eu estou estudando boas práticas, mas nem sempre você irá encontrar boas práticas no meu código. Dá pra melhorar muita coisa, eu sei, mas estou aprendendo, então tenha paciência.</p>
+- 📚 **Livros**: Título, ISBN, exemplares disponíveis, descrição
+- ✍️ **Autores**: Informações dos autores
+- 🏷️ **Categorias**: Classificação dos livros
+- 📋 **Empréstimos**: Controle de livros emprestados
+- 🔄 **Reservas**: Sistema de reserva de livros
 
-<p align='justify' style='text-indent: 40px'>
-Note que todos os tipos de usuários mostrados acima tem um primeiro atributo e esse atributo está ligado a um outro model chamado 'User'. Pra você que está começando no django, esse model já vem quando você instala o django no seu ambiente. Você pode importá-lo do pacote <strong>django.contrib.auth.models</strong>. Fiz isso porque quero, nesse projeto, usar o controle de usuário do próprio django. Isso vai me economizar muito trabalho.</p>
+### App Curso
 
-### O app livro
+Gerenciamento dos cursos da instituição:
 
-<p align='justify' style='text-indent: 40px'>
-Não se faz uma biblioteca sem livros, não é mesmo? É nesse app que você encontra nossa abstração de livros, com seus autores e suas categorias, todos com seus models e suas respectivas views, dando mais um pouco de funcionalidade a nossa aplicação.</p>
-<p align='justify' style='text-indent: 40px'>
-Nesse app você também pode encontrar reservas e emprestimos de livros. Essas operações representam o ato de reservar e o ato de pegar emprestado um livro por um determinado tempo. Não acho que seja muito interessante encher sua tela de código (por mais que você esteja lendo algo no github), então vamos adiantar e mostrar a vocẽ só o importante. Abaixo seguem algumas imagens de como é nossa janelinha que vai controlar as operações com a entidade livro e suas variantes:</p>
-<!-- TODO: Inserir algumas imagens de exemplo na janela de livro -->
+- Cadastro e atualização de cursos
+- Associação com alunos e professores
+- CRUD completo
 
-### O app curso
+### Estrutura de Arquivos Padrão dos Apps
 
-<p align='justify' style='text-indent: 40px'>
-Bem, nesse app você encontra nossa abstração dos cursos de uma instituição de ensino. Se vocẽ pensa o mesmo que eu, esse não vai ser o app mais funcional ou mais interessante do sistema. Talvez não precizasse nem de um app dedicado unicamente a essa funcionalidade. Mas eu quiz fazer assim. Então, nesse ponto não espere encontrar muito mais do que um CRUD (rs). Mesmo assim, segue uma demonstração em imagens do que seria a nossa janela que irá administrar os cursos cadastrados na plataforma</p>
-<!-- TODO: Inserir algumas imagens de exemplo na janela de livro -->
+Cada app segue a estrutura Django padrão:
 
-## Dependências
+| Arquivo | Responsabilidade |
+|---------|------------------|
+| `models.py` | Definição das tabelas do banco de dados (ORM Django) |
+| `views.py` | Lógica de negócio e processamento de requisições |
+| `urls.py` | Roteamento de URLs específicas do app |
+| `forms.py` | Formulários para entrada de dados |
+| `admin.py` | Configuração da interface administrativa do Django |
+| `tests.py` | Testes automatizados |
+| `apps.py` | Configuração do app |
 
-## Rodando localmente a aplicação
 
-<p align='justify' style='text-indent: 40px'>
-Nesta seção você vai aprender a instalar e rodar essa aplicação localmente. Algumas informações que eu ache importante que você leia posteriormente na documentaçao do django ou de outra dependencia irei deixar no final dessa seção.</p>
 
-### Baixando o aplicativo
+## 📦 Dependências
 
-<p align='justify' style='text-indent: 40px'>
-A maneira mais simples de você baixar essa aplicação é fazendo um git clone. Lembrando que algumas instruções desse tutorial pode mudar de sistema para sistema. Eu desenvolvi essa aplicação usando vscode e como sistema operacional o ubuntu 24.04, fique ciente disso quando for rodar a aplicação em windows ou mac, por exemplo.</p>
+| Pacote | Versão | Propósito |
+|--------|--------|----------|
+| Django | 5.0 | Framework web principal |
+| django-crispy-forms | 2.5 | Renderização avançada de formulários |
+| crispy-bootstrap4 | 2025.6 | Tema Bootstrap 4 para formulários |
+| psycopg2-binary | 2.9.11 | Driver PostgreSQL |
+| dj-database-url | 3.0.1 | Configuração de BD via URL |
+| Faker | 35.2.0 | Geração de dados fictícios |
+| asgiref | 3.10.0 | Utilitários ASGI |
+| sqlparse | 0.5.3 | Parser SQL |
 
-<p align='justify' style='text-indent: 40px'>
-Abra o terminal e digite:</p>
+## 🚀 Instalação e Execução
 
-```
+### Pré-requisitos
+- Python 3.8+
+- pip
+- Git
+
+### 1. Clonar o Repositório
+
+```bash
 git clone https://github.com/leonhardc/biblioteca.git
+cd biblioteca
 ```
 
-<p align='justify' style='text-indent: 40px'>
-Depois de apertar o enter e esperar a operação acabar, você terá todos os arquivos necessários para rodar a aplicação no seu computador. Agora vamos para o próximo passo.</p>
+### 2. Criar e Ativar Ambiente Virtual
 
-### Instalando o ambiente virtual (opcional)
-
-<p align='justify' style='text-indent: 40px'>
-Leia com atenção, principalmente se você está iniciando na programação e quer usar um exemplo como esse repositório para começar a ver como o django funciona.</p>
-<p align='justify' style='text-indent: 40px'>
-A instalação de um ambiente virtual é muito importante ao desenvolver os seus próprios projetos ou para rodar ambientes de terceiros. Pense comigo, se hoje você dicide começar a desenvolver um e-comerce em django e instala todos as suas dependencias no ambiente global. Ali você vai usar o django mais recente até o momento. Depois de um tempo você trava, não sabe muito bem como configurar o ambiente e seu projeto está com alguns bugs. Você então decide baixar um projeto de um terceiro para vê-lo rodando e usar uma parte do código dele como exemplo para o seu, afinal de contas você ainda está apredendo.</p>
-<p align='justify' style='text-indent: 40px'>
-Ai você todo animado, vai lá e instala todas as dependencias do projeto do amiguinho no ambiente global da sua máquina, vê que o amiguinho implementou algumas coisas que ajudam a resolver os problemas que vocẽ estava tendo e dai, quando você vai rodar o projeto do amiguinho corre tudo bem, você vê tudo funcionando perfeitamente e quando você volta finalmente para o seu projeto, nada mais funciona. O que você faz? Será alguma biblioteca que está desatualizada? O django está desatualizado? O que aconteceu?</p>
-<p align='justify' style='text-indent: 40px'>
-Finalmente vocẽ consegue atualizar todas as bibliotecas e dependencias do seu projeto mas quando volta no projeto do seu amigo já não roda nada. O que você faz?</p>
-<p align='justify' style='text-indent: 40px'>
-Agora imagina se existisse uma forma de isolar as dependencias do seu projeto das dependencias do projeto da pessoa que desenvolveu o projeto que você está usando como base pro seu. Existe, se chama ambiente virtual.</p>
-<p align='justify' style='text-indent: 40px'>
-Cada linguagem tem seu jeito de instalar um ambiente virtual, em python você pode fazer assim:</p>
-
-```python
-python -m venv <nome_do_ambiente>
+**Criar o ambiente virtual:**
+```bash
+python -m venv venv
 ```
 
-<p align='justify' style='text-indent: 40px'>
-Se correr tudo bem, depois que você executar o comando acima uma nova pasta será criada dentro do diretório do seu projeto. Dai, basta você ativar o seu ambiente.</p>
-
-<p align='justify' style='text-indent: 40px'>
-No ubuntu, para executar o seguinte comando:</p>
-
-```
-source <nome_do_ambiente>/bin/activate
+**Ativar no Ubuntu/Linux/macOS:**
+```bash
+source venv/bin/activate
 ```
 
-<p align='justify' style='text-indent: 40px'>
-Se tudo correu bem, o seu terminal vai ficar mais ou menos assim:</p>
-
-```
-(<nome_do_seu_ambiente_virtual>) <seu_usuario>@<diretorio_atual>
+**Ativar no Windows:**
+```cmd
+venv\Scripts\activate
 ```
 
-<p align='justify' style='text-indent: 40px'>
-Pode variar um pouco, mas o importante é saber que, se o ambiente está ativado corretamente, o nome dele vai aparecer entre parenteses logo antes da linha de comando no seu terminal.</p>
-
-### Instalando as dependencias do projeto
-
-<p align='justify' style='text-indent: 40px'>
-Se tudo correu bem até agora e você conseguiu baixar o projeto, instalar e ativar o ambiente virtual na sua máquina, então podemos ir adiante.</p>
-<p align='justify' style='text-indent: 40px'>
-Veja que no diretório raiz do projeto existe um arquivo chamado <strong>requirements.txt</strong/>. Se você der dois cliques nesse arquivo, o que verá será uma lista de bibliotecas que são, exatamente, as dependencias desse projeto. Para instalá-las, basta executar o comando abaixo:</p>
-
+Após ativação bem-sucedida, seu terminal exibirá:
 ```
+(venv) seu_usuario@seu_computador:~/biblioteca$
+```
+
+### 3. Instalar Dependências
+
+```bash
 pip install -r requirements.txt
 ```
 
-<p align='justify' style='text-indent: 40px'>
-Tudo bem até aqui? Se sim vamos aprender agora a rodar a aplicação.</p>
+### 4. Configurar Banco de Dados
 
-### Executando a aplicação na sua máquina (finalmente)
-
-<p align='justify' style='text-indent: 40px'>
-Bem, antes de rodar a aplicação de fato (rs), devemos fazer algumas coisas. Como fazer as migrations para o banco de dados:</p>
-
-```python
+Executar migrations:
+```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-<p align='justify' style='text-indent: 40px'>
-Os dois comandos acima irão preparar o banco de dados para receber os dados que serão salvos no passo seguinte.</p>
-
-```python
+Popular com dados de exemplo:
+```bash
 python povoar_banco.py
+// ou
+python manage.py shell
+>>> from povoar_banco import script_povoar_banco
+>>> script_povoar_banco()
 ```
 
-<p align='justify' style='text-indent: 40px'>
-O comando acima vai preencher o banco de dados com alguns dados fictícios o que facilita a ter noção de todas as funcionalidades da nossa aplicação.</p>
+### 5. Executar a Aplicação
 
-<p align='justify' style='text-indent: 40px'>
-Depois de seguir com todos os passos acima, para executar tudo basta digitar o comando:</p>
-
-```python
+```bash
 python manage.py runserver
 ```
 
-<p align='justify' style='text-indent: 40px'>
-Se tudo correu bem até agora você pode ver uma mensagem como a seguinte no seu terminal:</p>
-
+Você verá uma saída similar a:
 ```
 System check identified no issues (0 silenced).
-June 23, 2025 - 16:27:56
+February 13, 2026 - 10:30:45
 Django version 5.0, using settings 'biblioteca.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
 
-<p align='justify' style='text-indent: 40px'>
-Acessando o endereço http://127.0.0.1:8000/ no seu navegador, você pode ver a aplicação de fato funcionando.</p>
+**Acesse:** http://127.0.0.1:8000/
+
+### 6. Acessar o Painel Administrativo
+
+http://127.0.0.1:8000/administrador/
+
+## 📖 Como Usar
+
+### Tipos de Acesso
+
+1. **Aluno**
+   - Dashboard com informações pessoais
+   - Catálogo de livros
+   - Reservar e alugar livros
+   - Visualizar histórico de empréstimos
+
+2. **Professor**
+   - Mesmas funcionalidades do aluno
+   - Limite maior de livros simultâneos
+   - Prazo estendido para devoluções
+
+3. **Funcionário**
+   - Gerenciar empréstimos (próprios e alheios)
+   - Atualizar informações de livros
+   - Gerar relatórios
+   - Gerenciar devoluções
+
+4. **Administrador**
+   - Acesso total ao sistema
+   - CRUD completo de todas as entidades
+   - Gerenciamento de usuários
+   - Configurações do sistema
+
+## 🏛️ Ambiente Virtual - Por Quê?
+
+Isolamento de dependências é crucial ao desenvolver em Python. Um ambiente virtual garante que:
+
+- ✅ Cada projeto tenha suas próprias dependências
+- ✅ Conflitos de versões sejam evitados
+- ✅ O ambiente global permaneça limpo
+- ✅ A aplicação seja facilmente portável
+
+**Exemplo:** Se você instala Django 5.0 globalmente e depois precisa de Django 4.0 em outro projeto, causará conflitos. Com ambientes virtuais, cada projeto é independente.
+
+## 📂 Estrutura de Pastas Resumida
+
+```
+biblioteca/
+├── biblioteca/              # Configurações principais
+├── administrador/           # Painel administrativo
+├── usuario/                 # Gerenciamento de usuários
+├── livro/                   # Sistema de livros
+├── curso/                   # Gerenciamento de cursos
+├── notificacao/             # Sistema de notificações
+├── static/                  # CSS, JavaScript, imagens
+├── templates/               # Templates HTML
+├── utils/                   # Funções utilitárias
+├── manage.py                # Utilitário Django
+├── requirements.txt         # Dependências do projeto
+└── db.sqlite3               # Banco de dados SQLite
+```
+
+## 🔧 Recursos Principais
+
+### ✨ Implementado
+- ✅ CRUD completo de livros, autores e categorias
+- ✅ Sistema de empréstimos e reservas
+- ✅ Três tipos de usuários com permissões distintas
+- ✅ Painel administrativo personalizado
+- ✅ Autenticação via Django Auth
+- ✅ Banco de dados com ORM Django
+- ✅ Sinais Django para automação de tarefas
+- ✅ Formulários com validação
+
+### 🚧 Melhorias Futuras
+- [ ] Interface mobile responsiva
+- [ ] Sistema de notificações por email
+- [ ] Relatórios PDF
+- [ ] API REST
+- [ ] Dashboard com gráficos de uso
+- [ ] Importação de livros em lote
+- [ ] Sistema de recomendação
+
+## 📝 Notas Importantes
+
+### Arquitetura
+Este projeto utiliza:
+- **ORM Django** para abstração de banco de dados
+- **Django Models** para definição de schemas
+- **Django Views** (baseadas em classes e funções)
+- **Django Templates** para renderização frontend
+- **Django Signals** para lógica automática
+
+### Banco de Dados
+- **Desenvolvimento:** SQLite (padrão)
+- **Produção:** PostgreSQL (configurável em settings.py)
+- Suporte a MySQL/MariaDB via configuração
+
+### Autenticação
+Utiliza o sistema de autenticação padrão do Django (`django.contrib.auth.models.User`), economizando desenvolvimento e garantindo segurança.
+
+## 🤝 Contribuindo
+
+Consulte [CONTRIBUTING.md](CONTRIBUTING.md) para informações sobre como contribuir.
+
+Para verificar se suas contribuições estão aparecendo no GitHub, execute:
+```bash
+./check-contributions.sh
+```
+
+## 📄 Documentação Adicional
+
+- [Checklist de Responsividade](CHECKLIST_RESPONSIVIDADE.md)
+- [Guia de Paginação Otimizada](PAGINACAO_OTIMIZADA.md)
+- [README de Responsividade](README_RESPONSIVIDADE.md)
+- [Exemplos de Responsividade](EXEMPLOS_RESPONSIVIDADE.md)
+
+## 🐛 Troubleshooting
+
+### Erro: "No module named 'django'"
+**Solução:** Verifique se o ambiente virtual está ativado e se as dependências foram instaladas:
+```bash
+pip install -r requirements.txt
+```
+
+### Erro ao executar migrations
+**Solução:** Certifique-se de que está no diretório raiz do projeto e execute:
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### Porta 8000 já em uso
+**Solução:** Execute em porta diferente:
+```bash
+python manage.py runserver 8001
+```
+
+### Banco de dados corrompido
+**Solução:** Delete `db.sqlite3` e refaça as migrations:
+```bash
+rm db.sqlite3
+python manage.py migrate
+python povoar_banco.py
+```
+
+## 📊 Informações do Projeto
+
+| Item | Descrição |
+|------|-----------|
+| **Linguagem** | Python |
+| **Framework** | Django 5.0 |
+| **Banco de Dados** | SQLite / PostgreSQL |
+| **Padrão de Arquitetura** | MTV (Model-Template-View) |
+| **Status** | Em Desenvolvimento |
+| **Licença** | MIT (ou conforme especificado) |
+
+## 🎓 Aprendizados
+
+Este projeto foi desenvolvido para consolidar conhecimentos em:
+- Modelagem de banco de dados relacional
+- Django Framework (Models, Views, Templates)
+- HTML/CSS/JavaScript
+- Segurança em aplicações web
+- Boas práticas de desenvolvimento
+- Versionamento com Git
+
+## 📞 Suporte
+
+Para dúvidas ou sugestões:
+1. Abra uma [Issue](https://github.com/leonhardc/biblioteca/issues)
+2. Consulte a [documentação do Django](https://docs.djangoproject.com/)
+3. Verifique os comentários no código
+
+---
+
+**Desenvolvido com ❤️ como projeto educacional**
