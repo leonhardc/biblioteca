@@ -429,7 +429,7 @@ python povoar_banco.py
 | **Banco de Dados** | SQLite / PostgreSQL |
 | **Padrão de Arquitetura** | MTV (Model-Template-View) |
 | **Status** | Em Desenvolvimento |
-| **Licença** | MIT (ou conforme especificado) |
+| **Licença** | - |
 
 ## 🎓 Aprendizados
 
