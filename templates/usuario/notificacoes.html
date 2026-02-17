@@ -351,7 +351,17 @@
 			</div>
 		</div>
 		{% else %}
-		<p>Você não tem notificações.</p>
+		<div class="container-notificacoes" style="display: flex; align-items: center; justify-content: center; min-height: 60vh;">
+			<div style="background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 40px 32px; text-align: center; box-shadow: 0 2px 8px rgba(30,58,95,0.06); max-width: 400px;">
+				<div style="margin-bottom: 18px;">
+					<span class="icone icone-info" style="font-size: 2.2em;">
+						<i class="fa-solid fa-bell" style="font-size: 14px;"></i>
+					</span>
+				</div>
+				<h2 style="font-size: 1.3em; color: #1e3a5f; margin-bottom: 10px;">Nenhuma notificação encontrada</h2>
+				<p style="color: #555; font-size: 1em;">Você ainda não possui notificações.<br>Assim que houver novidades, elas aparecerão aqui.</p>
+			</div>
+		</div>
 		{% endif %}
 	</main>
 	<!-- Script da pagina - toggle menu -->
