@@ -282,7 +282,7 @@ function handleCategoryClick(e) {
     log(`📚 Navegando para a categoria: ${category.name}`);
 
     // Simulando navegação (em produção, isso levaria a uma página de filtro)
-    showToast(`Filtrando por: ${category.name}`);
+    showToast(`Livros de ${category.name}`);
 }
 
 // ============================================
@@ -334,7 +334,7 @@ function handleNewBookClick(e) {
     const book = newBooks[bookIndex];
 
     log(`📖 Abrindo detalhes de: ${book.title}`);
-    showToast(`Detalhes de: ${book.title}`);
+    showToast(`${book.title}`);
 }
 
 // ============================================
