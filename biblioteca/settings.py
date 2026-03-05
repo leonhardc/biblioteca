@@ -81,34 +81,12 @@ WSGI_APPLICATION = 'biblioteca.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = { # type: ignore
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# Supabase PostgreSQL Database
-DATABASES = {
+DATABASES = { # type: ignore
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'pCMnu*#p?NtKd7B',
-        'HOST': 'db.nntwxwpwssswqscssavu.supabase.co',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'biblioteca_banco',
-#         'USER': 'root',
-#         'PASSWORD': 'minhaSenha#123',
-#         'HOST': 'localhost',
-#         'PORT': '3306'
-#     }
-# }
 
 # COMANDO PARA CRIAR O BANCO NO MYSQL (deve ser adicionado antes de rodar as migrations)
 # CREATE DATABASE <NOME_DO_BANCO> CHARACTER SET utf8mb4 COLLATE utfmb4_unicode_ci;
