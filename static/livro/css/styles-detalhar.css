@@ -250,7 +250,9 @@
     border-top: 1px solid var(--border-color);
 }
 
-.btn {
+.book-detail-page .btn,
+.profile-page .btn,
+.book-actions .btn {
     display: inline-flex;
     align-items: center;
     gap: 0.625rem;
@@ -266,44 +268,51 @@
 }
 
 .book-detail-page .btn-primary,
-.book-actions .btn-primary {
+.book-actions .btn-primary,
+.profile-page .btn-primary {
     background: var(--secondary);
     color: var(--body-color);
 }
 
 .book-detail-page .btn-primary:hover,
-.book-actions .btn-primary:hover {
+.book-actions .btn-primary:hover,
+.profile-page .btn-primary:hover {
     background: #c49a2e;
     transform: translateY(-2px);
     box-shadow: var(--gold-glow);
 }
 
 .book-detail-page .btn-primary i,
-.book-actions .btn-primary i {
+.book-actions .btn-primary i,
+.profile-page .btn-primary i {
     font-size: 18px;
 }
 
-.btn-outline-primary {
+.book-detail-page .btn-outline-primary,
+.profile-page .btn-outline-primary {
     background: transparent;
     color: var(--primary);
     border: 2px solid var(--primary);
 }
 
-.btn-outline-primary:hover {
+.book-detail-page .btn-outline-primary:hover,
+.profile-page .btn-outline-primary:hover {
     background: var(--primary);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
 }
 
-.btn-secondary {
+.book-detail-page .btn-secondary,
+.profile-page .btn-secondary {
     background: var(--muted);
     color: white;
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-.btn-back {
+.book-detail-page .btn-back,
+.profile-page .btn-back {
     background: transparent;
     color: var(--muted);
     border: 2px solid var(--border-color);
@@ -311,7 +320,8 @@
     font-size: 0.9375rem;
 }
 
-.btn-back:hover {
+.book-detail-page .btn-back:hover,
+.profile-page .btn-back:hover {
     border-color: var(--primary);
     color: var(--primary);
     background: rgba(30, 58, 95, 0.05);

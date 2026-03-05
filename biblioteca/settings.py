@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'curso.apps.CursoConfig',
     'livro.apps.LivroConfig',
     'notificacao.apps.NotificacaoConfig',
-    'administrador.apps.AdministradorConfig',
     'crispy_forms',
     'crispy_bootstrap4',
 ]

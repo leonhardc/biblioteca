@@ -139,6 +139,16 @@
     color: white;
 }
 
+.reservation-status.active {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.reservation-status.inactive {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+}
+
 .reservation-card-body {
     padding: 1.5rem;
     flex: 1;
@@ -320,6 +330,20 @@
 .stat-icon.warning {
     background: linear-gradient(135deg, rgba(212, 167, 52, 0.1) 0%, rgba(212, 167, 52, 0.05) 100%);
     color: var(--secondary);
+}
+
+.stat-icon.success {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(32, 201, 151, 0.05) 100%);
+    color: #28a745;
+}
+
+.stat-icon.muted {
+    background: linear-gradient(135deg, rgba(108, 117, 125, 0.12) 0%, rgba(108, 117, 125, 0.06) 100%);
+    color: #6c757d;
+}
+
+.all-reservations-page .reservation-meta-label {
+    min-width: 110px;
 }
 
 .stat-label {

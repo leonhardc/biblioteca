@@ -3,106 +3,214 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Reservas - Biblioteca</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
-    <link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
-    <link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
-    <link rel="stylesheet" href="{% static 'usuario/aluno/css/dashboard-aluno.css' %}">
+    <title>Todas as Reservas - Biblioteca Acadêmica</title>
+    {% include 'livro/parciais/_head.html' %}
 </head>
 
 <body>
     <header>
-        {% if user_context.aluno %}
-        {% include 'usuario/aluno/parciais/_nav.html' %}
-        {% elif user_context.professor %}
-        {% include 'usuario/professor/parciais/_nav.html' %}
-        {% elif user_context.funcionario %}
         {% include 'usuario/funcionario/parciais/_nav.html' %}
-        {% endif %}
     </header>
-    <div class="container mt-4">
-        <div class="row mb-4" style="margin-top: 100px;">
-            <div class="col">
-                <h2 class="d-flex align-items-center"><i class="bi bi-calendar-check me-2"></i> Lista de Reservas</h2>
-            </div>
-        </div>
-
-        <!-- {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <main class="reservations-page all-reservations-page">
+        <div class="container-fluid">
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        <a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}">
+                            <i class="fa-solid fa-home"></i> Dashboard
+                        </a>
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Todas as Reservas</span>
+                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        Todas as Reservas
+                    </h1>
+                    <p class="page-subtitle">
+                        Acompanhe as reservas da biblioteca e gerencie os atendimentos de forma centralizada.
+                    </p>
                 </div>
-            {% endfor %}
-        {% endif %} -->
+            </section>
 
-        <div class="card shadow">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Usuário</th>
-                                <th>Livro</th>
-                                <th>Data da Reserva</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for reserva in reservas %}
-                            <tr>
-                                <td>{{ reserva.id }}</td>
-                                <td>
-                                    <i class="bi bi-person"></i> {{ reserva.usuario.username }}
-                                </td>
-                                <td>
-                                    <i class="bi bi-book"></i> {{ reserva.livro.titulo }}
-                                </td>
-                                <td>
-                                    <i class="bi bi-calendar"></i> {{ reserva.data_reserva|date:"d/m/Y" }}
-                                </td>
-                                <td>
-                                    {% if reserva.ativo %}
-                                    <span class="badge bg-success">Ativa</span>
-                                    {% else %}
-                                    <span class="badge bg-secondary">Cancelada</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <a href="{% url 'livro:ler_reserva' reserva.id %}" class="btn btn-sm btn-info"
-                                        title="Ver detalhes">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    {% if reserva.ativo %}
-                                    <a href="{% url 'livro:deletar_reserva' reserva.id %}" class="btn btn-sm btn-danger"
-                                        title="Cancelar reserva"
-                                        onclick="return confirm('Deseja cancelar esta reserva?')">
-                                        <i class="bi bi-x-circle"></i>
-                                    </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="6" class="text-center text-muted">
-                                    <i class="bi bi-inbox"></i> Nenhuma reserva encontrada.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            {% include 'parciais/_messages.html' %}
+
+            {% if reservas %}
+            <section class="reservations-stats">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon warning">
+                            <i class="fa-solid fa-bookmark"></i>
+                        </div>
+                        <span class="stat-label">Total</span>
+                    </div>
+                    <div class="stat-value">{{ reservas|length }}</div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon success">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <span class="stat-label">Ativas</span>
+                    </div>
+                    <div class="stat-value">
+                        <span id="reservas-ativas-count">-</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon muted">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </div>
+                        <span class="stat-label">Canceladas</span>
+                    </div>
+                    <div class="stat-value">
+                        <span id="reservas-canceladas-count">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="reservations-section">
+                <div class="reservations-list">
+                    {% for reserva in reservas %}
+                    <article class="reservation-card">
+                        <div class="reservation-card-header">
+                            <div class="reservation-icon">
+                                <i class="fa-solid fa-bookmark"></i>
+                            </div>
+                            <div>
+                                {% if reserva.ativo %}
+                                <span class="reservation-status active">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Ativa
+                                </span>
+                                {% else %}
+                                <span class="reservation-status inactive">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                    Cancelada
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="reservation-card-body">
+                            <h3 class="reservation-book-title">{{ reserva.livro.titulo }}</h3>
+
+                            <div class="reservation-meta">
+                                <div class="reservation-meta-item">
+                                    <i class="fa-solid fa-hashtag"></i>
+                                    <span class="reservation-meta-label">Reserva:</span>
+                                    <span class="reservation-meta-value">#{{ reserva.id }}</span>
+                                </div>
+
+                                <div class="reservation-meta-item">
+                                    <i class="fa-solid fa-user"></i>
+                                    <span class="reservation-meta-label">Usuário:</span>
+                                    <span class="reservation-meta-value">{{ reserva.usuario.get_full_name|default:reserva.usuario.username }}</span>
+                                </div>
+
+                                <div class="reservation-meta-item">
+                                    <i class="fa-solid fa-calendar-plus"></i>
+                                    <span class="reservation-meta-label">Data Reserva:</span>
+                                    <span class="reservation-meta-value reservation-date-highlight">{{ reserva.data_reserva|date:"d/m/Y" }}</span>
+                                </div>
+
+                                <div class="reservation-meta-item">
+                                    <i class="fa-solid fa-barcode"></i>
+                                    <span class="reservation-meta-label">ISBN:</span>
+                                    <span class="reservation-meta-value">{{ reserva.livro.isbn }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reservation-card-footer">
+                            <a href="{% url 'livro:ler_reserva' reserva.id %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fa-solid fa-eye"></i>
+                                Ver Detalhes
+                            </a>
+
+                            {% if reserva.ativo %}
+                            <a href="{% url 'livro:deletar_reserva' reserva.id %}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Deseja cancelar esta reserva?');">
+                                <i class="fa-solid fa-trash"></i>
+                                Cancelar Reserva
+                            </a>
+                            {% endif %}
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+            {% else %}
+            <section class="reservations-section">
+                <div class="empty-state-reservations">
+                    <div class="empty-state-reservations-icon">
+                        <i class="fa-solid fa-bookmark"></i>
+                    </div>
+                    <h2 class="font-display empty-state-reservations-title">Nenhuma Reserva Encontrada</h2>
+                    <p class="empty-state-reservations-text">
+                        Ainda nao existem reservas registradas na biblioteca.
+                    </p>
+                    <a href="{% url 'livro:listar_livros' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-book"></i>
+                        Ir para o Acervo
+                    </a>
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const reservationCards = document.querySelectorAll('.reservation-card');
+        let ativas = 0;
+        let canceladas = 0;
+
+        reservationCards.forEach(card => {
+            const status = card.querySelector('.reservation-status');
+            if (status && status.classList.contains('active')) {
+                ativas++;
+            } else if (status && status.classList.contains('inactive')) {
+                canceladas++;
+            }
+        });
+
+        const ativasCount = document.getElementById('reservas-ativas-count');
+        const canceladasCount = document.getElementById('reservas-canceladas-count');
+
+        if (ativasCount) ativasCount.textContent = ativas;
+        if (canceladasCount) canceladasCount.textContent = canceladas;
+
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navbarCollapse = document.getElementById('navbarNav');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (mobileMenuBtn && navbarCollapse) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navbarCollapse.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+        }
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+    </script>
 </body>
 
 </html>

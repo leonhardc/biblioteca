@@ -22,7 +22,7 @@
 
             <!-- Navigation Menu -->
             <div class="navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav" style="align-items: end;">
+                <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link {% if dashboard %}active{% endif %}" href="{% url 'usuario:pagina_inicial_funcionario' user.id %}">
                             <i class="fa-solid fa-house"></i>
@@ -65,7 +65,7 @@
             <!-- User Actions -->
             <div class="navbar-actions d-none d-md-flex">
                 <div class="user-menu">
-                    <button class="btn btn-user" id="user-menu-btn" type="button">
+                    <button class="btn-user" id="user-menu-btn" type="button">
                         <i class="fa-solid fa-user-tie"></i>
                         <span class="user-name">{{ user.first_name|default:"Funcionário" }}</span>
                         <i class="fa-solid fa-chevron-down"></i>

@@ -166,12 +166,6 @@ body {
     color: white;
 }
 
-@media (min-width: 768px) {
-    .navbar-toggler {
-        display: none;
-    }
-}
-
 /* Navigation Menu */
 .navbar-collapse {
     display: none;
@@ -186,20 +180,6 @@ body {
     display: block;
 }
 
-@media (min-width: 768px) {
-    .navbar-collapse {
-        display: flex !important;
-        width: auto;
-        order: initial;
-        margin-top: 0;
-        padding-top: 0;
-        border-top: none;
-        flex: 1;
-        justify-content: center;
-        margin-left: 2rem;
-    }
-}
-
 .navbar-nav {
     list-style: none;
     display: flex;
@@ -207,13 +187,6 @@ body {
     gap: 0.5rem;
     padding: 0;
     margin: 0;
-}
-
-@media (min-width: 768px) {
-    .navbar-nav {
-        flex-direction: row;
-        gap: 0.25rem;
-    }
 }
 
 .nav-item {
@@ -263,9 +236,59 @@ body {
     gap: 0.75rem;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 1199px) {
+    .navbar-actions.d-md-flex {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbar-toggler {
+        display: none;
+    }
+
+    .navbar {
+        flex-wrap: nowrap;
+        gap: 0.75rem;
+    }
+
+    .navbar-collapse {
+        display: flex !important;
+        width: auto;
+        order: initial;
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+        flex: 1;
+        justify-content: center;
+        margin-left: 2rem;
+        min-width: 0;
+    }
+
+    .navbar-nav {
+        flex-direction: row;
+        gap: 0.25rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .navbar-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-link {
+        white-space: nowrap;
+    }
+
     .navbar-actions.d-md-flex {
         display: flex !important;
+        flex-shrink: 0;
+    }
+
+    .btn-user {
+        white-space: nowrap;
     }
 }
 
@@ -400,6 +423,31 @@ body {
     height: 1px;
     background: var(--border-color);
     margin: 0.5rem 0;
+}
+
+/* Keep navbar metrics stable across pages that redefine generic utility classes. */
+.header-backdrop .navbar {
+    padding: 0.75rem 0 !important;
+}
+
+.header-backdrop .logo-box {
+    width: 40px;
+    height: 40px;
+}
+
+.header-backdrop .logo-text p {
+    margin: 0 !important;
+    line-height: 1;
+}
+
+.header-backdrop .nav-link {
+    line-height: 1.2;
+}
+
+.header-backdrop .btn-user {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9375rem;
+    line-height: 1.2;
 }
 
 /* Utility Classes */

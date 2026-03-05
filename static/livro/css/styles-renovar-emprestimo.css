@@ -140,7 +140,9 @@
     flex-wrap: wrap;
 }
 
-.btn {
+.renew-page .btn,
+.form-page .btn,
+.profile-page .btn {
     padding: 0.875rem 1.5rem;
     border-radius: 8px;
     font-weight: 600;
@@ -155,39 +157,55 @@
     font-family: var(--font-body);
 }
 
-.btn i {
+.renew-page .btn i,
+.form-page .btn i,
+.profile-page .btn i {
     font-size: 1rem;
 }
 
-.btn-primary {
+.renew-page .btn-primary,
+.form-page .btn-primary,
+.profile-page .btn-primary {
     background: var(--primary);
     color: white;
 }
 
-.btn-primary:hover {
+.renew-page .btn-primary:hover,
+.form-page .btn-primary:hover,
+.profile-page .btn-primary:hover {
     background: #152a42;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
 }
 
-.btn-secondary {
+.renew-page .btn-secondary,
+.form-page .btn-secondary,
+.profile-page .btn-secondary {
     background: transparent;
     color: var(--muted);
     border: 2px solid var(--border-color);
 }
 
-.btn-secondary:hover {
+.renew-page .btn-secondary:hover,
+.form-page .btn-secondary:hover,
+.profile-page .btn-secondary:hover {
     background: var(--muted-light);
     color: var(--body-color);
 }
 
-.btn-block {
+.renew-page .btn-block,
+.form-page .btn-block,
+.profile-page .btn-block {
     width: 100%;
     justify-content: center;
 }
 
-.btn:disabled,
-.btn[disabled] {
+.renew-page .btn:disabled,
+.renew-page .btn[disabled],
+.form-page .btn:disabled,
+.form-page .btn[disabled],
+.profile-page .btn:disabled,
+.profile-page .btn[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
@@ -362,7 +380,9 @@
         flex-direction: column;
     }
 
-    .btn {
+    .renew-page .btn,
+    .form-page .btn,
+    .profile-page .btn {
         width: 100%;
         justify-content: center;
     }
@@ -579,7 +599,7 @@ RESPONSIVE CLASSES
         gap: 1rem !important;
     }
 
-    .btn {
+    .form-page .btn {
         width: 100% !important;
         padding: 0.75rem 1.5rem !important;
         font-size: 0.95rem !important;
@@ -668,13 +688,13 @@ RESPONSIVE CLASSES
         gap: 0.75rem !important;
     }
 
-    .btn {
+    .form-page .btn {
         width: 100% !important;
         padding: 0.625rem 1rem !important;
         font-size: 0.9rem !important;
     }
 
-    .btn i {
+    .form-page .btn i {
         margin-right: 0.35rem !important;
     }
 
@@ -702,27 +722,33 @@ RESPONSIVE CLASSES
 /* Touch-friendly adjustments */
 @media (hover: none) and (pointer: coarse) {
 
-    button,
-    a.btn,
-    input[type="submit"] {
+    .renew-page button,
+    .renew-page a.btn,
+    .renew-page input[type="submit"],
+    .form-page button,
+    .form-page a.btn,
+    .form-page input[type="submit"],
+    .profile-page button,
+    .profile-page a.btn,
+    .profile-page input[type="submit"] {
         min-height: 44px !important;
         min-width: 44px !important;
     }
 }
 
-.container-fluid {
+.renew-page .container-fluid {
     max-width: 1200px;
     margin: 0 auto;
     padding: 16px;
 }
 
-.loans-list {
+.renew-page .loans-list {
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
 }
 
-.loan-card {
+.renew-page .loan-card {
     flex: 1 1 350px;
     max-width: 400px;
     min-width: 260px;
@@ -734,7 +760,7 @@ RESPONSIVE CLASSES
     margin-bottom: 16px;
 }
 
-.search-form .form-group {
+.renew-page .search-form .form-group {
     display: grid;
     gap: 10px;
     grid-template-columns: 3fr 1fr;
@@ -742,54 +768,54 @@ RESPONSIVE CLASSES
 }
 
 @media (max-width: 900px) {
-    .container-fluid {
+    .renew-page .container-fluid {
         padding: 8px;
     }
 
-    .loans-list {
+    .renew-page .loans-list {
         flex-direction: column;
         gap: 16px;
     }
 
-    .loan-card {
+    .renew-page .loan-card {
         max-width: 100%;
         min-width: 0;
     }
 
-    .search-form .form-group {
+    .renew-page .search-form .form-group {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 600px) {
-    .page-header-content {
+    .renew-page .page-header-content {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .page-title {
+    .renew-page .page-title {
         font-size: 1.3rem;
     }
 
-    .section-title {
+    .renew-page .section-title {
         font-size: 1.1rem;
     }
 
-    .loan-card {
+    .renew-page .loan-card {
         padding: 8px;
     }
 
-    .loan-card-body h3 {
+    .renew-page .loan-card-body h3 {
         font-size: 1rem;
     }
 
-    .search-form .form-group input,
-    .search-form .form-group select {
+    .renew-page .search-form .form-group input,
+    .renew-page .search-form .form-group select {
         height: 40px;
         font-size: 1rem;
     }
 
-    .form-actions {
+    .renew-page .form-actions {
         flex-direction: column;
         gap: 8px;
     }

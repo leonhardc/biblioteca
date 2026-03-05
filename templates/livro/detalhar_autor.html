@@ -3,16 +3,8 @@
 <html lang="pt-BR">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{ autor.nome }} {{ autor.sobrenome }} - Biblioteca Acadêmica</title>
-	<link rel="stylesheet"
-		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
-	<script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
-	<link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
-	<link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
-	<link rel="stylesheet" href="{% static 'livro/css/styles-detalhar.css' %}">
+	<title>Detalhes do Autor - Biblioteca Acadêmica</title>
+	{% include 'livro/parciais/_head.html' %}
 </head>
 
 <body>
