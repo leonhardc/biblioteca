@@ -12,9 +12,9 @@ Veja a aplicacão rodando em [biblioteca-academica](http://biblioteca.leonardorc
 
 |Tipo de Usuario|Usuario|Senha|
 |---------------|-------|-----|
-|Aluno|hellena_da.cruz781|1234|
-|Professor|mathias_marques994|1234|
-|Funcionario|caio_garcia522|1234|
+|Aluno|	larissa_melo537|1234|
+|Professor|bento_garcia129|1234|
+|Funcionario|juan_alves305|1234|
 
 ### Contexto
 
