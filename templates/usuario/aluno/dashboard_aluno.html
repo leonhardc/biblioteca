@@ -85,7 +85,7 @@
                             <i class="fa-solid fa-clock"></i>
                         </div>
                         <div class="stat-content">
-                            <h3 class="stat-value">{{ aluno.emprestimos_pendentes|default:0 }}</h3>
+                            <h3 class="stat-value">{{ aluno.devolucoes_pendentes|default:0 }}</h3>
                             <p class="stat-label">Devoluções Pendentes</p>
                             <a href="{% url 'livro:listar_emprestimos' %}" class="stat-link">
                                 Gerenciar <i class="fa-solid fa-arrow-right"></i>
@@ -94,6 +94,7 @@
                     </div>
 
                     <div class="stat-card">
+                        {% if aluno.devolucoes_pendentes == 0 %}
                         <div class="stat-icon stat-icon-info">
                             <i class="fa-solid fa-star"></i>
                         </div>
@@ -104,6 +105,18 @@
                                 Ver perfil <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
+                        {% else %}
+                        <div class="stat-icon stat-icon-warning">
+                            <i class="fa-solid fa-exclamation-triangle" style="color: brown;"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value">Atrasado</h3>
+                            <p class="stat-label">Status da Conta</p>
+                            <a href="{% url 'usuario:ler-aluno' %}" class="stat-link">
+                                Ver perfil <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </section>

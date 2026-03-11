@@ -40,6 +40,22 @@
                         Acompanhe todos os seus empréstimos ativos e o histórico de devoluções.
                     </p>
                 </div>
+                {% if multa %}
+                <style>
+                    .multas {
+                        margin-top: 20px;
+                        padding: 15px;
+                        background-color: #f8d7da;
+                        color: #721c24;
+                        border: 1px solid #f5c6cb;
+                        border-radius: 5px;
+                        font-weight: bold;
+                    }
+                </style>
+                <div class="multas">
+                    <span>Multa: R$ {{ multa|floatformat:2 }}</span>
+                </div>
+                {% endif %}
             </section>
 
             {% if emprestimos %}
@@ -70,7 +86,7 @@
                                     {% endif %}
                                 {% endfor %}
                             {% endwith %}
-                            <span id="ativos-count">-</span>
+                            <span id="ativos-count">{{ ativos }}</span>
                         </div>
                     </div>
 
@@ -79,10 +95,10 @@
                             <div class="stat-icon danger">
                                 <i class="fa-solid fa-clock"></i>
                             </div>
-                            <span class="stat-label">Devolvidos</span>
+                            <span class="stat-label">Pendentes</span>
                         </div>
                         <div class="stat-value">
-                            <span id="devolvidos-count">-</span>
+                            <span id="pendentes-count">{{ devolucoes_pendentes }}</span>
                         </div>
                     </div>
                 </section>
@@ -97,10 +113,16 @@
                                         <i class="fa-solid fa-book-open"></i>
                                     </div>
                                     <div>
-                                        {% if emprestimo.ativo %}
+                                        {% if emprestimo.ativo and not emprestimo.pendente%}
                                             <span class="loan-status active">
                                                 <i class="fa-solid fa-circle-check"></i>
                                                 Ativo
+                                            </span>
+                                        {% endif %}
+                                        {% if emprestimo.pendente %}
+                                            <span class="loan-status pending" style="background-color: brown; color: aliceblue;">
+                                                <i class="fa-solid fa-hourglass-half"></i>
+                                                Pendente
                                             </span>
                                         {% else %}
                                             <span class="loan-status inactive">
