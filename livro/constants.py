@@ -125,3 +125,9 @@ NUMERO_MAXIMO_DE_RENOVACOES_POR_USUARIO = {
     'professor': 4,
     'funcionario': 3
 }
+
+MULTA_POR_DIA_DE_ATRASO = {
+    'aluno': 1.00,
+    'professor': 0.50,
+    'funcionario': 0.75
+}

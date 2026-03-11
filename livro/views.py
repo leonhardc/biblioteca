@@ -673,6 +673,12 @@ def criar_emprestimo(request: HttpRequest, id_livro:int, id_usuario:int):
         # professor, aluno ou outro funcionario
         pass
 
+def calcular_multa(usuario):
+    # Funcao para calcular a multa total de um usuario, somando o valor de todas as multas pendentes
+    emprestimos_pendentes = Emprestimo.objects.filter(usuario=usuario, pendente=True)
+    multa_total = sum(emprestimo.calcular_multa for emprestimo in emprestimos_pendentes)
+    return multa_total
+
 def listar_emprestimos(request: HttpRequest):
     if request.user.is_authenticated:
         user_context = {
@@ -683,8 +689,9 @@ def listar_emprestimos(request: HttpRequest):
         emprestimos_existem = Emprestimo.objects.filter(usuario=request.user, ativo=True).exists()
         template_name = 'livro/listar_emprestimos.html'
         if emprestimos_existem:
+            devolucoes_pendentes = Emprestimo.objects.filter(usuario=request.user, pendente=True).count()
             emprestimos = Emprestimo.objects.filter(usuario=request.user, ativo=True)
-            return render(request, template_name, context={'emprestimos': emprestimos, 'user_context': user_context})
+            return render(request, template_name, context={'emprestimos': emprestimos, 'user_context': user_context, 'devolucoes_pendentes': devolucoes_pendentes, 'multa': calcular_multa(request.user)})
         else:
             messages.add_message(request, messages.ERROR, 'Não existem emprestimos para este usuário.')
             return render(request, template_name, context={'emprestimo':True, 'user_context': user_context})

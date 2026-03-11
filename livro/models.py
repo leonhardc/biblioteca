@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from livro.constants import NACIONALIDADES, SEXO
+from livro.constants import NACIONALIDADES, SEXO, MULTA_POR_DIA_DE_ATRASO
+from utils.usuarios.utils import get_tipo_usuario
 
 
 
@@ -71,6 +72,15 @@ class Emprestimo(models.Model):
     # * Um FUNCIONARIO pode pedir até 4 livros emprestados por até 21 dias cada.
     data_devolucao = models.DateField(default=timezone.now, blank=False, null=False, verbose_name='Data da Devolução')  # type: ignore
     numero_renovacoes = models.IntegerField(default=0, blank=False, null=False, verbose_name='Número de Renovações') # type: ignore
+
+    @property
+    def calcular_multa(self):
+        # Funcao para calcular a multa de um emprestimo, considerando o valor de R$ 1,00 por dia de atraso
+        if self.pendente:
+            dias_atraso = (timezone.now().date() - self.data_devolucao).days
+            if dias_atraso > 0:
+                return dias_atraso * MULTA_POR_DIA_DE_ATRASO.get(get_tipo_usuario(self.usuario), 1.00) # type: ignore
+        return 0.00
     
     def __str__(self):
         return f'{self.usuario} - {self.livro}'

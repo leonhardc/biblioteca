@@ -68,15 +68,47 @@ def calcula_emprestimos_pendentes_de_usuario(usuario_id):
             emprestimo.pendente = True
             emprestimo.save()
 
+def get_emprestimos_pendentes_usuario(usuario):
+    hoje = datetime.date.today()
+    emprestimos_pendentes = Emprestimo.objects.filter(
+        usuario=usuario,
+        ativo=True,
+        data_devolucao__lt=hoje
+    ).count()
+    return emprestimos_pendentes
+
+def marcar_emprestimos_pendentes(usuario):
+    hoje = datetime.date.today()
+    emprestimos_pendentes = Emprestimo.objects.filter(
+        usuario=usuario,
+        ativo=True,
+        data_devolucao__lt=hoje
+    )
+    if not emprestimos_pendentes:
+        return False
+    else:
+        for emprestimo in emprestimos_pendentes:
+            emprestimo.pendente = True
+            emprestimo.save()
+        return True
+    
+
 def pagina_inicial_aluno(request:HttpRequest, uid:int):
     if request.user.is_authenticated:
         template_name='usuario/aluno/dashboard_aluno.html'
+        devolucoes_pendentes = marcar_emprestimos_pendentes(request.user)
         usuario = User.objects.get(id=uid)
         cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
         cont_reservas = len(get_reservas_ativas_usuario(usuario))
-        cont_emprestimos_pendentes = len(get_emprestimos_pendentes_usuario(usuario))
-        # messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-        return render(request, template_name=template_name, context={'aluno':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas, 'emprestimos_pendentes':cont_emprestimos_pendentes}})
+        devolucoes_pendentes = Emprestimo.objects.filter(usuario=usuario, pendente=True).count()
+        contexto = {
+            'aluno': {
+                'emprestimos':cont_emprestimos, 
+                'reservas':cont_reservas, 
+                'devolucoes_pendentes': devolucoes_pendentes,
+                }
+            }
+        return render(request, template_name=template_name, context=contexto)
     else:
         messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
         return redirect('usuario:entrar')
@@ -87,9 +119,8 @@ def pagina_inicial_professor(request:HttpRequest, uid:int):
         usuario = User.objects.get(id=uid)
         cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
         cont_reservas = len(get_reservas_ativas_usuario(usuario))
-        cont_emprestimos_pendentes = len(get_emprestimos_pendentes_usuario(usuario))
         # messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-        return render(request, template_name=template_name, context={'professor':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas, 'emprestimos_pendentes':cont_emprestimos_pendentes}})
+        return render(request, template_name=template_name, context={'professor':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas}})
     else:
         messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
         return redirect('usuario:entrar')
@@ -100,9 +131,9 @@ def pagina_inicial_funcionario(request:HttpRequest, uid:int):
         usuario = User.objects.get(id=uid)
         cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
         cont_reservas = len(get_reservas_ativas_usuario(usuario))
-        cont_emprestimos_pendentes = len(get_emprestimos_pendentes_usuario(usuario))
+        # cont_emprestimos_pendentes = len(get_emprestimos_pendentes_usuario(usuario))
         messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-        return render(request, template_name=template_name, context={'funcionario':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas, 'emprestimos_pendentes':cont_emprestimos_pendentes}})
+        return render(request, template_name=template_name, context={'funcionario':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas}})
     else:
         messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
         return redirect('usuario:entrar')

@@ -27,3 +27,13 @@ def user_is_funcionario(usuario): # type: ignore
         username = usuario.username # type: ignore
         funcionario = Funcionario.objects.filter(usuario__username=username).exists()
         return True if funcionario else False
+
+def get_tipo_usuario(usuario): # type: ignore
+    if user_is_aluno(usuario):
+        return 'aluno'
+    elif user_is_professor(usuario):
+        return 'professor'
+    elif user_is_funcionario(usuario):
+        return 'funcionario'
+    else:
+        return 'desconecido'
