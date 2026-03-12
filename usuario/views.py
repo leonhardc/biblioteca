@@ -179,6 +179,76 @@ def sair(request:HttpRequest):
     return redirect('usuario:entrar')
 
 
+def configuracoes(request: HttpRequest):
+    if not request.user.is_authenticated:
+        messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
+        return redirect('usuario:entrar')
+
+    user_context = {
+        'aluno': user_is_aluno(request.user),
+        'professor': user_is_professor(request.user),
+        'funcionario': user_is_funcionario(request.user),
+    }
+
+    perfil = {
+        'icone': 'fa-user',
+        'tipo_label': 'Usuário da Biblioteca',
+        'matricula': '-',
+        'ativo': True,
+        'curso': 'Não informado',
+        'cpf': '-',
+    }
+
+    if user_context['aluno']:
+        aluno = Aluno.objects.filter(usuario=request.user).select_related('curso').first()
+        if aluno:
+            perfil.update(
+                {
+                    'icone': 'fa-graduation-cap',
+                    'tipo_label': 'Aluno',
+                    'matricula': aluno.matricula,
+                    'ativo': aluno.ativo,
+                    'curso': str(aluno.curso),
+                    'cpf': aluno.cpf,
+                }
+            )
+    elif user_context['professor']:
+        professor = Professor.objects.filter(usuario=request.user).select_related('curso').first()
+        if professor:
+            perfil.update(
+                {
+                    'icone': 'fa-chalkboard-user',
+                    'tipo_label': 'Professor',
+                    'matricula': professor.matricula,
+                    'ativo': professor.ativo,
+                    'curso': str(professor.curso),
+                    'cpf': professor.cpf,
+                }
+            )
+    elif user_context['funcionario']:
+        funcionario = Funcionario.objects.filter(usuario=request.user).first()
+        if funcionario:
+            perfil.update(
+                {
+                    'icone': 'fa-user-tie',
+                    'tipo_label': 'Funcionário',
+                    'matricula': funcionario.matricula,
+                    'ativo': funcionario.ativo,
+                    'cpf': funcionario.cpf,
+                }
+            )
+
+    return render(
+        request,
+        'usuario/config.html',
+        context={
+            'user_context': user_context,
+            'perfil': perfil,
+            'configuracoes': True,
+        },
+    )
+
+
 # CRUD de Aluno
 def listar_alunos(request:HttpRequest):
     if request.user.is_authenticated:
@@ -739,6 +809,22 @@ def buscar_usuario(request):
                         'usuarios':usuarios
                     }
                 )
+    else:
+        messages.add_message(request, messages.ERROR, 'O usuário não está autenticado.')
+        url_anterior = request.META.get('HTTP_REFERER')
+        return redirect(url_anterior) # type: ignore
+
+def config_page_aluno(request:HttpRequest):
+    if request.method == "GET" and request.user.is_authenticated:
+        template_name = "usuario/config.html"
+        usuario = request.user
+        if user_is_aluno(usuario):
+            aluno = Aluno.objects.get(usuario=usuario)
+            return render(request, template_name, context={'aluno':aluno})
+        else:
+            messages.add_message(request, messages.ERROR, 'O usuário logado não é um aluno.')
+            url_anterior = request.META.get('HTTP_REFERER')
+            return redirect(url_anterior) # type: ignore
     else:
         messages.add_message(request, messages.ERROR, 'O usuário não está autenticado.')
         url_anterior = request.META.get('HTTP_REFERER')

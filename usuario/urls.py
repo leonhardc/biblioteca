@@ -7,6 +7,7 @@ urlpatterns = [                                                                 
     path('entrar/', views.entrar, name='entrar'),                                                                       # type: ignore
     path('autenticar/', views.autenticar, name='autenticar'),                                                           # type: ignore
     path('sair/', views.sair, name='sair'),
+    path('configuracoes/', views.configuracoes, name='configuracoes'),
 
     # CRUD de alunos
     path('listar-alunos/', views.listar_alunos, name='listar-alunos'),

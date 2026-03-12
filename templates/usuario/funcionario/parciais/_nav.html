@@ -75,7 +75,7 @@
                             <i class="fa-solid fa-user-circle"></i>
                             Meu Perfil
                         </a>
-                        <a href="#" class="dropdown-item">
+                        <a href="{% url 'usuario:configuracoes' %}" class="dropdown-item {% if configuracoes %}active{% endif %}">
                             <i class="fa-solid fa-gear"></i>
                             Configurações
                         </a>

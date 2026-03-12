@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Configurações - Biblioteca Acadêmica</title>
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+	<script src="https://kit.fontawesome.com/9ca5555edc.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="{% static 'usuario/css/index.css' %}">
+	<link rel="stylesheet" href="{% static 'usuario/css/responsive.css' %}">
+	<link rel="stylesheet" href="{% static 'usuario/aluno/css/styles-aluno.css' %}">
+	<link rel="stylesheet" href="{% static 'usuario/css/config.css' %}">
+</head>
+
+<body>
+	{% if user_context.aluno %}
+		{% include 'usuario/aluno/parciais/_nav.html' %}
+	{% elif user_context.professor %}
+		{% include 'usuario/professor/parciais/_nav.html' %}
+	{% elif user_context.funcionario %}
+		{% include 'usuario/funcionario/parciais/_nav.html' %}
+	{% endif %}
+
+	<main class="settings-page">
+		<div class="container-fluid">
+			<section class="page-header">
+				<div class="page-header-content">
+					<div class="page-breadcrumb">
+						{% if user_context.aluno %}
+							<a href="{% url 'usuario:pagina_inicial_aluno' uid=user.id %}">
+								<i class="fa-solid fa-house"></i> Dashboard
+							</a>
+						{% elif user_context.professor %}
+							<a href="{% url 'usuario:pagina_inicial_professor' uid=user.id %}">
+								<i class="fa-solid fa-house"></i> Dashboard
+							</a>
+						{% elif user_context.funcionario %}
+							<a href="{% url 'usuario:pagina_inicial_funcionario' uid=user.id %}">
+								<i class="fa-solid fa-house"></i> Dashboard
+							</a>
+						{% endif %}
+						<i class="fa-solid fa-chevron-right"></i>
+						<span>Configurações</span>
+					</div>
+					<h1 class="font-display page-title">
+						<i class="fa-solid fa-gear"></i>
+						Configurações da Conta
+					</h1>
+					<p class="page-subtitle">
+						Personalize sua experiência na biblioteca, atualize informações e gerencie a segurança da sua conta.
+					</p>
+				</div>
+			</section>
+
+			<section class="settings-grid">
+				<aside class="profile-sidebar">
+					<div class="profile-card">
+						<div class="profile-avatar">
+							<i class="fa-solid {{ perfil.icone|default:'fa-user' }}"></i>
+						</div>
+						<h2 class="profile-name">{{ user.first_name|default:user.username }} {{ user.last_name }}</h2>
+						<span class="profile-role">
+							<i class="fa-solid {{ perfil.icone|default:'fa-user' }}"></i>
+							{{ perfil.tipo_label }}
+						</span>
+					</div>
+
+					<nav class="profile-menu">
+						{% if user_context.aluno %}
+							<a href="{% url 'usuario:ler-aluno' %}" class="profile-menu-item">
+								<i class="fa-solid fa-user"></i>
+								Informações Pessoais
+							</a>
+						{% elif user_context.professor %}
+							<a href="{% url 'usuario:ler-professor' uid=user.id %}" class="profile-menu-item">
+								<i class="fa-solid fa-user"></i>
+								Informações Pessoais
+							</a>
+						{% elif user_context.funcionario %}
+							<a href="{% url 'usuario:ler-funcionario' uid=user.id %}" class="profile-menu-item">
+								<i class="fa-solid fa-user"></i>
+								Informações Pessoais
+							</a>
+						{% endif %}
+						<a href="{% url 'usuario:configuracoes' %}" class="profile-menu-item active">
+							<i class="fa-solid fa-gear"></i>
+							Configurações
+						</a>
+						<a href="{% url 'usuario:sair' %}" class="profile-menu-item danger">
+							<i class="fa-solid fa-right-from-bracket"></i>
+							Sair
+						</a>
+					</nav>
+				</aside>
+
+				<div class="settings-content">
+					<section class="settings-card">
+						<div class="card-title-row">
+							<h3 class="font-display">
+								<i class="fa-solid fa-id-card"></i>
+								Dados da Conta
+							</h3>
+							<span class="card-hint">Somente visualização</span>
+						</div>
+						<div class="settings-info-grid">
+							<div class="info-item">
+								<label>Perfil</label>
+								<p>{{ perfil.tipo_label }}</p>
+							</div>
+							<div class="info-item">
+								<label>Nome completo</label>
+								<p>{{ user.first_name|default:'-' }} {{ user.last_name|default:'' }}</p>
+							</div>
+							<div class="info-item">
+								<label>Usuário</label>
+								<p>{{ user.username|default:'-' }}</p>
+							</div>
+							<div class="info-item">
+								<label>E-mail</label>
+								<p>{{ user.email|default:'-' }}</p>
+							</div>
+							<div class="info-item">
+								<label>Matrícula</label>
+								<p>{{ perfil.matricula|default:'-' }}</p>
+							</div>
+							<div class="info-item">
+								<label>Curso / Vínculo</label>
+								<p>{{ perfil.curso|default:'Não informado' }}</p>
+							</div>
+							<div class="info-item">
+								<label>CPF</label>
+								<p>{{ perfil.cpf|default:'-' }}</p>
+							</div>
+							<div class="info-item">
+								<label>Status</label>
+								<p>{% if perfil.ativo %}Ativo{% else %}Inativo{% endif %}</p>
+							</div>
+							<div class="info-item">
+								<label>Conta criada em</label>
+								<p>{{ user.date_joined|date:'d/m/Y' }}</p>
+							</div>
+						</div>
+					</section>
+
+					<section class="settings-card">
+						<div class="card-title-row">
+							<h3 class="font-display">
+								<i class="fa-solid fa-sliders"></i>
+								Preferências
+							</h3>
+						</div>
+						<form class="settings-form" method="post" action="#" novalidate>
+							{% csrf_token %}
+							<label class="switch-row" for="receber_notificacoes">
+								<span>
+									<strong>Receber notificações por e-mail</strong>
+									<small>Alertas sobre empréstimos, reservas e devoluções pendentes.</small>
+								</span>
+								<input id="receber_notificacoes" type="checkbox" checked>
+							</label>
+
+							<label class="switch-row" for="newsletter_biblioteca">
+								<span>
+									<strong>Receber novidades do acervo</strong>
+									<small>Comunicados de novos títulos e recomendações.</small>
+								</span>
+								<input id="newsletter_biblioteca" type="checkbox">
+							</label>
+
+							<div class="field-group">
+								<label for="idioma_interface">Idioma da interface</label>
+								<select id="idioma_interface" name="idioma_interface">
+									<option value="pt-BR" selected>Português (Brasil)</option>
+									<option value="en">Inglês</option>
+									<option value="es">Espanhol</option>
+								</select>
+							</div>
+
+							<button type="submit" class="btn btn-primary" disabled>
+								<i class="fa-solid fa-floppy-disk"></i>
+								Salvar preferências (em breve)
+							</button>
+						</form>
+					</section>
+
+					<section class="settings-card">
+						<div class="card-title-row">
+							<h3 class="font-display">
+								<i class="fa-solid fa-shield-halved"></i>
+								Segurança
+							</h3>
+						</div>
+						<div class="security-actions">
+							<a href="{% url 'usuario:sair' %}" class="btn btn-outline-secondary">
+								<i class="fa-solid fa-right-from-bracket"></i>
+								Encerrar sessão
+							</a>
+							<button class="btn btn-danger" type="button" disabled>
+								<i class="fa-solid fa-key"></i>
+								Alterar senha (em breve)
+							</button>
+						</div>
+					</section>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<script src="{% static 'usuario/js/layout.js' %}"></script>
+</body>
+
+</html>
