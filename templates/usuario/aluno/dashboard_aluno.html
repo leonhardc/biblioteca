@@ -28,7 +28,8 @@
                         Olá, {{ user.first_name|default:"Estudante" }}! 👋
                     </h1>
                     <p class="welcome-subtitle">
-                        Bem-vindo ao seu painel. Aqui você pode gerenciar seus empréstimos, reservas e explorar nosso acervo.
+                        Bem-vindo ao seu painel. Aqui você pode gerenciar seus empréstimos, reservas e explorar nosso
+                        acervo.
                     </p>
                 </div>
                 <div class="quick-actions">
@@ -113,7 +114,7 @@
                             <h3 class="stat-value">Atrasado</h3>
                             <p class="stat-label">Status da Conta</p>
                             <a href="{% url 'livro:listar_emprestimos'%}" class="stat-link">
-                                Ver perfil <i class="fa-solid fa-arrow-right"></i>
+                                Ver Emprestimos <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
                         {% endif %}
@@ -135,8 +136,20 @@
                                 <p class="card-subtitle">Suas últimas interações na biblioteca</p>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="overflow-y: auto; max-height: 400px;">
                             <div class="activity-list">
+
+                                {% for notificacao in aluno.notificacoes %}
+                                <div class="activity-item">
+                                    <div class="activity-icon activity-icon-primary">
+                                        <i class="fa-solid fa-bell"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p class="activity-title">{{ notificacao.message }}</p>
+                                        <p class="activity-time">{{ notificacao.created_at|timesince }} atrás</p>
+                                    </div>
+                                </div>
+                                {% empty %}
                                 <div class="activity-item">
                                     <div class="activity-icon activity-icon-primary">
                                         <i class="fa-solid fa-book"></i>
@@ -146,6 +159,8 @@
                                         <p class="activity-time">Comece explorando nosso acervo</p>
                                     </div>
                                 </div>
+                                {% endfor %}
+
                             </div>
                         </div>
                     </div>
@@ -216,44 +231,15 @@
                     </div>
                     <div class="info-banner-text">
                         <h3>Lembre-se!</h3>
-                        <p>Você pode emprestar até <strong>3 livros</strong> simultaneamente por um período de <strong>14 dias</strong>. Renove antes do prazo para evitar multas.</p>
+                        <p>Você pode emprestar até <strong>3 livros</strong> simultaneamente por um período de
+                            <strong>14 dias</strong>. Renove antes do prazo para evitar multas.</p>
                     </div>
                 </div>
             </section>
         </div>
     </main>
 
-    <script>
-    // Mobile menu toggle and user dropdown
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const navbarCollapse = document.getElementById('navbarNav');
-        const userMenuBtn = document.getElementById('user-menu-btn');
-        const userDropdown = document.getElementById('user-dropdown');
-
-        if (mobileMenuBtn && navbarCollapse) {
-            mobileMenuBtn.addEventListener('click', function() {
-                navbarCollapse.classList.toggle('show');
-                this.classList.toggle('active');
-            });
-        }
-
-        if (userMenuBtn && userDropdown) {
-            userMenuBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userDropdown.classList.toggle('show');
-            });
-
-            document.addEventListener('click', function() {
-                userDropdown.classList.remove('show');
-            });
-
-            userDropdown.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-    });
-    </script>
+    <script src="{% static 'usuario/js/layout.js' %}"></script>
 </body>
 
 </html>

@@ -20,6 +20,9 @@ from .constants import *
 import datetime
 from utils.utils import gerar_matricula_aluno, gerar_matricula_professor, gerar_matricula_funcionario
 from django.db.models import Q
+from notificacao.models import Notificacao
+
+
 # Views de controle de usuario
 def index(request:HttpRequest) -> HttpResponse:
     # if request.user.is_authenticated:
@@ -101,11 +104,13 @@ def pagina_inicial_aluno(request:HttpRequest, uid:int):
         cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
         cont_reservas = len(get_reservas_ativas_usuario(usuario))
         devolucoes_pendentes = Emprestimo.objects.filter(usuario=usuario, pendente=True).count()
+        ultimas_notificacoes = Notificacao.objects.filter(user=usuario).order_by('-created_at')[:5]
         contexto = {
             'aluno': {
                 'emprestimos':cont_emprestimos, 
                 'reservas':cont_reservas, 
                 'devolucoes_pendentes': devolucoes_pendentes,
+                'notificacoes': ultimas_notificacoes
                 }
             }
         return render(request, template_name=template_name, context=contexto)
