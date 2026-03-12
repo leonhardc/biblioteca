@@ -689,9 +689,24 @@ def listar_emprestimos(request: HttpRequest):
         emprestimos_existem = Emprestimo.objects.filter(usuario=request.user, ativo=True).exists()
         template_name = 'livro/listar_emprestimos.html'
         if emprestimos_existem:
-            devolucoes_pendentes = Emprestimo.objects.filter(usuario=request.user, pendente=True).count()
             emprestimos = Emprestimo.objects.filter(usuario=request.user, ativo=True)
-            return render(request, template_name, context={'emprestimos': emprestimos, 'user_context': user_context, 'devolucoes_pendentes': devolucoes_pendentes, 'multa': calcular_multa(request.user)})
+            devolucoes_pendentes = Emprestimo.objects.filter(usuario=request.user, pendente=True).count()
+            if devolucoes_pendentes > 0:
+                contexto = {
+                    'emprestimos': emprestimos, 
+                    'user_context': user_context, 
+                    'devolucoes_pendentes': devolucoes_pendentes, 
+                    'multa': calcular_multa(request.user)}
+            else:
+                contexto = {
+                    'emprestimos': emprestimos, 
+                    'user_context': user_context, 
+                    'devolucoes_pendentes': devolucoes_pendentes, 
+                }
+            
+            return render(request, template_name, context=contexto)
+                
+                
         else:
             messages.add_message(request, messages.ERROR, 'Não existem emprestimos para este usuário.')
             return render(request, template_name, context={'emprestimo':True, 'user_context': user_context})
