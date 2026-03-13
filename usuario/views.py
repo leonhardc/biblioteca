@@ -1,10 +1,3 @@
-# O que deve ser implementado aqui:
-# TODO: 1. Todas as views de Usuarios. Elas tem que ser Intermediarias a todos as operações
-# Que envolvam usuarios. 
-# TODO: 2. Tem que ser Implementado o Sistema de Login Redirecionando cada um dos tipos de usuarios
-# as suas respectivas paginas iniciais
-# TODO: 3. Tem que ser implementado todo um sistema de controle de acesso a determinadas views. Onde cada
-# tipo de usuario so pode acessar as views as quais ele tem permissao
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
 from usuario.forms import LoginForm, FormularioAluno, FormularioBuscarUsuario
@@ -358,7 +351,6 @@ def criar_aluno(request:HttpRequest):
         return redirect(url_anterior) # type: ignore
 
 def ler_aluno_administrador(request:HttpRequest, uid:int):
-    # TODO: Criar o template abaixo
     if request.user.is_authenticated:
         if request.user.is_staff or user_is_funcionario(request.user):
             template_name = "usuario/aluno/ler_aluno.html"
@@ -402,8 +394,6 @@ def ler_aluno(request:HttpRequest):
         return redirect(url_anterior) # type: ignore
 
 def atualizar_aluno(request:HttpRequest, uid:int):
-    # TODO: Essa view so pode ser acessada por funcionarios, administradores e pelo aluno
-    # TODO: Criar o template abaixo
     if request.user.is_authenticated:
         template_name = 'usuario/aluno/atualizar_dados_aluno.html'
         if request.user.is_staff or user_is_funcionario(request.user):
@@ -448,13 +438,17 @@ def atualizar_aluno(request:HttpRequest, uid:int):
         return redirect(url_anterior) # type: ignore
 
 def deletar_aluno(request:HttpRequest, uid:int):
-    # TODO: Somente acessivel pelo usuario administrador
-    if Aluno.objects.filter(id=uid).exists() and request.user.is_authenticated:
-        Aluno.objects.get(id=uid).delete()
-        return HttpResponse("Aluno Deletado com Sucesso.")
-    else: 
-        url_anterior = request.META.get('HTTP_REFERER')
+    if request.user.is_authenticated and (request.user.is_staff or user_is_funcionario(request.user)):
+        if Aluno.objects.filter(id=uid).exists():
+            Aluno.objects.get(id=uid).delete()
+            return HttpResponse("Aluno Deletado com Sucesso.")
+        else: 
+            url_anterior = request.META.get('HTTP_REFERER')
         messages.add_message(request, messages.ERROR, 'Aluno não encontrado')
+        return redirect(url_anterior) # type: ignore
+    else:
+        url_anterior = request.META.get('HTTP_REFERER')
+        messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado ou não tem permissão para acessar essa página.')
         return redirect(url_anterior) # type: ignore
 
 def detalhes_aluno(request:HttpRequest, uid:int):
@@ -545,7 +539,6 @@ def criar_professor(request:HttpRequest):
 def ler_professor(request:HttpRequest, uid:int):
     if request.user.is_authenticated:
         if request.method == 'GET':
-            # TODO: Criar o template abaixo
             template_name = 'usuario/professor/detalhes_professor.html'
             professor_existe = Professor.objects.filter(usuario=uid).exists()
             if professor_existe:
@@ -635,7 +628,6 @@ def detalhes_professor(request:HttpRequest, uid:int):
 def criar_funcionario(request:HttpRequest):
     if request.user.is_authenticated:
         if request.method == 'GET':
-            # TODO: Implementar o template abaixo
             template_name = 'ususario/funcionario/criar_funcionario.html'
             formulario_funcionario = FormularioFuncionario()
             return render(request, template_name, context={'form':formulario_funcionario})
@@ -704,7 +696,6 @@ def atualizar_funcionario(request:HttpRequest, uid:int):
     if request.user.is_authenticated:
         template_name = 'usuario/funcionario/atualizar_funcionario.html'
         if request.method == 'GET':
-            # TODO: Adicionar dados iniciais no formulario
             funcionario = Funcionario.objects.get(id=uid)
             informacoes_funcionario = informacoes_formulario_funcionario(funcionario)
             formulario_funcionario = FormularioFuncionario(initial=informacoes_funcionario)

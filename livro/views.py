@@ -771,18 +771,6 @@ def renovar_emprestimo(request: HttpRequest):
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
 
-
-def renovar_emprestimo_aluno(usuario, livro):
-    try:
-        emprestimo = Emprestimo.objects.get(usuario=usuario, livro=livro, ativo=True)
-        nova_data_devolucao = emprestimo.data_devolucao + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['aluno'])
-        # TODO: Adicionar checagens de quantas vezes o aluno ja renovou determinado emprestimo
-        emprestimo.data_devolucao = nova_data_devolucao
-        emprestimo.save()
-        return True
-    except:
-        return False
-
 def renovar_emprestimo_aluno(emprestimo):
     if emprestimo.numero_renovacoes < NUMERO_MAXIMO_DE_RENOVACOES_POR_USUARIO['aluno']:
         nova_data_devolucao = emprestimo.data_devolucao + timedelta(days=NUM_MAX_DIAS_EMPRESTIMOS['aluno'])
@@ -852,8 +840,6 @@ def renovar_emprestimo_livro(request, emprestimo_id):
     else:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
-
-# TODO: Implementar view de historico de emprestimos
 
 def historico_emprestimos(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:

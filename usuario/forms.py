@@ -85,7 +85,7 @@ class FormularioProfessor(forms.Form):
     cpf = forms.CharField(label='CPF', widget=forms.TextInput(attrs={'class':'form-control'}))
     regime = forms.ChoiceField(label='Regime', choices=JORNADA, widget=forms.Select(attrs={'class':'form-control'}))
     contratacao = forms.DateField(label='Contratação', widget=forms.DateInput(attrs={'type':'date'}))
-    # TODO: Implementar os metodos _clean dos atributos do formulário
+
     def clean_nome(self):
         nome = self.cleaned_data['nome']
         if re.search(r'[0-9]', nome):
@@ -118,7 +118,7 @@ class FormularioFuncionario(forms.Form):
     usuario = forms.CharField(label='Usuário', max_length=20, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite seu nome de usuário'}))
     matricula = forms.CharField(label='Matricula', max_length=4, widget=forms.TextInput(attrs={'placeholder':'Matricula do professor', 'disabled':False }))
     cpf = forms.CharField(label='CPF', widget=forms.TextInput(attrs={'class':'form-control'}))
-    # TODO: Implementar os metodos _clean dos atributos do formulário
+    
     def clean_nome(self):
         nome = self.cleaned_data['nome']
         if re.search(r'[0-9]', nome):

@@ -2,11 +2,11 @@
 
 ## 🎯 Antes de Começar um Novo Template
 
-- [ ] Incluir `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
-- [ ] Importar os 3 arquivos CSS responsivos
-- [ ] Usar classes grid (`row`, `col-*`) ou `display: grid`
+- [x] Incluir `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
+- [x] Importar os 3 arquivos CSS responsivos
+- [x] Usar classes grid (`row`, `col-*`) ou `display: grid`
 - [ ] Começar com mobile-first approach
-- [ ] Pensar em como layout será em diferentes tamanhos
+- [x] Pensar em como layout será em diferentes tamanhos
 
 ## 📝 Durante a Desenvolvimento
 
