@@ -82,7 +82,7 @@ NUM_MAX_EMPRESTIMOS = {
 
 NUM_MAX_DIAS_EMPRESTIMOS = {
     'aluno': 15,
-    'professore': 30,
+    'professor': 30,
     'funcionario': 21
 }
 

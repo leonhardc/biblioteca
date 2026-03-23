@@ -1,5 +1,4 @@
 {% load static %}
-{% load my_filters %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -106,7 +105,7 @@
                                             <i class="fa-solid fa-circle"></i>
                                             CPF
                                         </label>
-                                        <div class="info-value">{{ professor.cpf|filter_formatar_cpf }}</div>
+                                        <div class="info-value">{{ professor.cpf }}</div>
                                     </div>
                                 </div>
                             </div>

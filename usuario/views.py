@@ -115,10 +115,11 @@ def pagina_inicial_professor(request:HttpRequest, uid:int):
     if request.user.is_authenticated:
         template_name='usuario/professor/dashboard_professor.html'
         usuario = User.objects.get(id=uid)
+        professor = Professor.objects.get(usuario=usuario)
         cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
         cont_reservas = len(get_reservas_ativas_usuario(usuario))
-        # messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-        return render(request, template_name=template_name, context={'professor':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas}})
+        notificacoes = Notificacao.objects.filter(user=usuario).order_by('-created_at')[:5]
+        return render(request, template_name=template_name, context={'professor':{'professor': professor, 'emprestimos':cont_emprestimos, 'reservas':cont_reservas, 'notificacoes': notificacoes}})
     else:
         messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
         return redirect('usuario:entrar')
@@ -130,8 +131,9 @@ def pagina_inicial_funcionario(request:HttpRequest, uid:int):
         cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))
         cont_reservas = len(get_reservas_ativas_usuario(usuario))
         # cont_emprestimos_pendentes = len(get_emprestimos_pendentes_usuario(usuario))
+        notificacoes = Notificacao.objects.filter(user=usuario).order_by('-created_at')[:5]
         messages.add_message(request, messages.SUCCESS, f'{usuario.username} logado com sucesso!')
-        return render(request, template_name=template_name, context={'funcionario':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas}})
+        return render(request, template_name=template_name, context={'funcionario':{'emprestimos':cont_emprestimos, 'reservas':cont_reservas, 'notificacoes': notificacoes}})
     else:
         messages.add_message(request, messages.ERROR, 'Operação inválida. O usuário não está autenticado.')
         return redirect('usuario:entrar')

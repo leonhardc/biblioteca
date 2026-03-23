@@ -98,7 +98,7 @@
                             <i class="fa-solid fa-graduation-cap"></i>
                         </div>
                         <div class="stat-content">
-                            <h3 class="stat-value">{{ user.professor.regime|default:"N/A" }}</h3>
+                            <h3 class="stat-value">{{ professor.professor.regime|default:"N/A" }}</h3>
                             <p class="stat-label">Regime de Trabalho</p>
                             <a href="{% url 'usuario:ler-professor' uid=user.id %}" class="stat-link">
                                 Ver perfil <i class="fa-solid fa-arrow-right"></i>
@@ -122,6 +122,29 @@
                                 <p class="card-subtitle">Suas últimas interações na biblioteca</p>
                             </div>
                         </div>
+                        {% if professor.notificacoes %}
+                        <div class="card-body">
+                            <div class="activity-list">
+                                {% for notificacao in professor.notificacoes %}
+                                <div class="activity-item">
+                                    <div class="activity-icon activity-icon-primary">
+                                        {% if notificacao.type == 'EMPRESTIMO_CRIADO' %}
+                                        <i class="fa-solid fa-book"></i>
+                                        {% elif notificacao.type == 'RESERVA_CRIADA' %}
+                                        <i class="fa-solid fa-bookmark"></i>
+                                        {% else %}
+                                        <i class="fa-solid fa-info-circle"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="activity-content">
+                                        <p class="activity-title">{{ notificacao.title }}</p>
+                                        <p class="activity-time">{{ notificacao.created_at|timesince }} atrás</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>  
+                        {%else%}
                         <div class="card-body">
                             <div class="activity-list">
                                 <div class="activity-item">
@@ -135,6 +158,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
 
                     <!-- Quick Links -->
