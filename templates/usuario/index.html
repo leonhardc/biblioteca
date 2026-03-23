@@ -35,7 +35,7 @@
 
                 <!-- Mobile Menu Toggle -->
                 <button class="navbar-toggler" id="mobile-menu-btn" type="button">
-                    <span class="material-symbols-outlined">menu</span>
+                    <i class="fas fa-bars"></i>
                 </button>
 
                 <!-- Navigation Menu -->
@@ -52,6 +52,12 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#sobre">Sobre</a>
+                        </li>
+                        <li class="nav-item nav-item-login-mobile">
+                            <a class="nav-link nav-link-login-mobile" href="{% url 'usuario:entrar' %}">
+                                <span class="material-symbols-outlined">person</span>
+                                Entrar
+                            </a>
                         </li>
                     </ul>
                 </div>

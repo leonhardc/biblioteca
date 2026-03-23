@@ -485,6 +485,10 @@ h6,
     position: relative;
 }
 
+.nav-item-login-mobile {
+    display: none;
+}
+
 .nav-link {
     color: var(--muted);
     text-decoration: none;
@@ -516,6 +520,21 @@ h6,
 }
 
 @media (max-width: 767px) {
+    .nav-item-login-mobile {
+        display: block;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .nav-link-login-mobile {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary);
+        font-weight: 600;
+    }
+
     .nav-link::after {
         display: none;
     }
