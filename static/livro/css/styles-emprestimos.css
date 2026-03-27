@@ -147,6 +147,11 @@
     color: white;
 }
 
+.loan-status.pending {
+    background: linear-gradient(135deg, #f0ad4e 0%, #e67e22 100%);
+    color: white;
+}
+
 .loan-status.overdue {
     background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
     color: white;

@@ -68,3 +68,10 @@ def criar_reserva_funcionario(request:HttpRequest, id_livro:int):
         return cria_nova_reserva(request, livro)
     else:
         return retorna_pagina_anterior_com_erro(request, 'Nao eh possivel fazer mais reservas. Usuário já atingiu o numero máximo de reservas.')
+
+def atualizar_status_emprestimos():
+    emprestimos = Emprestimo.objects.filter(ativo=True)
+    for emprestimo in emprestimos:
+        if emprestimo.data_devolucao < date.today() and not emprestimo.pendente:
+            emprestimo.pendente = True
+            emprestimo.save()

@@ -14,6 +14,7 @@ import datetime
 from utils.utils import gerar_matricula_aluno, gerar_matricula_professor, gerar_matricula_funcionario
 from django.db.models import Q
 from notificacao.models import Notificacao
+from utils.livros.utils import atualizar_status_emprestimos
 
 
 # Views de controle de usuario
@@ -126,6 +127,7 @@ def pagina_inicial_professor(request:HttpRequest, uid:int):
 
 def pagina_inicial_funcionario(request:HttpRequest, uid:int):
     if request.user.is_authenticated:
+        atualizar_status_emprestimos()
         template_name='usuario/funcionario/dashboard_funcionario.html'
         usuario = User.objects.get(id=uid)
         cont_emprestimos = len(get_emprestimos_ativos_usuario(usuario))

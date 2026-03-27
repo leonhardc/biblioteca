@@ -101,16 +101,19 @@
                                         <i class="fa-solid fa-book-open"></i>
                                     </div>
                                     <div>
-                                        {% if emprestimo.ativo %}
+                                        {% if emprestimo.ativo or emprestimo.pendente%}
+                                            {% if emprestimo.ativo %}
                                             <span class="loan-status active">
                                                 <i class="fa-solid fa-circle-check"></i>
                                                 Ativo
                                             </span>
-                                        {% elif emprestimo.pendente %}
+                                            {% endif %}
+                                            {% if emprestimo.pendente %}
                                             <span class="loan-status pending">
-                                                <i class="fa-solid fa-hourglass-half"></i>
+                                                <i class="fa-solid fa-triangle-exclamation"></i>
                                                 Pendente
                                             </span>
+                                            {% endif %}
                                         {% else %}
                                             <span class="loan-status inactive">
                                                 <i class="fa-solid fa-circle-xmark"></i>
@@ -181,7 +184,7 @@
 
         </div>
     </main>
-
+    <script src="{% static 'usuario/js/layout.js' %}"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const loanCards = document.querySelectorAll('.loan-card');
