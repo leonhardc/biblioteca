@@ -964,7 +964,7 @@ def emprestar_livro(request:HttpResponse) -> HttpResponse:
         messages.add_message(request, messages.ERROR, f'Usuário não autenticado.')
         return redirect('usuario:entrar')
 
-def devolver_livro(request, emprestimo_id):
+def historico_livro(request, emprestimo_id):
     if request.user.is_authenticated:
         if user_is_funcionario(request.user):
             emprestimo_existe = Emprestimo.objects.filter(id=emprestimo_id, ativo=True).exists()
