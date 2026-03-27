@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <title>Histórico de Empréstimos - Biblioteca Acadêmica</title>
@@ -10,68 +10,200 @@
 <body>
     <header>
         {% if user_context.aluno %}
-        {% include 'usuario/aluno/parciais/_nav.html' %}
+            {% include 'usuario/aluno/parciais/_nav.html' %}
         {% elif user_context.professor %}
-        {% include 'usuario/professor/parciais/_nav.html' %}
+            {% include 'usuario/professor/parciais/_nav.html' %}
         {% elif user_context.funcionario %}
-        {% include 'usuario/funcionario/parciais/_nav.html' %}
+            {% include 'usuario/funcionario/parciais/_nav.html' %}
         {% endif %}
     </header>
-    <main>
-        <div class="container"
-            style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-            <h1 style="margin-bottom: 2rem; color: #333;">Histórico de Empréstimos</h1>
 
-            <div class="table-container"
-                style="width: 100%; max-width: 1200px; overflow-x: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px;">
-                <table class="table" style="width: 100%; border-collapse: collapse; background-color: white;">
-                    <thead>
-                        <tr style="background-color: #4CAF50; color: white;">
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">ID</th>
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Usuário</th>
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Livro</th>
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Data Empréstimo</th>
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Data Devolução</th>
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Status</th>
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600;">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+    <main class="loans-page">
+        <div class="container-fluid">
+
+            <!-- Page Header -->
+            <section class="page-header">
+                <div class="page-header-content">
+                    <div class="page-breadcrumb">
+                        {% if user_context.aluno %}
+                            <a href="{% url 'usuario:pagina_inicial_aluno' user.id %}">
+                                <i class="fa-solid fa-home"></i> Dashboard
+                            </a>
+                        {% elif user_context.professor %}
+                            <a href="{% url 'usuario:pagina_inicial_professor' user.id %}">
+                                <i class="fa-solid fa-home"></i> Dashboard
+                            </a>
+                        {% elif user_context.funcionario %}
+                            <a href="{% url 'usuario:pagina_inicial_funcionario' user.id %}">
+                                <i class="fa-solid fa-home"></i> Dashboard
+                            </a>
+                        {% endif %}
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>Histórico de Empréstimos</span>
+                    </div>
+                    <h1 class="font-display page-title">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        Histórico de Empréstimos
+                    </h1>
+                    <p class="page-subtitle">
+                        Acompanhe todos os empréstimos registrados na biblioteca e seus respectivos status.
+                    </p>
+                </div>
+            </section>
+
+            {% include 'parciais/_messages.html' %}
+
+            {% if emprestimos %}
+                <!-- Stats Section -->
+                <section class="loans-stats">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon primary">
+                                <i class="fa-solid fa-book"></i>
+                            </div>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-value">{{ emprestimos|length }}</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon success">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <span class="stat-label">Ativos</span>
+                        </div>
+                        <div class="stat-value">
+                            <span id="ativos-count">-</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon muted">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                            </div>
+                            <span class="stat-label">Devolvidos</span>
+                        </div>
+                        <div class="stat-value">
+                            <span id="devolvidos-count">-</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Loans List Section -->
+                <section class="loans-section">
+                    <div class="loans-list">
                         {% for emprestimo in emprestimos %}
-                        <tr style="border-bottom: 1px solid #ddd; transition: background-color 0.3s;"
-                            onmouseover="this.style.backgroundColor='#f5f5f5'"
-                            onmouseout="this.style.backgroundColor='white'">
-                            <td style="padding: 12px 15px;">{{emprestimo.id}}</td>
-                            <td style="padding: 12px 15px;">{{emprestimo.usuario}}</td>
-                            <td style="padding: 12px 15px;">{{emprestimo.livro}}</td>
-                            <td style="padding: 12px 15px;">{{emprestimo.data_emprestimo|date:"d/m/Y"}}</td>
-                            <td style="padding: 12px 15px;">{{emprestimo.data_devolucao|date:"d/m/Y"}}</td>
-                            <td style="padding: 12px 15px;">
-                                {% if emprestimo.ativo %}
-                                <span class="badge badge-success"
-                                    style="padding: 6px 12px; border-radius: 12px; background-color: #28a745; color: white; font-size: 0.85rem; font-weight: 500;">Ativo</span>
-                                {% else %}
-                                <span class="badge badge-secondary"
-                                    style="padding: 6px 12px; border-radius: 12px; background-color: #6c757d; color: white; font-size: 0.85rem; font-weight: 500;">Devolvido</span>
-                                {% endif %}
-                            </td>
-                            <td style="padding: 12px 15px;">
-                                <a href="#" style="color: #4CAF50; text-decoration: none; font-weight: 500;">Ver
-                                    Detalhes</a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="text-center"
-                                style="padding: 20px; text-align: center; color: #666; font-style: italic;">Nenhum
-                                empréstimo encontrado.</td>
-                        </tr>
+                            <div class="loan-card">
+                                <div class="loan-card-header">
+                                    <div class="loan-icon">
+                                        <i class="fa-solid fa-book-open"></i>
+                                    </div>
+                                    <div>
+                                        {% if emprestimo.ativo %}
+                                            <span class="loan-status active">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                                Ativo
+                                            </span>
+                                        {% elif emprestimo.pendente %}
+                                            <span class="loan-status pending">
+                                                <i class="fa-solid fa-hourglass-half"></i>
+                                                Pendente
+                                            </span>
+                                        {% else %}
+                                            <span class="loan-status inactive">
+                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                Devolvido
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="loan-card-body">
+                                    <h3 class="loan-book-title">{{ emprestimo.livro.titulo }}</h3>
+
+                                    <div class="loan-meta">
+                                        <div class="loan-meta-item">
+                                            <i class="fa-solid fa-user"></i>
+                                            <span class="loan-meta-label">Usuário:</span>
+                                            <span class="loan-meta-value">{{ emprestimo.usuario }}</span>
+                                        </div>
+
+                                        <div class="loan-meta-item">
+                                            <i class="fa-solid fa-calendar-plus"></i>
+                                            <span class="loan-meta-label">Data Empréstimo:</span>
+                                            <span class="loan-meta-value loan-date-highlight">
+                                                {{ emprestimo.data_emprestimo|date:"d/m/Y" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="loan-meta-item">
+                                            <i class="fa-solid fa-calendar-check"></i>
+                                            <span class="loan-meta-label">Data Devolução:</span>
+                                            <span class="loan-meta-value {% if emprestimo.ativo %}loan-date-highlight{% endif %}">
+                                                {{ emprestimo.data_devolucao|date:"d/m/Y" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="loan-meta-item">
+                                            <i class="fa-solid fa-hashtag"></i>
+                                            <span class="loan-meta-label">ID:</span>
+                                            <span class="loan-meta-value">#{{ emprestimo.id }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    </div>
+                </section>
+
+            {% else %}
+                <!-- Empty State -->
+                <section class="loans-section">
+                    <div class="empty-state-loans">
+                        <div class="empty-state-loans-icon">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                        <h2 class="font-display empty-state-loans-title">
+                            Nenhum Empréstimo Encontrado
+                        </h2>
+                        <p class="empty-state-loans-text">
+                            Ainda não existem empréstimos registrados na biblioteca.
+                        </p>
+                        <a href="{% url 'livro:listar_livros' %}" class="btn btn-primary">
+                            <i class="fa-solid fa-book"></i>
+                            Ir para o Acervo
+                        </a>
+                    </div>
+                </section>
+            {% endif %}
+
         </div>
     </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loanCards = document.querySelectorAll('.loan-card');
+        let ativos = 0;
+        let devolvidos = 0;
+
+        loanCards.forEach(card => {
+            const status = card.querySelector('.loan-status');
+            if (status && status.classList.contains('active')) {
+                ativos++;
+            } else if (status && status.classList.contains('inactive')) {
+                devolvidos++;
+            }
+        });
+
+        const ativosCount = document.getElementById('ativos-count');
+        const devolvidosCount = document.getElementById('devolvidos-count');
+
+        if (ativosCount) ativosCount.textContent = ativos;
+        if (devolvidosCount) devolvidosCount.textContent = devolvidos;
+    });
+    </script>
 </body>
 
 </html>
