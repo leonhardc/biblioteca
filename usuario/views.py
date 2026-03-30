@@ -683,9 +683,9 @@ def criar_funcionario(request:HttpRequest):
 def ler_funcionario(request:HttpRequest, uid:int):
     if request.user.is_authenticated:
         template_name = 'usuario/funcionario/detales_funcionario.html'
-        funcionario_existe = Funcionario.objects.filter(id=uid).exists()
+        funcionario_existe = Funcionario.objects.filter(usuario__id=uid).exists()
         if funcionario_existe:
-            funcionario = Funcionario.objects.get(id=uid)
+            funcionario = Funcionario.objects.get(usuario__id=uid)
             return render(request, template_name, context={'funcionario':funcionario})
         else:
             messages.add_message(request, messages.ERROR, 'O usuário buscado nao existe na base de dados.')
