@@ -202,58 +202,7 @@
         </div>
     </main>
 
-    <script>
-    // Mobile menu toggle and stats calculation
-    document.addEventListener('DOMContentLoaded', function() {
-        // Calculate stats
-        const loanCards = document.querySelectorAll('.loan-card');
-        let ativos = 0;
-        let devolvidos = 0;
-        
-        loanCards.forEach(card => {
-            const status = card.querySelector('.loan-status');
-            if (status && status.classList.contains('active')) {
-                ativos++;
-            } else if (status && status.classList.contains('inactive')) {
-                devolvidos++;
-            }
-        });
-        
-        const ativosCount = document.getElementById('ativos-count');
-        const devolvidosCount = document.getElementById('devolvidos-count');
-        
-        if (ativosCount) ativosCount.textContent = ativos;
-        if (devolvidosCount) devolvidosCount.textContent = devolvidos;
-
-        // Mobile menu
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const navbarCollapse = document.getElementById('navbarNav');
-        const userMenuBtn = document.getElementById('user-menu-btn');
-        const userDropdown = document.getElementById('user-dropdown');
-
-        if (mobileMenuBtn && navbarCollapse) {
-            mobileMenuBtn.addEventListener('click', function() {
-                navbarCollapse.classList.toggle('show');
-                this.classList.toggle('active');
-            });
-        }
-
-        if (userMenuBtn && userDropdown) {
-            userMenuBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userDropdown.classList.toggle('show');
-            });
-
-            document.addEventListener('click', function() {
-                userDropdown.classList.remove('show');
-            });
-
-            userDropdown.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-    });
-    </script>
+    <script src="{% static 'usuario/js/layout.js' %}"></script>
 </body>
 
 </html>
